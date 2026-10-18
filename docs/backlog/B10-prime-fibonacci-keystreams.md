@@ -20,3 +20,8 @@ The page-15 square is 3301 +- primes whose prime indices are Fibonacci numbers (
 
 ## Notes
 Square: 3258 3222 3152 3038 / 3278 3299 3298 2838 / 3288 3294 3296 2472 / 4516 1206 708 1820.
+Exact rule verified 2026-10-18 (see docs/LEADS.md): cell = |3301 - B| with B the primes at 0-based
+Fibonacci indices, B = 2, 3, 5, 7, 13, 23, 43, 79, 149, 263, 463, 829, 1481, 2593, 4507, 7817, in a
+spiral. So the natural keystreams are B itself (and its continuation: primes at index F_n for larger
+Fibonacci numbers), |3301 - B|, and the spiral order of the cells; the Zeckendorf digits of n are a
+separate stream. Council note: 149 (B_9) equals the fitted 1/P(step 0) = 12947/86; probably chance.
