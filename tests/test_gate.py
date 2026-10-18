@@ -27,6 +27,13 @@ def test_welcome_divinity_with_f_skips():
     assert Vigenere(Cipher, "DIVINITY", FSkips=WelcomeFSkips) == Plain
 
 
+def test_koan2_firfumferenfe_with_two_f_skips():
+    # Koan 2 (relikd jpg107-167): Vigenere FIRFUMFERENFE; the 2nd and 3rd of its 5 ciphertext Fs pass
+    # through (the only subset of <= 3 skips that reproduces the plaintext). B01's real-world control.
+    Cipher = LoadSection("jpg107-167")["Runes"]
+    assert Vigenere(Cipher, "FIRFUMFERENFE", FSkips=[2, 3]) == LoadSection("solved_jpg107-167")["Runes"]
+
+
 def test_koan1_atbash_plus_3():
     Cipher = LoadSection("0_koan_1")["Runes"]
     assert Shift(Atbash(Cipher), 3) == LoadSection("solved_0_koan_1")["Runes"]
