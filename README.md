@@ -32,8 +32,9 @@ histogram) and the bit-exact Perl/glibc PRNGs.
 | `lp/` | Library: gematria, loader, statistics, ciphers, detectors, controls, key sources |
 | `experiments/`, `results/` | Experiment scripts and their small text outputs |
 | `seed/` | Session-one scripts and prompts (historical) |
-| `.claude/skills/`, `.claude/agents/` | Session workflow (lp-start, lp-experiment, lp-handoff, lp-budget, lp-data) and the skeptic |
-| `tools/ask_other_model.py` | OpenAI wrapper (stub for now) |
+| `.claude/skills/`, `.claude/agents/` | Session workflow (lp-start, lp-experiment, lp-handoff, lp-budget, lp-data, lp-council) and the skeptic, council and worker agents |
+| `tools/ask_other_model.py` | OpenAI wrapper: budgeted background calls (see `docs/models/openai.md`) |
+| `budget/openai/ledger.jsonl`, `docs/council/` | Shared OpenAI token ledger; saved prompts and replies |
 
 ## How sessions work
 

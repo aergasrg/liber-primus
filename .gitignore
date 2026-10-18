@@ -7,3 +7,5 @@ results/**/*.npy
 results/**/checkpoint*
 *.log
 *.part
+budget/openai/ledger.lock
+budget/openai/*.tmp

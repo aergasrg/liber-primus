@@ -370,9 +370,9 @@ the index, push, and open a PR. If a step needs something only a human can do (W
 a file), write it in the handoff and stop.
 ```
 
-Run two or three workers at a time on different items, then merge their PRs before the next wave.
-Inside one session you can also fan out: "Use worker subagents on B01, B05 and B10 in parallel."
-Keep it to three or four: they share one machine and the same credits.
+A wave is 2-3 separate sessions, each with one backlog item; merge their PRs before the next wave.
+Do not fan one session out over several items. The worker subagent (`.claude/agents/worker.md`) is
+only for helping within a session's own item, e.g. one variant or sub-sweep of it.
 
 ## Open-ended hunt (Fable 5.1, modeled on the Vals AI Urquhart run)
 
