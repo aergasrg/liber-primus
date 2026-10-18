@@ -49,7 +49,7 @@ for everything; it stops starting new work after `--hours` (default 15) and can 
    If it stops (reboot, sleep, Ctrl+C), run the same command again: finished units are skipped.
    If the first lines say `planted-key control FAILED`, stop and upload the results file anyway.
 
-5. In the morning, upload `results_E0029_gpu.json` (well under 1 MB) from this folder. `ALL DONE` at
+5. In the morning, upload `results_E0029_gpu.json` (about 1 MB) from this folder. `ALL DONE` at
    the end of `run.log` means it finished; otherwise the file still holds everything finished so far.
    `powercfg /change standby-timeout-ac 30` restores sleep.
 

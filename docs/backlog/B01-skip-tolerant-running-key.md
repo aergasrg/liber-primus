@@ -1,10 +1,10 @@
 ---
 id: B01
 title: Skip-tolerant running-key engine
-status: claimed
+status: done
 claimed_by: claude/blissful-gates-2v36sv
 rank: 1
-ledger: [E0008, E0012, E0024]
+ledger: [E0008, E0012, E0024, E0029]
 ---
 
 # B01 Skip-tolerant running-key engine
@@ -49,3 +49,14 @@ source. Null: the whole optimised search on 999 surrogate corpora (non-zero step
 pages, zeros kept, re-integrated, F positions recomputed); hit = max-search p <= 0.01, confirmed by a
 frozen-key continuation. Not worth doing: more rigid whole-section scans; a huge new corpus before the
 engine passes these plants; non-English scoring as the first repair.
+
+## Outcome (2026-10-18, claude/blissful-gates-2v36sv, E0029)
+- Engine: `lp/runningkey.py`, exact DP over source position covering all four council gaps (page-local,
+  4 views, digraph lattice, 8 polarity/direction forms). It is in the gate (Koan 2 recovered exactly).
+- Real-world controls: Koan 2 and Welcome hidden in the Mabinogion come back at the exact start (z 49, 61).
+- Tier 1: 99-100/100 on pages of >= 141 runes for every source; 50-86/100 on the six pages of <= 140
+  runes (not identifiable, follow-up B22).
+- Negative for lp_plain, lp_cipher (solved pages), Self-Reliance, Mabinogion, growing string, 560.13 and
+  wisdom: no page above the family-wise threshold.
+- Pending: the big byte sources (761.MP3, _560.00, 560.17, page images) are in `gpu/E0029_bytes_gpu.py`
+  for the human's GPU; import with `experiments/E0029_skip_tolerant_running_key.py import-gpu`.
