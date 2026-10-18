@@ -1,0 +1,61 @@
+id: E0032
+title: Key-free tests of the council's repeat-avoiding leak rules (lag-k coincidences, preceding-step gate, running-checksum gate, step band, guard and word lanes) (B25)
+family: doublet-origin
+hypothesis: 'The ciphertext is drawn from the 28 runes other than an excluded symbol h (normally h =
+  c_(i-1), so no doublets); a control law sometimes moves h, and only then can a doublet appear. Laws
+  tested: stale register (h = c_(i-4) one time in five), preceding-step gate (s_(i-1) in a 5-set),
+  running-checksum gate (prefix sum in a 5-residue window, phase per section), displaced-hole band
+  (h = c_(i-1)+1..5), guard (no leak within 5 after a doublet), word lanes (leaks only at in-word index =
+  b mod 5).'
+coverage: 'All 9 unsolved sections (12,956 runes, 86 doublets), within sections. Five statistics fixed in
+  the script and committed (331947d) before the real stage: T1 = -min z of R_k, k = 2..10; T2 = min-p of
+  chi2 and contiguous 5-set scan for s_(i-1), s_(i+1), c_(i-2); T3 = min-p over 4 running states (rune
+  sum, prime sum, index mod 29 from section start, from page start) of the per-section max-phase window
+  count; T4 = max |z| of the {1..5} and {24..28} shares of non-zero steps; T5a = renewal LR (R = 5 vs 0);
+  T5b = same-word pairs not divisible by 5 (identifiable only if >= 3 expected pairs).'
+detector: the five statistics above
+control:
+  method: 'Common core implemented in the script: solved LP plaintext (9 relikd files) prefix-coded into 28
+    digits (27 -> 27,0; 28 -> 27,1), c_i = A[(digit + U_i) mod 28], A = 0..28 minus h, U seeded uniform;
+    real section lengths, page and word layout. 100 plants per law (stale 1,000). Detection = matching
+    statistic at p <= 0.002 (0.01 / 5) against the Markov-null table.'
+  score: 'doublet rate mean 0.60-0.71% for every law (in 0.53-0.82). Flagged/100: prevstep T2 100,
+    checksum T3 100, stale T1 86, band T4 3, guard T5a 2; memoryless 0 on every statistic (calibration).
+    Word lanes: 0.79 expected same-word doublet pairs from the real word lengths, so T5b not identifiable
+    and left out of the family.'
+  power: 'prevstep 100/100, checksum 100/100; stale 86/100 with the preregistered min-over-lags T1 (below
+    95), but its own R_4 distribution (1,000 plants: mean 356.6, sd 19.3, max 432) is separated from the
+    real value; band 3/100, guard 2/100, word lanes: not identifiable.'
+'null':
+  method: 'T1, T4: 10^4 memoryless Markov corpora at P(stay) = 86/12947, real section lengths; T1 also 10^4
+    E0027 surrogates (non-zero steps permuted within pages). T2, T3, T5a: 10^5 within-section permutations
+    of the real doublet positions (E0028 PermutedPositions), variables recomputed. Family: min-p over 5,
+    Bonferroni and a joint min-p on the Markov table.'
+  ceiling: per-statistic p 0.002; family-wise 0.01
+  surrogates: '10^4 Markov, 10^4 E0027 surrogates, 10^5 permutations'
+result:
+  best: 'R_k, k = 2..10: 440, 439, 458, 477, 454, 448, 436, 461, 440; Markov null mean 445.8 (sd 20.7 at k
+    = 4); z -0.80, -0.31, +0.59, +1.53, +0.43, +0.16, -0.40, +0.82, -0.18 (surrogate z the same to 0.03).
+    T1 p 0.89 (surrogate 0.95). Stale register: 0 of 1,000 plants reach R_4 = 458; the real value is +5.3
+    SD above the rule''s own prediction (357). T2 p 0.74 (permutation). T3 p 0.22 (rune-sum state 0.07,
+    39 of 86 doublets in the best windows; the rule puts all 86 there). T4 z(1..5) -0.22, z(24..28) +0.01,
+    p 0.97. T5a LR 5.79, p 0.022 (permutation; Markov 0.017), not significant after the family correction
+    and with no power on its plants. Family min-p 0.022, Bonferroni 0.108, joint 0.080.'
+  verdict: negative
+skips_handled: n/a (key-free; Fs are ordinary runes)
+source: claude/admiring-brown-6qihly
+date: '2026-10-18'
+artifacts: [experiments/E0032_key_free_leak_rules.py, results/E0032/summary.txt, results/E0032/real.json,
+  results/E0032/control.json]
+notes: 'Excluded: the stale-exclusion register at lag 4 (the council''s top pick; rule-specific plant
+  comparison, p < 0.001 under the rule), the preceding-step gate (s_(i-1), s_(i+1), c_(i-2), contiguous
+  5-sets), and the running-checksum gate (rune sum, prime sum, position mod 29 from section or page
+  start). The doublet rate pins the stale fraction at about 0.19, so a stale register at any lag k in
+  2..10 would cost about 85 coincidences (z about -4) at that lag. Every real z is >= -0.80, so those lags
+  are excluded by the same arithmetic, but only k = 4 was planted. Not identifiable here: the
+  displaced-hole band (power 3%), the guard renewal (2%) and word lanes (0.79 expected same-word pairs).
+  The 18 Oct outside note (R_4 458 vs 446, lags 2-8 within +-1.5) is confirmed except that lag 5 is
+  z +1.53 under this null. The real lag profile was known in outline before the run, from that note; the
+  statistics were still fixed in code first. B25 check (d), E0027/E0030 on one plant corpus, was not run:
+  their surrogate means and sds are not stored and would need the 999-surrogate runs again. The T5a p of
+  0.02 echoes E0028''s minimum gap of 6 (E0028 MinGap p 0.12) and has no power behind it.'

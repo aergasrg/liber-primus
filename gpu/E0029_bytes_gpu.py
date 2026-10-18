@@ -127,7 +127,8 @@ def LoadSource(Name):
 
 
 def PageEvents(Runes, View, SkipScore):
-    """Same events as lp.runningkey.PageEvents: list of (CipherIndex, [(Atoms, Const), ...])."""
+    """Same events as lp.runningkey.PageEvents: list of (CipherIndex, [(Atoms, Const), ...]).
+    In the step views each F of an F-run is keyed, a literal skip or a transparent skip (B24)."""
     C = list(Runes)
     N = len(C)
     if View == "raw29":
@@ -144,18 +145,30 @@ def PageEvents(Runes, View, SkipScore):
     Events = []
     I = 1
     while I < N:
-        Isolated = C[I] == 0 and C[I - 1] != 0 and (I == N - 1 or C[I + 1] != 0)
-        if not Isolated:
+        if C[I] != 0:
             Events.append((I, [(Atom(C[I] - C[I - 1]), 0.0)]))
             I += 1
-        elif I == N - 1:
-            Events.append((I, [(Atom(C[I] - C[I - 1]), 0.0), ((), SkipScore)]))
-            I += 1
-        else:
-            Keyed = Atom(C[I] - C[I - 1]) + Atom(C[I + 1] - C[I])
-            Events.append((I, [(Keyed, 0.0), (Atom(C[I + 1] - C[I]), SkipScore),
-                               (Atom(C[I + 1] - C[I - 1]), SkipScore)]))
-            I += 2
+            continue
+        J = I
+        while J < N and C[J] == 0:
+            J += 1
+        Paths = [(C[I - 1], (), 0)]  # (State, Atoms, Skips), first-seen order
+        for K in range(I, J):
+            Next = []
+            for State, Atoms, Skips in Paths:
+                for Item in [(0, Atoms + Atom(0 - State), Skips), (0, Atoms, Skips + 1), (State, Atoms, Skips + 1)]:
+                    if Item not in Next:
+                        Next.append(Item)
+            Paths = Next
+        Options = []
+        for State, Atoms, Skips in Paths:
+            if J < N:
+                Atoms = Atoms + Atom(C[J] - State)
+            if (Atoms, Skips) not in Options:
+                Options.append((Atoms, Skips))
+        Options.sort(key=lambda Key: (Key[1], len(Key[0])))
+        Events.append((I, [(Atoms, Skips * SkipScore) for Atoms, Skips in Options]))
+        I = J + 1
     return Events
 
 
