@@ -63,6 +63,8 @@ length (4.47 = 12,956 / 2,896) matches 2,896. The gate pins 2,896.
 - No periodicity up to 300 per section or 600 overall; no shared keystream between sections at overlaps of 600+.
 - Mean word length 4.47 runes (solved pages 4.03 in session one; 4.07 over all seven relikd solved files
   with this loader); two-rune words 15.5%.
+- Real page map (2026-10-18, from the page images; `lp.data.PageLines`): 55 rune pages, 66-277 runes
+  each; page 50 is digits only; blank lines in the transcription are page or paragraph breaks.
 - One repeated 6-gram, DJUBEI, at corpus positions 6555 and 12950 (0-based, sections concatenated in order).
 
 ## Working model

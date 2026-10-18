@@ -1,0 +1,32 @@
+E0027 combined: run A = own-rate baseline (perm), run B = uniform baseline
+
+  perm     surrogates 999  S1/S2/S3 p 0.863 0.097 0.620  family-wise p 0.259
+  uniform  surrogates 999  S1/S2/S3 p 0.410 0.421 0.697  family-wise p 0.765
+  family-wise p over both runs, x2 corrected: 0.518
+
+Lab-verified negative region: conditions with >= 95/100 plants recovered at the x2-corrected
+threshold in a run whose real data was null (either run; the x2 correction covers both looks).
+  S1 chain-literal-z1      p25 n=273     skips none     L = 3(u100)
+  S1 chain-literal-z1      p25 n=273     skips random   L = 3(u100)
+  S1 chain-literal-z1      p25 n=273     skips welcome  L = 3(u99)
+  S1 chain-literal-z1      p3 n=217      skips none     L = 3(u95)
+  S1 chain-literal-z1      p3 n=217      skips random   L = 3(u96)
+  S1 chain-literal-z1      p3 n=217      skips welcome  L = 3(u97)
+  S1 chain-transparent-z2  p25 n=273     skips none     L = 3(u100)
+  S1 chain-transparent-z2  p25 n=273     skips random   L = 3(u98)
+  S1 chain-transparent-z2  p25 n=273     skips welcome  L = 3(u100)
+  S1 chain-transparent-z2  p3 n=217      skips welcome  L = 3(u95)
+  S1 raw                   p25 n=273     skips none     L = 3(u100)
+  S1 raw                   p25 n=273     skips random   L = 3(u100)
+  S1 raw                   p25 n=273     skips welcome  L = 3(u99)
+  S1 raw                   p3 n=217      skips none     L = 3(u100)
+  S1 raw                   p3 n=217      skips random   L = 3(u100)
+  S1 raw                   p3 n=217      skips welcome  L = 3(u100)
+  S2 chain-literal-z1      p3-7 n=1145   skips none     L = 7(p100), 60(p100), 7(u100), 60(u100)
+  S2 chain-literal-z1      p54-55 n=308  skips none     L = 7(p97), 7(u100)
+  S2 raw                   p3-7 n=1145   skips none     L = 7(p100), 60(p100), 250(p96), 7(u100), 60(u100)
+  S2 raw                   p54-55 n=308  skips none     L = 7(p98), 7(u100)
+  S3 chain-literal-z1      all pages     skips none     L = 5(p100), 20(p100), 60(p100), 5(u100), 20(u100), 60(u100)
+  S3 raw                   all pages     skips none     L = 5(p100), 20(p100), 60(p100), 5(u100), 20(u100), 60(u100)
+  (L(xN): period, run p=perm/u=uniform, plants recovered of 100)
+Every other tested condition is 'not identifiable at this length', not excluded.
