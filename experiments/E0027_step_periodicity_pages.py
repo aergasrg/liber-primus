@@ -492,6 +492,10 @@ def Report():
     Level = 1 - 0.01 / 3
     Thresholds = {"S1": float(np.quantile(S1Surr, Level)), "S2": float(np.quantile(S2Surr, Level)),
                   "S3": float(np.quantile(S3Surr, Level))}
+    # stricter threshold for the x2 correction over the two baselines (runs A and B): family level 0.005
+    Level2 = 1 - 0.005 / 3
+    Thresholds2 = {"S1": float(np.quantile(S1Surr, Level2)), "S2": float(np.quantile(S2Surr, Level2)),
+                   "S3": float(np.quantile(S3Surr, Level2))}
     Lines = [f"E0027 report: {NSurr} surrogate corpora (whole search on each)", ""]
     Lines.append("Real data (standardised by each page's / section's surrogate mean and sd):")
     Lines.append(f"  S1 page-local      {S1:6.2f}  surrogate p {P[0]:.3f}  tier-1 threshold {Thresholds['S1']:.2f}")
@@ -512,44 +516,81 @@ def Report():
     PageIndex = {N: I for I, N in enumerate(PageNumbers)}
     PageLengths = {N: len(R) for _, PageList in RealLayout() for N, R in PageList}
     SectionIndex = {Name: I for I, (Name, _) in enumerate(RealLayout())}
+    SectionLengths = {Name: sum(len(R) for _, R in PageList) for Name, PageList in RealLayout()}
     Rows = []
     Shared = {}
     for R in Power:
         if R["Kind"] == "page":
             I = PageIndex[R["Page"]]
             Std = (np.array(R["Scores"]) - PageMean[I]) / PageSd[I]
-            Hits = int(np.sum(Std >= Thresholds["S1"]))
+            Hits, Hits2 = int(np.sum(Std >= Thresholds["S1"])), int(np.sum(Std >= Thresholds2["S1"]))
             Right = sum(1 for Pd in R["Periods"] if Pd % R["L"] == 0 or R["L"] % Pd == 0)
-            Rows.append(("S1", R["Model"], f"p{R['Page']} n={PageLengths[R['Page']]}", R["L"], R["Skips"], Hits, len(Std), Right))
+            Rows.append(("S1", R["Model"], f"p{R['Page']} n={PageLengths[R['Page']]}", R["L"], R["Skips"], Hits, len(Std), Right, Hits2))
         elif R["Kind"] == "section":
             I = SectionIndex[R["Section"]]
             Std = (np.array(R["Scores"]) - SectionMean[I]) / SectionSd[I]
-            Hits = int(np.sum(Std >= Thresholds["S2"]))
+            Hits, Hits2 = int(np.sum(Std >= Thresholds["S2"])), int(np.sum(Std >= Thresholds2["S2"]))
             Right = sum(1 for Pd in R["Periods"] if Pd % R["L"] == 0 or R["L"] % Pd == 0)
-            Rows.append(("S2", R["Model"], R["Section"], R["L"], "none", Hits, len(Std), Right))
+            Rows.append(("S2", R["Model"], f"{R['Section']} n={SectionLengths[R['Section']]}", R["L"], "none", Hits, len(Std), Right, Hits2))
         else:
             Key = (R["Model"], R["L"])
             Old = Shared.get(Key, ([], []))
             Shared[Key] = (Old[0] + R["Scores"], Old[1] + R["Periods"])
     for (Model, L), (Scores, Periods) in sorted(Shared.items()):
-        Hits = int(np.sum(np.array(Scores) >= Thresholds["S3"]))
+        Hits, Hits2 = int(np.sum(np.array(Scores) >= Thresholds["S3"])), int(np.sum(np.array(Scores) >= Thresholds2["S3"]))
         Right = sum(1 for Pd in Periods if Pd % L == 0 or L % Pd == 0)
-        Rows.append(("S3", Model, "all pages", L, "none", Hits, len(Scores), Right))
+        Rows.append(("S3", Model, "all pages", L, "none", Hits, len(Scores), Right, Hits2))
     Lines.append("")
     Lines.append("Tier 1 power (recovered = plant reaches the family threshold, surrogate quantile 1 - 0.01/3):")
-    Lines.append("  stat model                 layout     L    skips    recovered  period-right")
-    for Stat, Model, Where, L, Skips, Hits, Total, Right in sorted(Rows, key=lambda R: (R[0], R[1], str(R[2]), R[3], R[4])):
-        Flag = "" if Hits >= 0.95 * Total else "  NOT IDENTIFIABLE"
-        Lines.append(f"  {Stat}   {Model:<21} {str(Where):<10} {L:<4} {Skips:<8} {Hits:>3}/{Total:<3}     {Right:>3}{Flag}")
+    Lines.append("  (x2-corrected: at the stricter threshold, surrogate quantile 1 - 0.005/3)")
+    Lines.append("  stat model                 layout        L    skips    recovered  x2-corr  period-right")
+    Rows.sort(key=lambda R: (R[0], R[1], str(R[2]), R[3], R[4]))
+    for Stat, Model, Where, L, Skips, Hits, Total, Right, Hits2 in Rows:
+        Flag = "" if Hits2 >= 0.95 * Total else "  NOT IDENTIFIABLE"
+        Lines.append(f"  {Stat}   {Model:<21} {str(Where):<13} {L:<4} {Skips:<8} {Hits:>3}/{Total:<3}   {Hits2:>3}/{Total:<3}     {Right:>3}{Flag}")
+    with open(os.path.join(OutDir, "analysis.json"), "w") as Handle:
+        json.dump({"Baseline": Baseline, "Surrogates": NSurr, "P": P, "FamilyP": FamilyP, "Stats": [S1, S2, S3],
+                   "Thresholds": Thresholds, "Thresholds2": Thresholds2,
+                   "Rows": [list(R) for R in Rows]}, Handle)
     Text = "\n".join(Lines) + "\n"
     with open(os.path.join(OutDir, "summary.txt"), "w") as Handle:
         Handle.write(Text)
     print(Text)
 
 
+def Combined():
+    """Runs A (perm) and B (uniform) as two looks at the real data: x2-corrected family p, power region."""
+    Runs = {}
+    for Name in ("perm", "uniform"):
+        with open(os.path.join(RepoRoot, "results", "E0027", Name, "analysis.json")) as Handle:
+            Runs[Name] = json.load(Handle)
+    Corrected = min(1.0, 2 * min(R["FamilyP"] for R in Runs.values()))
+    Lines = ["E0027 combined: run A = own-rate baseline (perm), run B = uniform baseline", ""]
+    for Name, R in Runs.items():
+        Lines.append(f"  {Name:<8} surrogates {R['Surrogates']}  S1/S2/S3 p {R['P'][0]:.3f} {R['P'][1]:.3f} {R['P'][2]:.3f}"
+                     f"  family-wise p {R['FamilyP']:.3f}")
+    Lines.append(f"  family-wise p over both runs, x2 corrected: {Corrected:.3f}")
+    Lines.append("")
+    Lines.append("Lab-verified negative region: conditions with >= 95/100 plants recovered at the x2-corrected")
+    Lines.append("threshold in a run whose real data was null (either run; the x2 correction covers both looks).")
+    Region = {}
+    for Name, R in Runs.items():
+        for Stat, Model, Where, L, Skips, Hits, Total, Right, Hits2 in R["Rows"]:
+            if Hits2 >= 0.95 * Total:
+                Region.setdefault((Stat, Model, Where, Skips), []).append(f"{L}({Name[0]}{Hits2})")
+    for Key in sorted(Region):
+        Lines.append(f"  {Key[0]} {Key[1]:<21} {Key[2]:<13} skips {Key[3]:<8} L = {', '.join(Region[Key])}")
+    Lines.append("  (L(xN): period, run p=perm/u=uniform, plants recovered of 100)")
+    Lines.append("Every other tested condition is 'not identifiable at this length', not excluded.")
+    Text = "\n".join(Lines) + "\n"
+    with open(os.path.join(RepoRoot, "results", "E0027", "combined.txt"), "w") as Handle:
+        Handle.write(Text)
+    print(Text)
+
+
 def Main():
     Parser = argparse.ArgumentParser()
-    Parser.add_argument("mode", choices=["real", "surrogates", "power", "report", "time"])
+    Parser.add_argument("mode", choices=["real", "surrogates", "power", "report", "combined", "time"])
     Parser.add_argument("--count", type=int, default=999)
     Parser.add_argument("--plants", type=int, default=100)
     Parser.add_argument("--workers", type=int, default=max(1, (os.cpu_count() or 2)))
@@ -568,6 +609,8 @@ def Main():
         RunPower(Args.plants, Args.workers)
     elif Args.mode == "report":
         Report()
+    elif Args.mode == "combined":
+        Combined()
     else:
         Start = time.time()
         SurrogateJob(1)
