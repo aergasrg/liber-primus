@@ -1,0 +1,63 @@
+id: E0030
+title: Page-local periodic keys L 2-20 scored by best-shift English likelihood per column (B21)
+family: periodic-polyalphabetic
+hypothesis: Each LP page (real page map) has its own periodic key of period L 2..20, applied to the raw
+  runes (Vigenere mod 29) or to the chain units (u = s - 1 mod 28), with up to 11 ciphertext Fs passing
+  through without consuming key.
+coverage: 55 rune-bearing pages; views raw29, unit28z1 (a doublet consumes key), unit28z2 (it does not),
+  built by E0027's BuildViews (first edge of each page omitted, Fs and F-adjacent steps left out of the
+  columns, so literal-F and transparent-F chain conventions shift the phase identically). L = 2..min(20,
+  n // 3). Skip masks at EVERY period and view, every subset of the page's ciphertext Fs with <= 11 skips,
+  capped at 4096 subsets (E0027's SkipMasks). step29 dropped (chain model = unit28z1 plus a zero symbol;
+  raw model gives letter differences, not shifted English). No section-wide or shared-period statistic.
+detector: 'per column: max over M shifts (29 raw, 28 chain with F and EA merged as p mod 28) of the
+  English unigram log-likelihood ratio of its symbols (lp.detectors.EnglishModel, add-one); page z =
+  (sum S_j - sum mu(n_j)) / sqrt(sum var(n_j)), mu/var of the best-shift LLR for n uniform symbols (Monte
+  Carlo, 20000 draws per n); page best = max over views, L, masks; S1 = max over pages of the page best
+  standardised by that page''s surrogate mean and sd'
+control:
+  method: 'tier 1: 100 plants per condition through the identical page search; E0027 PlantPage (solved
+    plaintext poured into real layouts with their doublet positions, fresh random key); models raw,
+    chain literal-F z1, chain transparent-F z2; skips none / random half of plaintext Fs (<= 11) /
+    Welcome ordinals; layouts p25 (273 runes), p3 (217), p14 (137), p55 (76); L 3, 5, 8, 10, 12, 13, 16,
+    20 (288 conditions). Recovered = standardised page score >= the S1 threshold 4.17.'
+  score: 'median standardised plant score 17-20 at L 3-5 on 273 runes; e.g. L 12 Welcome skips on
+    217-273 runes z 8-15 raw (null page z 3-6)'
+  power: 'lab-verified (>= 95/100 at threshold 4.17), all 3 models x 3 skip masks unless stated:
+    273 runes (p25) L 3-20, except chain literal-F with random skips at L 20 (94/100);
+    217 runes (p3) L 3-13; L 16 for 4 of 9 conditions (raw x3, chain transparent-F no skips; misses 85-92/100); L 20 raw no-skip only;
+    137 runes (p14) L 3 and 5; L 8 for 6 of 9 (chain random-skip and chain-literal Welcome 92-94/100);
+    L 10 raw no/random skips only; nothing at L >= 12 (best 82/100);
+    76 runes (p55) raw L 3 only (95-99/100); chain L 3 84-91/100; L >= 5 at most 74/100.
+    Full table: results/E0030/summary.txt.'
+'null':
+  method: 'tier 2: 999 surrogate corpora (E0027 SurrogateLayout: non-zero steps permuted within each page,
+    zero positions and page lengths kept, re-integrated from a random first rune, Fs recomputed), whole
+    search (all views, periods, masks) on each; threshold = surrogate quantile 0.99 of S1'
+  ceiling: 'S1 threshold 4.17 (surrogate S1 median 2.39, max 5.97)'
+  surrogates: 999
+result:
+  best: 'S1 3.14, surrogate p 0.153; best page p55 unit28z2 L 13 with 1 skip (raw z 4.51; a 76-rune page
+    where 13 columns of ~5 symbols overfit to common letters). Next p44 unit28z1 L 5 4 skips (2.45 sd).'
+  verdict: negative
+skips_handled: 'yes: every subset of a page''s ciphertext Fs with <= 11 skips, capped at 4096 subsets per
+  page, at every period and view'
+source: claude/eloquent-hopper-k6fff6
+date: '2026-10-18'
+artifacts:
+- experiments/E0030_column_shift_llr_pages.py
+- results/E0030/summary.txt
+- results/E0030/analysis.json
+- results/E0030/real.json
+- results/E0030/run_all.sh
+notes: 'Extends E0027''s verified region (single-page key L 3 only, pages >= 217 runes) to L 3-13 on pages
+  of >= 217 runes for every model and skip mask, and L 3-20 on 273 runes. 42 of 55 pages (10,963 of 12,956
+  runes) are >= 217 runes, but power was verified on the p3 and p25 layouts only; other pages of that
+  length with more Fs (fewer allowed skips) are assumed, not shown, to behave alike. Still not identifiable:
+  L >= 16 on 217-272 runes in most chain conditions, L >= 10 on 137 runes (chain) and L >= 12 (all), anything
+  but raw L 3 on 76 runes, periods > 20 anywhere (not searched; E0027 covers them only as not identifiable),
+  keys continuing across pages (E0027 S2). Real data null, so nothing went to the skeptic. Single statistic,
+  one look, level 0.01 (no x2 correction as in E0027, which had two baselines). Renumbered E0028 -> E0029 -> E0030
+  (taken on main by B12, then B01, while this ran); the plant seed label in the script stays "E0028" so
+  plants reproduce. Its follow-up item was renumbered B22 -> B23 for the same reason.
+  Runtime: 16.5 s per corpus single-thread, ~70 min for 999 on 4 cores, power ~20 min.'
