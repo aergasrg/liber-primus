@@ -1,10 +1,10 @@
 ---
 id: B24
 title: Engine fixes from the midpoint bug hunt (F-runs in runningkey step views, plant doublet handling, E0030 hardening)
-status: claimed
+status: done
 claimed_by: claude/admiring-brown-6qihly
 rank: 3
-ledger: [E0029, E0030]
+ledger: [E0029, E0030, E0031]
 ---
 
 # B24 Engine fixes from the midpoint bug hunt
@@ -69,3 +69,13 @@ Positive control: the failing inputs above become gate tests that fail before th
 Rerun the Koan 2 / Welcome controls, and the tier-1 plants for unit28z2 with transparent skips on one
 long and one 141-220 rune page. Null: E0029's existing 20 replicates for the four-page rerun. Write a
 new ledger entry (follow-up to E0029) with the four-page step-view result.
+
+## Outcome (2026-10-18, claude/admiring-brown-6qihly)
+- Item 1 fixed in `lp/runningkey.py` and `gpu/E0029_bytes_gpu.py` (one event per F-run; each F keyed,
+  literal or transparent). Two gate tests (the failing input above, and a brute force over every F
+  assignment on 60 random pages) fail on the old code and pass on the new. E0031 reran the step views on
+  pages 9, 29, 32, 36 for the 7 CPU sources plus 20 nulls: no page near threshold, E0029's verdict stands.
+  The GPU script matches the CPU engine exactly (E0031 parity stage) and its `--quick` run passes.
+- Item 3 not applied: see E0031 notes (the reset is consistent with the engine; the proposed output is
+  not producible in unit28z1).
+- Items 2, 4 and the hardening list: moved to B26.

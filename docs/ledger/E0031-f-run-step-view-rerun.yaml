@@ -1,0 +1,57 @@
+id: E0031
+title: E0029 step views rerun on the four FF pages after the F-run fix in lp.runningkey (B24 item 1)
+family: running-key-text
+hypothesis: As E0029 (page-local running key from a known source, any start, any F-skip set), restricted
+  to the step views on the only pages where E0029's "any skip set" claim was false.
+coverage: 'Pages 9, 29, 32, 36 (the 4 FF pairs; 8 of 458 Fs). Views step29, unit28z1, unit28z2 x 4
+  polarities x 2 directions = 24 forms, the 7 CPU sources of E0029 (lp_plain, lp_cipher, self_reliance,
+  growing_string, c560_13, wisdom, mabinogion), real source plus E0029''s 20 null seeds (1000..1019).
+  Fix: lp.runningkey.PageEvents builds one event per F-run; each F of the run is keyed, a literal skip
+  (state F) or a transparent skip (state kept), and the first non-F rune after the run is keyed from the
+  state the run leaves. Before, only isolated Fs could skip in the step views. raw29 was never affected.
+  The fix only adds options, so new scores >= old (asserted for every real form). Merged into E0029:
+  page best = max(old, fixed step views), for the real source and for each null replicate; pooled
+  Gumbel thresholds recomputed exactly as E0029 (per-page alpha 1.65e-5).'
+detector: E0029's (English unigram log ratio along the best DP path; page statistic max over forms).
+control:
+  method: 'Gate tests (tests/test_gate.py): the B24 failing input PlantPage([0,0,1,1,1], key [0,0,0],
+    step29, skips {0,1}) -> [5,0,0,6,7,8] now scores exactly 2 W[F] + 3 W[1] with the exact traceback (it
+    scored -inf before); and the DP equals a brute force over every keyed/literal/transparent assignment
+    of the Fs on 60 random F-heavy pages (all 3 step views). Both fail on the old code and pass on the
+    new. Tier 1 on the 4 real FF layouts, Mabinogion key (E0029''s hardest source), 100 plants per view x
+    pattern x page: "ff" = plaintext F F both skipped (all step views), "fd" = a skipped F followed by a
+    doublet (unit28), other plaintext Fs skipped with prob 0.3, windowed scoring against the updated
+    thresholds; the same plants were also scored with the old PageEvents (git c3bb27d).'
+  score: 'Pages 9, 29, 36 (238-277 runes): fixed engine 100/100 in all 5 view-pattern rows; old engine
+    98-100/100. Page 32 (121 runes): fixed 92-97/100, old 39-68/100.'
+  power: '>= 95/100 on pages 9, 29, 36 in every row; page 32 92-97 (<= 140 runes: not identifiable, as in
+    E0029).'
+'null':
+  method: E0029's 20 shuffled-source replicates, rerun on the 4 pages with the fixed step views and merged.
+  ceiling: 'standardised 11.01 per page (unchanged rule); FF-page margins to the threshold -23 to -71
+    score units across sources'
+  surrogates: '20 shuffled-source replicates per source (tier 2 not run: nothing above threshold)'
+result:
+  best: 'FF pages, best standardised z over sources: p9 2.78 (lp_plain), p29 2.85 (lp_plain), p32 1.16
+    (lp_plain), p36 1.84 (growing_string); all >= 23 units below threshold. Best page per source after the
+    merge: lp_plain p18 5.04 (p 0.29), lp_cipher p35 2.73 (0.95), self_reliance p41 3.30 (0.95),
+    growing_string p5 3.70 (0.67), c560_13 p13 4.14 (0.43), wisdom p31 2.15 (1.00), mabinogion p54 4.25
+    (0.38). No page above threshold.'
+  verdict: negative
+skips_handled: 'yes: exact DP, every ciphertext F (isolated or in a run) may skip, literal or transparent'
+source: claude/admiring-brown-6qihly
+date: '2026-10-18'
+artifacts: [lp/runningkey.py, gpu/E0029_bytes_gpu.py, tests/test_gate.py,
+  experiments/E0031_f_run_step_view_rerun.py, results/E0031/summary.txt, results/E0031/summary.json,
+  results/E0031/parity.json, results/E0031/power_mabinogion.json]
+notes: 'Supersedes E0029 for the step views on pages 9, 29, 32, 36 (E0029''s file is not edited, per the
+  ledger rule); E0029''s verdict stands and its "any skip set" claim now holds on all 55 pages. Page 32
+  stays not identifiable (121 runes). The same fix is in gpu/E0029_bytes_gpu.py; parity stage: identical
+  events on the 55 pages and 2,000 random F-heavy pages in all 4 views, identical pages and English weights
+  from the GPU loaders, and Engine.Run (PyTorch 2.14 CPU) equal to lp.runningkey.RunEvents on 3,520 runs
+  (55 pages x 4 views x 2 a x 2 b x 2 directions x real/shuffled c560_13): max score difference 0, end
+  pointer mismatches 0. `--quick` smoke test of the GPU script on CPU passed its planted controls. B24
+  item 3 (doublet resets State after a transparent skip) was NOT applied: the reset keeps the plant inside
+  the engine''s model (a visible doublet after a skipped F is decoded as literal skip + zero step), while
+  the proposed output [5,0,0,7] cannot be produced by the model in unit28z1. Items 2, 4 and the hardening
+  list moved to B26.'

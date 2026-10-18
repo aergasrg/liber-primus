@@ -19,10 +19,10 @@ Views (the symbol stream the key is applied to; page-local, first rune of a page
   unit28z1  p%28 = a u + b k (mod 28), u = s - 1 over non-zero steps; a zero step consumes one key
             symbol and is unscored
   unit28z2  the same; a zero step consumes nothing
-  In the step views a skipped F at c_i (isolated: neither neighbour is F) has two conventions, both
-  allowed: literal (step i unkeyed, the chain state becomes F, step i+1 keyed as observed) and
-  transparent (steps i and i+1 replaced by one keyed step c_(i+1) - c_(i-1)). Fs next to an F are
-  always keyed in the step views. A skip scores W[F] in every view.
+  In the step views a skipped F at c_i has two conventions, both allowed: literal (step i unkeyed,
+  the chain state becomes F, step i+1 keyed as observed) and transparent (the state is kept, so the
+  next keyed step is taken from the previous state). Fs in a run (FF...) are handled jointly: each F
+  of the run is keyed, literal or transparent independently (B24). A skip scores W[F] in every view.
 Polarity: (a, b) in {+1,-1}^2; Vigenere decrypt p = c - k is (1, -1), Beaufort p = k - c is (-1, 1).
 Direction: the source read forwards or as a reversed token sequence.
 """
@@ -131,15 +131,23 @@ def ByteSource(Name, Data):
     return Source(Name, "bytes", np.frombuffer(bytes(Data), dtype=np.uint8))
 
 
-def PageEvents(Runes, View):
+def PageEvents(Runes, View, Labels=False):
     """Events for one page in one view: list of (CipherIndex, Options). An option is (Atoms, Const),
     Atoms a tuple of keyed symbols (>= 0) or -1 (consume one key symbol, unscored); Const != 0 marks
-    an F-skip (option 1 = literal, option 2 = transparent in the step views)."""
+    F-skips (Const = number of skips x W[F]). With Labels=True each event is (CipherIndex, Options, Info),
+    Info[k] = (Skips, Layout) for option k: Skips [(cipher index, 'S'/'L'/'T')], Layout the option's
+    plaintext order ('S' a skip, 'A' one atom)."""
     C = list(Runes)
     N = len(C)
     SkipScore = float(Weights(ViewModulus[View])[0])
     if View == "raw29":
-        return [(I, [((0,), 0.0), ((), SkipScore)] if V == 0 else [((V,), 0.0)]) for I, V in enumerate(C)]
+        Events = []
+        for I, V in enumerate(C):
+            if V == 0:
+                Events.append((I, [((0,), 0.0), ((), SkipScore)], [([], "A"), ([(I, "S")], "S")]))
+            else:
+                Events.append((I, [((V,), 0.0)], [([], "A")]))
+        return Events if Labels else [(I, Options) for I, Options, _ in Events]
 
     def Atom(Step):
         Step %= 29
@@ -152,19 +160,37 @@ def PageEvents(Runes, View):
     Events = []
     I = 1
     while I < N:
-        Isolated = C[I] == 0 and C[I - 1] != 0 and (I == N - 1 or C[I + 1] != 0)
-        if not Isolated:
-            Events.append((I, [(Atom(C[I] - C[I - 1]), 0.0)]))
+        if C[I] != 0:
+            Events.append((I, [(Atom(C[I] - C[I - 1]), 0.0)], [([], "A")]))
             I += 1
-        elif I == N - 1:
-            Events.append((I, [(Atom(C[I] - C[I - 1]), 0.0), ((), SkipScore)]))
-            I += 1
-        else:
-            Keyed = Atom(C[I] - C[I - 1]) + Atom(C[I + 1] - C[I])
-            Events.append((I, [(Keyed, 0.0), (Atom(C[I + 1] - C[I]), SkipScore),
-                               (Atom(C[I + 1] - C[I - 1]), SkipScore)]))
-            I += 2
-    return Events
+            continue
+        # An F-run I..J-1: each F is keyed (state F), a literal skip (state F) or a transparent skip
+        # (state kept); the first non-F rune after the run is keyed from the state the run leaves.
+        J = I
+        while J < N and C[J] == 0:
+            J += 1
+        Paths = {(C[I - 1], (), 0): ([], "")}  # (State, Atoms, Skips) -> (labels, layout)
+        for K in range(I, J):
+            Next = {}
+            for (State, Atoms, Skips), (Lab, Lay) in Paths.items():
+                Keyed = Atom(0 - State)
+                for Item in [((0, Atoms + Keyed, Skips), (Lab, Lay + "A" * len(Keyed))),
+                             ((0, Atoms, Skips + 1), (Lab + [(K, "L")], Lay + "S")),
+                             ((State, Atoms, Skips + 1), (Lab + [(K, "T")], Lay + "S"))]:
+                    Next.setdefault(*Item)
+            Paths = Next
+        Options, Info = {}, {}
+        for (State, Atoms, Skips), (Lab, Lay) in Paths.items():
+            if J < N:
+                Out = Atom(C[J] - State)
+                Atoms, Lay = Atoms + Out, Lay + "A" * len(Out)
+            if (Atoms, Skips) not in Options:
+                Options[(Atoms, Skips)] = (Atoms, Skips * SkipScore)
+                Info[(Atoms, Skips)] = (Lab, Lay)
+        Keys = sorted(Options, key=lambda Key: (Key[1], len(Key[0])))
+        Events.append((I, [Options[Key] for Key in Keys], [Info[Key] for Key in Keys]))
+        I = J + 1
+    return Events if Labels else [(I, Options) for I, Options, _ in Events]
 
 
 class Tables:
@@ -254,7 +280,7 @@ def Trace(Runes, Src, View, A, B, EndY, Margin=None):
     Returns dict: Score, StartY, EndY, Skips [(cipher index, 'S' raw / 'L' literal / 'T' transparent)],
     Plain (plaintext symbols in the view's modulus, a skip as 0) and TokenLengths (1, 2 or 3 letters).
     """
-    Events = PageEvents(Runes, View)
+    Events = PageEvents(Runes, View, Labels=True)
     Modulus = ViewModulus[View]
     W = Weights(Modulus)
     Margin = Margin or 3 * len(Runes) + 10
@@ -283,7 +309,7 @@ def Trace(Runes, Src, View, A, B, EndY, Margin=None):
         return New
 
     History = [np.zeros(Size + 1)]
-    for _, Options in Events:
+    for _, Options, _ in Events:
         Best = np.full(Size + 1, -math.inf)
         for Atoms, Const in Options:
             Cur = History[-1]
@@ -294,7 +320,7 @@ def Trace(Runes, Src, View, A, B, EndY, Margin=None):
     Y = Size
     Skips, Plain, Lengths = [], [], []
     for E in range(len(Events) - 1, -1, -1):
-        Index, Options = Events[E]
+        Index, Options, Info = Events[E]
         Target = History[E + 1][Y]
         Found = False
         for OptionIndex, (Atoms, Const) in enumerate(Options):
@@ -316,9 +342,11 @@ def Trace(Runes, Src, View, A, B, EndY, Margin=None):
         if not Found:
             raise RuntimeError("traceback failed")
         Got.reverse()
-        if Const:
-            Skips.append((Index, "S" if View == "raw29" else ("L" if OptionIndex == 1 else "T")))
-        Plain[:0] = ([0] if Const else []) + [P for P, _ in Got if P is not None]
+        Labels, Layout = Info[OptionIndex]
+        Skips.extend(Labels)
+        Atoms = iter(Got)
+        Part = [0 if Item == "S" else next(Atoms)[0] for Item in Layout]
+        Plain[:0] = [P for P in Part if P is not None]
         Lengths[:0] = [L for _, L in Got]
         Y = Yc
     return {"Score": float(History[-1][Size]), "StartY": Lo + Y, "EndY": EndY, "Skips": sorted(Skips),

@@ -1,0 +1,34 @@
+E0032 (B25): key-free tests of repeat-avoiding leak rules
+
+Doublets 86; word-lane expected same-word pairs 0.79 (not identifiable: T5b left out)
+
+T1 lag-k coincidences (Markov null mean; z vs Markov; z vs E0027 surrogate):
+    k=2: R 440, Markov z -0.80, surrogate z -0.62
+    k=3: R 439, Markov z -0.31, surrogate z -0.33
+    k=4: R 458, Markov z +0.59, surrogate z +0.59
+    k=5: R 477, Markov z +1.53, surrogate z +1.54
+    k=6: R 454, Markov z +0.43, surrogate z +0.46
+    k=7: R 448, Markov z +0.16, surrogate z +0.15
+    k=8: R 436, Markov z -0.40, surrogate z -0.40
+    k=9: R 461, Markov z +0.82, surrogate z +0.82
+    k=10: R 440, Markov z -0.18, surrogate z -0.17
+    Markov null R_4 mean 445.8 sd 20.7; per-section R_4 [24, 42, 59, 62, 34, 55, 61, 111, 10]
+    T1 = 0.80: p Markov 0.8881, p surrogate 0.9480
+    stale-register plants (1000): R_4 mean 356.6 sd 19.3, max 432; plants with R_4 >= 458: 0 (real is +5.3 SD from the rule's prediction)
+
+T2 preceding-step gate: p perm 0.7374 (Markov 0.7077); subs PrevChi2 0.470, PrevScan 0.444, NextChi2 0.403, NextScan 0.235, Back2Chi2 0.681, Back2Scan 0.764
+T3 running checksum: p perm 0.2212 (Markov 0.2236); values [39.0, 34.0, 32.0, 38.0] of 86; subs SumIdx 0.073, SumPrime 0.714, PosSection 0.926, PosPage 0.138
+T4 step band: z(1..5) -0.22, z(24..28) +0.01; p Markov 0.9691
+T5a guard LR(R=5 vs 0) 5.79: p perm 0.0216 (Markov 0.0168)
+T5b same-word pairs 1, not divisible by 5: 1
+
+Family: primary p {'T1': 0.8881111888811118, 'T2': 0.7373726262737372, 'T3': 0.2212477875221248, 'T4': 0.9691030896910309, 'T5a': 0.021599784002159977}; min-p 0.0216; Bonferroni 0.1080; joint Markov min-p 0.0799
+
+Positive controls (100 plants per law; flagged = matching p <= 0.002):
+    memoryless: doublet rate 0.624% [0.463, 0.796]; matching None; flagged {'T1': 0, 'T2': 0, 'T3': 0, 'T4': 0, 'T5a': 0, 'T5b_zero_bad_of_pairs': 2}
+    stale: doublet rate 0.691% [0.471, 0.888]; matching T1; flagged {'T1': 86, 'T2': 0, 'T3': 1, 'T4': 0, 'T5a': 1, 'T5b_zero_bad_of_pairs': 2}
+    prevstep: doublet rate 0.612% [0.324, 0.796]; matching T2; flagged {'T1': 1, 'T2': 100, 'T3': 0, 'T4': 0, 'T5a': 0, 'T5b_zero_bad_of_pairs': 0}
+    checksum: doublet rate 0.606% [0.409, 0.749]; matching T3; flagged {'T1': 0, 'T2': 1, 'T3': 100, 'T4': 1, 'T5a': 0, 'T5b_zero_bad_of_pairs': 3}
+    band: doublet rate 0.616% [0.463, 0.796]; matching T4; flagged {'T1': 1, 'T2': 0, 'T3': 0, 'T4': 3, 'T5a': 0, 'T5b_zero_bad_of_pairs': 2}
+    guard: doublet rate 0.603% [0.471, 0.757]; matching T5a; flagged {'T1': 1, 'T2': 0, 'T3': 0, 'T4': 0, 'T5a': 2, 'T5b_zero_bad_of_pairs': 0}
+    wordlane: doublet rate 0.713% [0.479, 0.881]; matching T5b; flagged {'T1': 0, 'T2': 1, 'T3': 0, 'T4': 0, 'T5a': 0, 'T5b_zero_bad_of_pairs': 30}

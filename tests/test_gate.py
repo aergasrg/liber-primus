@@ -103,6 +103,65 @@ def test_prngs_bit_exact():
     assert Result["glibc"] in (True, None)
 
 
+def test_running_key_f_runs_in_step_views():
+    # B24: an F inside an FF run must be able to skip in the step views. Before the fix only isolated
+    # Fs could skip, and this plant (two skipped Fs in a row, a 3-token source) scored -inf.
+    import random
+    import numpy as np
+    from lp.runningkey import PageEvents, PlantPage, RunEvents, RuneSource, Tables, Trace, Weights
+    Plain = [0, 0, 1, 1, 1]
+    Cipher, Used = PlantPage(Plain, [0, 0, 0], "step29", 1, -1, {0, 1}, Rng=random.Random(0), Start=5)
+    assert Cipher == [5, 0, 0, 6, 7, 8] and Used == 3
+    Src = RuneSource("k", [[0, 0, 0]])
+    V = RunEvents(PageEvents(Cipher, "step29"), Tables(Src, 29, -1), 1)
+    W = Weights(29)
+    assert abs(float(V.max()) - (2 * W[0] + 3 * W[1])) < 1e-4
+    Result = Trace(Cipher, Src, "step29", 1, -1, int(np.argmax(V)))
+    assert Result["Plain"] == Plain and [I for I, _ in Result["Skips"]] == [1, 2]
+
+
+def test_running_key_step_views_match_brute_force():
+    # Every keyed / literal / transparent assignment of the Fs (runs up to 3) against the DP, on random
+    # pages with a short rune source (no lattice): the DP must equal the brute-force optimum exactly.
+    import itertools
+    import random
+    import numpy as np
+    from lp.runningkey import PageEvents, RunEvents, RuneSource, Tables, ViewModulus, Weights
+    Rng = random.Random(24)
+    for Trial in range(60):
+        View = ["step29", "unit28z1", "unit28z2"][Trial % 3]
+        M = ViewModulus[View]
+        W = Weights(M)
+        Page = [Rng.choice([0, 0, 0, 3, 7, 7, 12]) for _ in range(9)]
+        Key = [Rng.randrange(29) for _ in range(14)]
+        Src = RuneSource("k", [Key])
+        A, B = Rng.choice([1, -1]), Rng.choice([1, -1])
+        Got = float(RunEvents(PageEvents(Page, View), Tables(Src, M, B), A).max())
+        Fs = [I for I in range(1, len(Page)) if Page[I] == 0]
+        Best = -np.inf
+        for Choice in itertools.product("KLT", repeat=len(Fs)):
+            Mode = dict(zip(Fs, Choice))
+            State, Atoms, Skips = Page[0], [], 0
+            for I in range(1, len(Page)):
+                if Mode.get(I, "K") == "K":
+                    Step = (Page[I] - State) % 29
+                    if View == "step29":
+                        Atoms.append(Step)
+                    elif Step:
+                        Atoms.append(Step - 1)
+                    elif View == "unit28z1":
+                        Atoms.append(-1)
+                    State = Page[I]
+                else:
+                    Skips += 1
+                    State = 0 if Mode[I] == "L" else State
+            for Start in range(len(Key) - len(Atoms) + 1):
+                Score = Skips * W[0] + sum(0.0 if X < 0 else W[(A * X + B * Key[Start + J]) % M]
+                                           for J, X in enumerate(Atoms))
+                Best = max(Best, Score)
+        assert abs(Got - Best) < 1e-3, (Trial, View, Page, Got, Best)
+
+
 if __name__ == "__main__":
     Failed = 0
     for Name, Fn in list(globals().items()):

@@ -1,10 +1,10 @@
 ---
 id: B25
 title: Key-free tests of repeat-avoiding leak rules (lag-k coincidences, preceding-step gate, running-checksum gate, step-band deficit, guard and word lanes)
-status: claimed
+status: done
 claimed_by: claude/admiring-brown-6qihly
 rank: 2
-ledger: [E0025, E0028]
+ledger: [E0025, E0028, E0032]
 ---
 
 # B25 Key-free tests of repeat-avoiding leak rules
@@ -83,3 +83,9 @@ Plant in 9 sections with the real section lengths. For each law, at the real n, 
   If B25 finds anything, test that prediction against word-length statistics (mean 4.47 here, 4.07 on the
   solved pages).
 - Anything above its ceiling goes to the skeptic agent first.
+
+## Outcome (2026-10-18, claude/admiring-brown-6qihly)
+E0032, negative. R_4 = 458 (Markov null 445.8, z +0.59); lags 2..10 all within z -0.80..+1.53. Stale
+register (k = 4) excluded: 0 of 1,000 rule plants reach 458 (rule mean 357). Preceding-step gate (p 0.74)
+and running-checksum gate (p 0.22) excluded with 100/100 power. Step band (3%), guard (2%) and word lanes
+(0.79 expected pairs) are not identifiable. Check (d) (E0027/E0030 on plants) was not run.

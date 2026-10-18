@@ -100,7 +100,7 @@ def Log(Message):
 def SaveJson(Path, Obj):
     os.makedirs(os.path.dirname(Path), exist_ok=True)
     with open(Path + ".tmp", "w") as Handle:
-        json.dump(Obj, Handle, separators=(",", ":"))
+        json.dump(Obj, Handle, separators=(",", ":"), default=lambda X: X.item() if hasattr(X, "item") else X.tolist())
     os.replace(Path + ".tmp", Path)
 
 

@@ -1,0 +1,39 @@
+E0031 (B24): E0029 step views rerun on the FF pages 9, 29, 32, 36 after the F-run fix
+
+CPU/GPU parity: {'event_mismatches': 0, 'pages_checked': 8220, 'pages_identical': True, 'max_weight_diff': 0.0, 'engine_runs': 3520, 'max_abs_score_diff': 0.0, 'end_pointer_mismatches': 0}
+lp_plain: 62 real step-view scores raised, 64 null page bests raised; best page p18 z 5.04 (unit28z2|+1+1|rev), p 0.286; above threshold: none
+    FF pages: p9 z 2.78 margin -38.0, p29 z 2.85 margin -38.3, p32 z 1.16 margin -30.5, p36 z -0.21 margin -48.8
+lp_cipher: 69 real step-view scores raised, 62 null page bests raised; best page p35 z 2.73 (step29|+1-1|rev), p 0.952; above threshold: none
+    FF pages: p9 z 2.11 margin -41.4, p29 z 2.41 margin -40.7, p32 z -0.0 margin -34.4, p36 z 0.01 margin -48.3
+self_reliance: 70 real step-view scores raised, 63 null page bests raised; best page p41 z 3.30 (unit28z2|-1-1|rev), p 0.952; above threshold: none
+    FF pages: p9 z -0.03 margin -39.6, p29 z 0.15 margin -39.7, p32 z -0.07 margin -26.7, p36 z -0.56 margin -39.2
+growing_string: 71 real step-view scores raised, 59 null page bests raised; best page p5 z 3.70 (unit28z1|-1+1|rev), p 0.667; above threshold: none
+    FF pages: p9 z 0.23 margin -60.0, p29 z -1.46 margin -70.6, p32 z 0.35 margin -39.9, p36 z 1.84 margin -48.1
+c560_13: 61 real step-view scores raised, 67 null page bests raised; best page p13 z 4.14 (unit28z1|+1+1|rev), p 0.429; above threshold: none
+    FF pages: p9 z 0.21 margin -59.8, p29 z 2.41 margin -48.4, p32 z -1.22 margin -45.5, p36 z -0.33 margin -59.1
+wisdom: 61 real step-view scores raised, 74 null page bests raised; best page p31 z 2.15 (raw29|-1+1|fwd), p 1.000; above threshold: none
+    FF pages: p9 z 0.32 margin -47.8, p29 z -0.26 margin -51.2, p32 z 0.71 margin -30.9, p36 z -0.72 margin -49.4
+mabinogion: 59 real step-view scores raised, 61 null page bests raised; best page p54 z 4.25 (step29|+1-1|fwd), p 0.381; above threshold: none
+    FF pages: p9 z 1.28 margin -30.4, p29 z -0.52 margin -36.6, p32 z -0.08 margin -23.3, p36 z -0.43 margin -33.7
+
+Tier-1 plants needing an F-run option (Mabinogion key, fixed engine vs old engine, updated thresholds):
+    step29 ff p9 (268 runes): fixed 100/100, old 100/100, min margin 59.8
+    step29 ff p29 (277 runes): fixed 100/100, old 99/100, min margin 57.0
+    step29 ff p32 (121 runes): fixed 96/100, old 52/100, min margin -1.8
+    step29 ff p36 (238 runes): fixed 100/100, old 99/100, min margin 42.2
+    unit28z1 ff p9 (268 runes): fixed 100/100, old 100/100, min margin 49.4
+    unit28z1 ff p29 (277 runes): fixed 100/100, old 99/100, min margin 58.2
+    unit28z1 ff p32 (121 runes): fixed 97/100, old 39/100, min margin -6.0
+    unit28z1 ff p36 (238 runes): fixed 100/100, old 98/100, min margin 40.0
+    unit28z1 fd p9 (268 runes): fixed 100/100, old 100/100, min margin 51.1
+    unit28z1 fd p29 (277 runes): fixed 100/100, old 100/100, min margin 54.3
+    unit28z1 fd p32 (121 runes): fixed 94/100, old 63/100, min margin -10.5
+    unit28z1 fd p36 (238 runes): fixed 100/100, old 100/100, min margin 32.6
+    unit28z2 ff p9 (268 runes): fixed 100/100, old 100/100, min margin 43.9
+    unit28z2 ff p29 (277 runes): fixed 100/100, old 100/100, min margin 53.7
+    unit28z2 ff p32 (121 runes): fixed 92/100, old 68/100, min margin -5.8
+    unit28z2 ff p36 (238 runes): fixed 100/100, old 100/100, min margin 40.7
+    unit28z2 fd p9 (268 runes): fixed 100/100, old 100/100, min margin 54.6
+    unit28z2 fd p29 (277 runes): fixed 100/100, old 100/100, min margin 63.4
+    unit28z2 fd p32 (121 runes): fixed 94/100, old 68/100, min margin -6.5
+    unit28z2 fd p36 (238 runes): fixed 100/100, old 100/100, min margin 39.6
