@@ -14,6 +14,7 @@
   into data/texts/. Do not copy code from github.com/Leo-Y-Zhang/LiberPrimusAnalysis (its licence
   is proprietary source-available): cite it, reimplement.
 - Never print or commit API keys. OpenAI calls only through tools/ask_other_model.py (below).
+- OpenAI models newer than your training exist. Read docs/models/openai.md before calling tools/ask_other_model.py.
 - One backlog item per session. Finish with the handoff skill.
 
 ## Orientation (read this, then docs/STATE.md)
@@ -37,6 +38,7 @@
 ## Pointers
 
 - docs/STATE.md (facts), docs/HISTORY.md (2012-2017 trail), docs/LEADS.md (unused clues, exact values)
-- Skills: lp-start, lp-experiment, lp-handoff, lp-budget, lp-data (in .claude/skills/)
-- Agent: skeptic (.claude/agents/skeptic.md)
-- OpenAI: tools/ask_other_model.py is a stub until the "OpenAI helper v3" session; see lp-budget.
+- Skills: lp-start, lp-experiment, lp-handoff, lp-budget, lp-data, lp-council (in .claude/skills/)
+- Agents (.claude/agents/): skeptic; council (one OpenAI call per brief); worker (only inside this session's own item)
+- OpenAI: tools/ask_other_model.py (budgeted, background calls); models and effort policy in docs/models/openai.md
+- Network: a download blocked by the allowlist goes in docs/NETWORK.md for the human; don't work around it.
