@@ -1,8 +1,8 @@
 ---
 id: B12
 title: Structure of the doublet event process (spacing, clustering, autocovariance)
-status: open
-claimed_by: ""
+status: claimed
+claimed_by: claude/serene-pasteur-5lrf49
 rank: 12
 ledger: []
 ---

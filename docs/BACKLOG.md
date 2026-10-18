@@ -18,7 +18,7 @@ Open and claimed items first, by rank. Claim an item by editing its own file.
 | 9 | [B09](backlog/B09-other-arithmetic-orders.md) | Other arithmetic orders | open |  | E0018 |
 | 10 | [B10](backlog/B10-prime-fibonacci-keystreams.md) | Prime-Fibonacci keystreams | open |  |  |
 | 11 | [B11](backlog/B11-self-keyed-book-codes.md) | Self-keyed book codes (page/line/sentence-indexed) | open |  | E0026 |
-| 12 | [B12](backlog/B12-doublet-event-process.md) | Structure of the doublet event process (spacing, clustering… | open |  |  |
+| 12 | [B12](backlog/B12-doublet-event-process.md) | Structure of the doublet event process (spacing, clustering… | claimed | claude/serene-pasteur-5lrf49 |  |
 | 13 | [B13](backlog/B13-doublet-rare-rune-escape.md) | Doublets as escapes for a set of rare plaintext runes | open |  | E0025 |
 | 14 | [B14](backlog/B14-self-addressing-book-walks.md) | Self-addressing walks through LP's own plain pages | open |  |  |
 | 15 | [B15](backlog/B15-deck-state-keystreams.md) | Deck and permutation-state keystreams (Solitaire-style) | open |  |  |
