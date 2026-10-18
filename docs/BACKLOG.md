@@ -6,7 +6,9 @@ Open and claimed items first, by rank. Claim an item by editing its own file.
 | rank | id | title | status | claimed_by | ledger |
 | --- | --- | --- | --- | --- | --- |
 | 2 | [B02](backlog/B02-plaintext-reactive-key.md) | Plaintext-reactive key rules over long key sources | open |  | E0006, E0007, E0028 |
+| 2 | [B25](backlog/B25-doublet-leak-context-predicates.md) | Key-free tests of repeat-avoiding leak rules (lag-k coincid… | open |  | E0025, E0028 |
 | 3 | [B03](backlog/B03-cicada-public-domain-texts.md) | Public-domain Cicada texts as running keys | open |  | E0008 |
+| 3 | [B24](backlog/B24-engine-fixes-midpoint-bughunt.md) | Engine fixes from the midpoint bug hunt (F-runs in runningk… | open |  | E0029, E0030 |
 | 4 | [B04](backlog/B04-titles-as-cribs.md) | Section titles as cribs | open |  | E0010 |
 | 4 | [B19](backlog/B19-prng-page-local-skip-aware.md) | Rerun E0019/E0020 page-locally, skip-aware, with reduction … | open |  | E0019, E0020 |
 | 5 | [B05](backlog/B05-grid-as-ciphertext.md) | The 256-byte grid as ciphertext | open |  | E0014, E0023 |

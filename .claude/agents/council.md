@@ -16,7 +16,8 @@ The lead gives you: the brief's path (or text), the model, effort, purpose and a
    be under 5,000 tokens (about 15,000 characters) and contain no copyrighted text. If it fails a
    check, fix it or stop and say why.
 3. Write the prompt to a file and run `python3 tools/ask_other_model.py --dry-run ...`, then the real call
-   with the same flags, exactly once. Add `--use-reserve` or `--purpose verify` only if the lead said so.
+   with the same flags, exactly once. Use `--purpose verify` only if the lead said so. Never touch the service tier
+   or add tools; if the tool exits 4 or reports a STOP file, stop and tell the lead.
    Do not retry. If the call is stopped as `flagged`, report that so the lead can decide on gpt-6.1-sol.
 4. Read the saved `docs/council/<date>/<NN>-...md` file. Do not paste the whole reply into chat.
 

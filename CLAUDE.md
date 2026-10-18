@@ -15,6 +15,10 @@
   is proprietary source-available): cite it, reimplement.
 - Never print or commit API keys. OpenAI calls only through tools/ask_other_model.py (below).
 - OpenAI models newer than your training exist. Read docs/models/openai.md before calling tools/ask_other_model.py.
+- Never change the OpenAI service tier: every request sends "service_tier": "default" (Standard), never
+  Fast, Ultrafast, priority or flex. A response reporting another tier writes budget/openai/STOP and
+  the tool refuses all calls until a human deletes it; never delete it yourself. Never enable hosted
+  tools (code interpreter, web search, file search, shell): calls are text only.
 - One backlog item per session. Finish with the handoff skill.
 
 ## Orientation (read this, then docs/STATE.md)

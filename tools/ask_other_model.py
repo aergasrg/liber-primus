@@ -6,13 +6,20 @@ Read docs/models/openai.md first: the models it uses are newer than Claude's tra
     python3 tools/ask_other_model.py --model gpt-6-astra --effort high --purpose bughunt --prompt-file brief.md
 
 Every call is a background Responses API request (POST /v1/responses, poll GET every 15 s, cancel at the
-deadline), budgeted against a shared token ledger in budget/openai/ledger.jsonl under an fcntl lock.
+deadline), budgeted against a shared token ledger in budget/openai/ledger.jsonl under an fcntl lock. The
+budget is a rolling 24-hour window: only ledger entries from the last 24 hours count against the cap.
+
+Service tier lock: every request sends "service_tier": "default" (Standard speed and price). Any response
+reporting another tier (or none, on the final response) is cancelled, logged as tier-violation, and writes
+budget/openai/STOP; while STOP exists here or on origin/main the tool refuses everything until a human
+deletes it. Requests are text only: the body is whitelisted, so no hosted tools can be sent.
 Prompt, reply and usage are saved to docs/council/<date>/<NN>-<model>-<purpose>.md. Stdout is only the
 remaining budget and that path. Keys are never read aloud: an Authorization header is sent only when
 OPENAI_API_KEY is set; otherwise the environment's credential proxy adds it.
 
 Exit codes: 0 completed, 1 call ended without a full answer (incomplete, failed, flagged, timeout),
-2 refused before calling (budget, policy, refresh rule), 3 HTTP or usage error.
+2 refused before calling (budget, policy, refresh rule, STOP file), 3 HTTP or usage error,
+4 the response reported a service tier other than the pinned one (STOP written).
 """
 import argparse
 import datetime
@@ -35,7 +42,14 @@ DeveloperMessage = ("One-shot request from an automated research lab. You cannot
                     "State any assumption and answer fully, concretely, testably.")
 DefaultCap = 230000
 CapMargin = 10000
-ReserveTokens = 50000
+WindowHours = 24
+ProMinLeft = 60000
+# Sent on every request. Pinned from a live gpt-6-luna call on 2026-10-18: Standard reports "default"
+# on both the create and the completed response. Never change this and never omit it.
+ServiceTier = "default"
+# The only request body keys the tool may send: text in, text out, no hosted tools.
+AllowedBodyKeys = {"model", "background", "store", "max_output_tokens", "input", "reasoning", "service_tier",
+                   "instructions"}
 HardMaxOutput = 48000
 PolicyMaxOutput = {"medium": 16000, "high": 25000, "xhigh": 40000, "pro": 40000}
 DeadlineMinutes = {"none": 8, "low": 8, "medium": 8, "high": 12, "xhigh": 20, "pro": 30}
@@ -61,6 +75,7 @@ class Refused(Exception):
 def Paths(Root):
     Budget = os.path.join(Root, "budget", "openai")
     return {"Ledger": os.path.join(Budget, "ledger.jsonl"), "Lock": os.path.join(Budget, "ledger.lock"),
+            "Stop": os.path.join(Budget, "STOP"),
             "Council": os.path.join(Root, "docs", "council"), "ModelDoc": os.path.join(Root, "docs", "models", "openai.md")}
 
 
@@ -80,8 +95,13 @@ def Warn(Text):
     print(Text, file=sys.stderr)
 
 
-def NowIso():
-    return datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+def NowIso(Offset=None):
+    Now = datetime.datetime.now(datetime.timezone.utc)
+    return (Now - (Offset or datetime.timedelta(0))).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def WindowStart():
+    return NowIso(datetime.timedelta(hours=WindowHours))
 
 
 def Slug(Text):
@@ -116,13 +136,19 @@ def MergeLedgers(*EntryLists):
     return sorted(Merged.values(), key=lambda Entry: (Entry.get("time", ""), EntryKey(Entry)[1] != "reserved"))
 
 
-def SpentTokens(Entries):
-    """A final entry replaces its reservation; a reservation with no final (crash, running call) counts whole."""
+def CallTotals(Entries):
+    """{id: (tokens, time)}. A final entry replaces its reservation; a reservation with no final (crash,
+    running call) counts whole, at its own time."""
     Finals, Reserved = {}, {}
     for Entry in Entries:
         Id, Kind = EntryKey(Entry)
-        (Finals if Kind == "final" else Reserved)[Id] = int(Entry.get("total_tokens") or 0)
-    return sum(Finals.values()) + sum(Total for Id, Total in Reserved.items() if Id not in Finals)
+        (Finals if Kind == "final" else Reserved)[Id] = (int(Entry.get("total_tokens") or 0), Entry.get("time", ""))
+    return {**Reserved, **Finals}
+
+
+def SpentTokens(Entries, Since=None):
+    """Tokens of the calls whose time is at or after Since (ISO UTC); all calls when Since is None."""
+    return sum(Tokens for Tokens, Time in CallTotals(Entries).values() if Since is None or Time >= Since)
 
 
 def CapTokens():
@@ -133,15 +159,9 @@ def CapTokens():
     return min(Requested, DefaultCap) - CapMargin
 
 
-def Remaining(Spent):
-    Cap = CapTokens()
-    return {"Cap": Cap, "General": max(0, Cap - ReserveTokens - Spent), "Total": max(0, Cap - Spent)}
-
-
 def RemainingLine(Spent):
-    Left = Remaining(Spent)
-    return (f"remaining: {Left['General']} general, {Left['Total']} incl. reserve "
-            f"(cap {Left['Cap']}, spent {Spent})")
+    Cap = CapTokens()
+    return f"remaining: {max(0, Cap - Spent)} in the rolling {WindowHours} h window (cap {Cap}, spent {Spent})"
 
 
 def OriginLedger(Root, Fetch):
@@ -191,21 +211,28 @@ def AppendEntry(Root, Entry):
 
 
 def Reserve(Root, Call, Origin, DryRun=False):
-    """Under the lock: merge origin/main, total, check cap and reserve, append the reservation."""
+    """Under the lock: merge origin/main, total the 24 h window, check cap and pro rule, append the reservation."""
     with LedgerLock(Root):
+        CheckStop(Root, Fetched=True)
         Entries = MergeLedgers(ReadLocalLedger(Root), Origin)
-        Spent = SpentTokens(Entries)
+        Since = WindowStart()
+        Spent = SpentTokens(Entries, Since)
         for Entry in Entries:
             if (Entry.get("status") == "flagged" and Entry.get("model") == Call["model"]
                     and Entry.get("prompt_sha256") == Call["prompt_sha256"]):
                 raise Refused(f"refused: this prompt was flagged on {Call['model']} ({Entry.get('id')}); "
                               "do not retry that model, ask gpt-6.1-sol instead")
         Cap = CapTokens()
-        Limit = Cap if Call["UsesReserve"] else Cap - ReserveTokens
-        if Spent + Call["Reservation"] > Limit:
-            Which = "cap" if Call["UsesReserve"] else "cap minus the 50k reserve (needs --purpose verify or --use-reserve)"
-            raise Refused(f"refused: reservation {Call['Reservation']} + spent {Spent} passes the {Which} ({Limit}). "
-                          + RemainingLine(Spent))
+        if Call["mode"] == "pro":
+            for Entry in Entries:
+                if Entry.get("mode") == "pro" and Entry.get("time", "") >= Since:
+                    raise Refused(f"refused: pro mode already used in the last {WindowHours} h "
+                                  f"({Entry.get('id')}); at most once per {WindowHours} h")
+            if Cap - Spent < ProMinLeft:
+                raise Refused(f"refused: pro mode needs {ProMinLeft}+ left in the window. " + RemainingLine(Spent))
+        if Spent + Call["Reservation"] > Cap:
+            raise Refused(f"refused: reservation {Call['Reservation']} + spent {Spent} passes the "
+                          f"{WindowHours} h cap ({Cap}). " + RemainingLine(Spent))
         if DryRun:
             return Spent
         Entry = {Key: Call[Key] for Key in ("id", "branch", "session", "model", "mode", "effort", "purpose",
@@ -217,9 +244,40 @@ def Reserve(Root, Call, Origin, DryRun=False):
         return Spent
 
 
-def FinalSpent(Root):
+def FinalSpent(Root, Origin=()):
     with LedgerLock(Root):
-        return SpentTokens(ReadLocalLedger(Root))
+        return SpentTokens(MergeLedgers(ReadLocalLedger(Root), list(Origin)), WindowStart())
+
+
+# ---------------------------------------------------------------- service tier lock
+
+def CheckStop(Root, Fetched=False):
+    """Refuse while a STOP file exists locally or on the last fetched origin/main."""
+    Path = Paths(Root)["Stop"]
+    OnMain = Fetched and Git(Root, "cat-file", "-e", "origin/main:budget/openai/STOP", Timeout=20) is not None
+    if os.path.exists(Path) or OnMain:
+        raise Refused(f"refused: {os.path.relpath(Path, Root)} exists" + (" on origin/main" if OnMain else "")
+                      + "; a response reported a service tier other than the pinned one. A human must read it, "
+                      "fix the cause and delete the file before any further call")
+
+
+def WriteStop(Root, Call, Response, Note):
+    Path = Paths(Root)["Stop"]
+    os.makedirs(os.path.dirname(Path), exist_ok=True)
+    with open(Path, "a", encoding="utf-8") as Handle:
+        Handle.write(f"{NowIso()} STOP: call {Call['id']} ({Call['model']}, response {Response.get('id', '')}) "
+                     f"{Note}. Pinned service_tier is {ServiceTier!r}. All calls are refused until a human "
+                     "deletes this file.\n")
+    return Path
+
+
+def TierProblem(Response, Final=False):
+    """None if the response's service_tier is the pinned one; else a note. The final response must report it."""
+    if "service_tier" not in Response or Response.get("service_tier") is None:
+        return "final response reported no service_tier" if Final else None
+    if Response["service_tier"] != ServiceTier:
+        return f"response reported service_tier {Response['service_tier']!r}"
+    return None
 
 
 # ---------------------------------------------------------------- HTTP
@@ -331,17 +389,30 @@ def Usage(Response):
             "total_tokens": int(Raw.get("total_tokens") or Input + Output)}
 
 
-def RunCall(Call, PollSeconds, DeadlineSeconds):
-    """Returns (Status, Response or {}, Usage or None, Note). Never raises for API outcomes."""
+def BuildBody(Call):
     Body = {"model": Call["model"], "background": True, "store": True,
             "max_output_tokens": Call["max_output"],
             "input": [{"role": "developer", "content": DeveloperMessage},
                       {"role": "user", "content": Call["PromptText"]}],
-            "reasoning": {"effort": Call["effort"]}}
+            "reasoning": {"effort": Call["effort"]}, "service_tier": ServiceTier}
     if Call["mode"] == "pro":
         Body["reasoning"]["mode"] = "pro"
     if Call["SystemText"]:
         Body["instructions"] = Call["SystemText"]
+    assert set(Body) <= AllowedBodyKeys and Body["service_tier"] == ServiceTier
+    return Body
+
+
+def Cancel(ResponseId, Response):
+    try:
+        return Request("POST", f"/responses/{ResponseId}/cancel", {})
+    except (urllib.error.URLError, OSError):
+        return Response
+
+
+def RunCall(Call, PollSeconds, DeadlineSeconds):
+    """Returns (Status, Response or {}, Usage or None, Note). Never raises for API outcomes."""
+    Body = BuildBody(Call)
     try:
         Response = Request("POST", "/responses", Body)
     except urllib.error.HTTPError as Error:
@@ -355,11 +426,12 @@ def RunCall(Call, PollSeconds, DeadlineSeconds):
     ResponseId = Response.get("id", "")
     Deadline = time.monotonic() + DeadlineSeconds
     while Response.get("status") in ("queued", "in_progress"):
+        Problem = TierProblem(Response)
+        if Problem:
+            Cancelled = Cancel(ResponseId, Response)
+            return "tier-violation", Response, Usage(Cancelled) or Usage(Response), Problem + "; cancelled"
         if time.monotonic() >= Deadline:
-            try:
-                Response = Request("POST", f"/responses/{ResponseId}/cancel", {})
-            except (urllib.error.URLError, OSError):
-                pass
+            Response = Cancel(ResponseId, Response)
             return "timeout", Response, Usage(Response), f"deadline {DeadlineSeconds:.0f} s reached; cancelled"
         time.sleep(PollSeconds)
         try:
@@ -370,6 +442,9 @@ def RunCall(Call, PollSeconds, DeadlineSeconds):
         except (urllib.error.URLError, OSError):
             pass  # transient; keep polling until the deadline
     Status = Response.get("status", "unknown")
+    Problem = TierProblem(Response, Final=Status in ("completed", "incomplete"))
+    if Problem:
+        return "tier-violation", Response, Usage(Response), Problem
     if IsFlagged(Response):
         return "flagged", Response, Usage(Response), "stopped by a safety check"
     if Status == "incomplete":
@@ -416,8 +491,11 @@ def Attempt(Root, Call, Origin, PollSeconds, DeadlineSeconds):
         Note = (Note + "; " if Note else "") + "no usage reported, whole reservation counted"
     Entry = {Key: Call[Key] for Key in ("id", "branch", "session", "model", "mode", "effort", "purpose",
                                          "max_output", "prompt_sha256")}
-    Entry.update(UsageData, time=NowIso(), status=Status, response_id=Response.get("id", ""), note=Note)
+    Entry.update(UsageData, time=NowIso(), status=Status, response_id=Response.get("id", ""), note=Note,
+                 service_tier=Response.get("service_tier"))
     AppendEntry(Root, Entry)
+    if Status == "tier-violation":
+        Warn(f"STOP written: {os.path.relpath(WriteStop(Root, Call, Response, Note), Root)}")
     Path = SaveCouncilFile(Root, Call, Status, OutputText(Response), UsageData, Note)
     return Status, Path, Note
 
@@ -429,7 +507,6 @@ def BuildCall(Args, Root, Mode, Effort, MaxOutput, PromptText, SystemText):
             "model": Args.model, "mode": Mode, "effort": Effort, "purpose": Slug(Args.purpose),
             "max_output": MaxOutput, "Reservation": math.ceil(Chars / 3) + MaxOutput,
             "prompt_sha256": hashlib.sha256((SystemText + "\0" + PromptText).encode()).hexdigest(),
-            "UsesReserve": Args.use_reserve or Slug(Args.purpose) == "verify",
             "PromptText": PromptText, "SystemText": SystemText}
 
 
@@ -463,12 +540,11 @@ def Main(Argv=None):
     Parser.add_argument("--model")
     Parser.add_argument("--prompt-file")
     Parser.add_argument("--system-file")
-    Parser.add_argument("--purpose", default="general", help="short slug; 'verify' may spend the 50k reserve")
+    Parser.add_argument("--purpose", default="general", help="short slug for the ledger and the saved file")
     Parser.add_argument("--effort", choices=["none", "low", "medium", "high", "xhigh", "max"])
     Parser.add_argument("--mode", choices=["standard", "pro"], default="standard")
     Parser.add_argument("--max-output", type=int, help=f"default from the effort policy; hard max {HardMaxOutput}")
     Parser.add_argument("--dry-run", action="store_true", help="budget check only; nothing sent or written")
-    Parser.add_argument("--use-reserve", action="store_true")
     # Test hooks (tests/test_ask_other_model.py); not for normal use.
     Parser.add_argument("--root", default=RepoRoot, help=argparse.SUPPRESS)
     Parser.add_argument("--poll-seconds", type=float, default=15.0, help=argparse.SUPPRESS)
@@ -476,6 +552,11 @@ def Main(Argv=None):
     Parser.add_argument("--no-fetch", action="store_true", help=argparse.SUPPRESS)
     Args = Parser.parse_args(Argv)
     Root = os.path.abspath(Args.root)
+    try:
+        CheckStop(Root)
+    except Refused as Problem:
+        Warn(str(Problem))
+        return 2
 
     if Args.list_models:
         return ListModels(Root)
@@ -510,8 +591,11 @@ def Main(Argv=None):
     except OSError as Problem:
         Warn(f"error: {Problem}")
         return 3
-    print(RemainingLine(FinalSpent(Root)))
+    print(RemainingLine(FinalSpent(Root, Origin)))
     print(f"saved: {Path}")
+    if Status == "tier-violation":
+        Warn(f"service tier violation: {Note}; budget/openai/STOP written, all calls refused until a human deletes it")
+        return 4
     if Status == "flagged":
         Warn(f"stopped by a safety check: do not retry {Args.model}; ask gpt-6.1-sol instead")
     elif Status != "completed":

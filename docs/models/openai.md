@@ -1,5 +1,5 @@
 ---
-updated: 2026-10-17
+updated: 2026-10-18
 ---
 
 # OpenAI models for the lab
@@ -45,6 +45,16 @@ previous generation). Skip them. Older ids (gpt-5.x and earlier, o-series) and n
   `flagged` when its error code or message, or its incomplete reason, mentions safety, a content
   filter, a usage policy, `invalid_prompt`, moderation or cyber.
 
+## Service tier (pinned)
+
+Every request sends `"service_tier": "default"`, Standard speed and price. A live gpt-6-luna call on
+2026-10-18 (effort none, max-output 200; `docs/council/2026-10-18/05-gpt-6-luna-smoke-service-tier.md`)
+reported `service_tier: "default"` on both the create and the completed response, so that is the pinned
+value. Never change it, never omit it (a project can make untagged requests default to a faster,
+pricier tier), never send Fast, Ultrafast, priority or flex. Any other reported tier, or none on the
+final response, cancels the call and writes `budget/openai/STOP`; the tool then refuses everything
+until a human deletes that file. Requests are text only: no `tools` field, no hosted tools.
+
 ## Effort policy
 
 | use | effort | max-output |
@@ -52,7 +62,7 @@ previous generation). Skip them. Older ids (gpt-5.x and earlier, o-series) and n
 | brainstorming lists of hypotheses | medium | 16000 |
 | attacking a test design, hunting bugs, checking a claimed hit, writing an exact test spec | high | 25000 |
 | the single hardest question of a phase | xhigh | 40000 |
-| pro mode: at most once per project, final phase, only with 60k+ left | high (+ mode pro) | 40000 |
+| pro mode: at most once per 24 h, only with 60k+ left in the window | high (+ mode pro) | 40000 |
 
 - Never use max effort. One public run waited over 7 minutes for its first token. The tool refuses it.
 - Never use low or none. Do small jobs yourself. The tool refuses them unless `--max-output` is
@@ -63,8 +73,11 @@ previous generation). Skip them. Older ids (gpt-5.x and earlier, o-series) and n
 
 ## Budget
 
-Cap = min(`OPENAI_TOKEN_CAP` or 230000, 230000) - 10000 = 220000 tokens for the whole project. That
-includes a 50000-token reserve, which only `--purpose verify` or `--use-reserve` can spend. The
+The key gets 230k tokens per day. Cap = min(`OPENAI_TOKEN_CAP` or 230000, 230000) - 10000 = 220000
+tokens per rolling 24 hours: the tool sums the ledger entries from the last 24 hours (a call counts at
+its final entry's time, or at its reservation's time while it runs). There is no reserve; verify calls
+simply go first on any day. Pro mode: at most once per 24 hours, and only with 60k+ left in the
+window (the tool enforces both). The ledger keeps its full history. The
 shared ledger is `budget/openai/ledger.jsonl`. It merges by id with origin/main before every call,
 and git merges it with the union driver (`.gitattributes`).
 
