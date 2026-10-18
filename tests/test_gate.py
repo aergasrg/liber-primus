@@ -34,6 +34,24 @@ def test_koan2_firfumferenfe_with_two_f_skips():
     assert Vigenere(Cipher, "FIRFUMFERENFE", FSkips=[2, 3]) == LoadSection("solved_jpg107-167")["Runes"]
 
 
+def test_running_key_engine_recovers_koan2():
+    # lp.runningkey (B01): Koan 2's key hidden mid-source in filler words must come back with the exact
+    # start, the two F-skips (cipher indices 49 and 58) and the exact plaintext.
+    import numpy as np
+    from lp.data import Words
+    from lp.gematria import ToLatin
+    from lp.runningkey import LatinSource, PageEvents, RunEvents, Tables, Trace
+    Filler = [ToLatin(W) for W in Words(LoadSection("solved_0_loss_of_divinity"))]
+    Text = " ".join(Filler[:60] + ["FIRFUMFERENFE"] * 25 + Filler[60:])
+    Src = LatinSource("filler+koan2", Text)
+    Cipher = LoadSection("jpg107-167")["Runes"]
+    V = RunEvents(PageEvents(Cipher, "raw29"), Tables(Src, 29, -1), 1)
+    Result = Trace(Cipher, Src, "raw29", 1, -1, int(np.argmax(V)))
+    assert Result["StartY"] == len("".join(Src.Chunks[:60]))
+    assert [I for I, _ in Result["Skips"]] == [49, 58]
+    assert Result["Plain"] == LoadSection("solved_jpg107-167")["Runes"]
+
+
 def test_koan1_atbash_plus_3():
     Cipher = LoadSection("0_koan_1")["Runes"]
     assert Shift(Atbash(Cipher), 3) == LoadSection("solved_0_koan_1")["Runes"]
