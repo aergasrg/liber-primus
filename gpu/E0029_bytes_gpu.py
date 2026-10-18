@@ -1,4 +1,4 @@
-"""E0028 (B01) GPU job: skip-tolerant, page-local running-key search of the 55 unsolved Liber Primus pages
+"""E0029 (B01) GPU job: skip-tolerant, page-local running-key search of the 55 unsolved Liber Primus pages
 against the large byte sources (2013 Cicada OS files 761.MP3, _560.00, 560.17, and the 75 original LP
 page images), byte % 29, in 4 views x 4 polarities x 2 directions.
 
@@ -9,12 +9,12 @@ Self-contained (Python 3.10+, PyTorch; CUDA used when available). It downloads w
   2. the real search (best score per page and form, every source);
   3. tier-1 plants (16 conditions x 100 per source; scores only, thresholds are applied in the lab);
   4. shuffled-source null replicates, round-robin over sources, until done or --hours runs out.
-Progress is saved after every unit (a few minutes at most) to ./results_E0028_gpu.json; rerunning the
+Progress is saved after every unit (a few minutes at most) to ./results_E0029_gpu.json; rerunning the
 same command resumes. Upload that one file. GPU memory stays under about 2 GB (asserted < 5 GB).
 
 The algorithm mirrors lp/runningkey.py in the lab repository (same events, tables and DP); the lab's
 CPU version was checked against this file on small sources before release.
-Usage: python E0028_bytes_gpu.py [--hours 15] [--reps 10] [--image-reps 6] [--quick]
+Usage: python E0029_bytes_gpu.py [--hours 15] [--reps 10] [--image-reps 6] [--quick]
 """
 import argparse
 import json
@@ -29,7 +29,7 @@ import torch
 
 Here = os.path.dirname(os.path.abspath(__file__))
 Cache = os.path.join(Here, "cache")
-ResultsPath = os.path.join(Here, "results_E0028_gpu.json")
+ResultsPath = os.path.join(Here, "results_E0029_gpu.json")
 Relikd = "https://raw.githubusercontent.com/relikd/LiberPrayground/main"
 Scream = "https://raw.githubusercontent.com/scream314/cicada3301/master/assets"
 RuneString = "ᚠᚢᚦᚩᚱᚳᚷᚹᚻᚾᛁᛄᛇᛈᛉᛋᛏᛒᛖᛗᛚᛝᛟᛞᚪᚫᚣᛡᛠ"
@@ -48,6 +48,7 @@ SourceOrder = ["c560_17", "c560_00", "mp3_761", "lp_images"]
 Views = ["raw29", "step29", "unit28z1", "unit28z2"]
 ViewModulus = {"raw29": 29, "step29": 29, "unit28z1": 28, "unit28z2": 28}
 Polarities = [(1, -1), (-1, 1), (1, 1), (-1, -1)]
+LengthEdges = [(0, 140), (141, 220), (221, 999)]
 Combos = [(Rev, M, B) for Rev in (False, True) for M in (29, 28) for B in (-1, 1)]
 Device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 NegInf = float("-inf")
@@ -247,12 +248,12 @@ def PlantPage(Plain, Key, View, A, B, SkipAt, Doublets, Rng, Start):
 
 
 def MakePlant(Rng, Corpus, Page, View, Pattern, SourceLength):
-    """Plaintext + skip mask in a real page layout (same patterns as the lab's E0028 power stage)."""
+    """Plaintext + skip mask in a real page layout (same patterns as the lab's E0029 power stage)."""
     N = len(Page)
     Dbl = [I for I in range(1, N) if Page[I] == Page[I - 1]] if View.startswith("unit") else []
     PlainLength = N if View == "raw29" else N - 1 - len(Dbl)
     DblPlain = {I - 1 - K for K, I in enumerate(Dbl)}
-    while True:
+    for _ in range(200):
         Off = Rng.randrange(len(Corpus) - PlainLength)
         Plain = [int(V) for V in Corpus[Off:Off + PlainLength]]
         Fs = [I for I, P in enumerate(Plain) if P == 0]
@@ -269,6 +270,8 @@ def MakePlant(Rng, Corpus, Page, View, Pattern, SourceLength):
                 continue
             Skips = {Late[0]} | {I for I in Late[1:] if Rng.random() < 0.5}
         break
+    else:
+        return None
     A, B = Rng.choice(Polarities)
     Rev = Rng.random() < 0.5
     Need = PlainLength + len(Dbl) + 5
@@ -341,8 +344,11 @@ def Main():
         T = time.time()
         Rows = []
         for View, Pattern in (("raw29", "early"), ("unit28z1", "mid")):
-            Page = Pages[Rng.randrange(len(Pages))]
-            Plain, Skips, Dbl, (V, A, B, Rev), Start, Need = MakePlant(Rng, Corpus, Page, View, Pattern, len(Sources[Name]))
+            Plant = None
+            while not Plant:
+                Page = Pages[Rng.randrange(len(Pages))]
+                Plant = MakePlant(Rng, Corpus, Page, View, Pattern, len(Sources[Name]))
+            Plain, Skips, Dbl, (V, A, B, Rev), Start, Need = Plant
             Tok = Sources[Name][::-1] if Rev else Sources[Name]
             Cipher = PlantPage(Plain, Tok[Start:Start + Need], V, A, B, Skips, Dbl, Rng, Page[0])
             Eng = Engine(Tok, W29, W28)
@@ -389,17 +395,25 @@ def Main():
         Rows = []
         for View in Views:
             for Pattern in ("none", "early", "mid", "late"):
-                for _ in range(Plants):
-                    PageIndex = Rng.randrange(len(PageList))
-                    Page = PageList[PageIndex]
-                    Plain, Skips, Dbl, (V, A, B, Rev), Start, Need = MakePlant(Rng, Corpus, Page, View, Pattern, len(Sources[Name]))
-                    Tok = Sources[Name][::-1] if Rev else Sources[Name]
-                    Cipher = PlantPage(Plain, Tok[Start:Start + Need], V, A, B, Skips, Dbl, Rng, Page[0])
-                    Lo, Hi = max(0, Start - 30), min(len(Tok), Start + Need + 30)
-                    Eng = Engine(Tok[Lo:Hi].copy(), W29, W28)
-                    Eng.SetCombo(ViewModulus[V], B)
-                    Score, End = Eng.Run(PageEvents(Cipher, V, Skip[ViewModulus[V]]), A)
-                    Rows.append([V, Pattern, PageIndex, round(Score, 3), len(Skips)])
+                for BinLo, BinHi in LengthEdges:  # 100 plants per page-length bin, as in the lab
+                    InBin = [I for I, R in enumerate(PageList) if BinLo <= len(R) <= BinHi]
+                    for _ in range(Plants if InBin else 0):
+                        for Attempt in range(50):
+                            PageIndex = Rng.choice(InBin)
+                            Page = PageList[PageIndex]
+                            Plant = MakePlant(Rng, Corpus, Page, View, Pattern, len(Sources[Name]))
+                            if Plant:
+                                break
+                        else:
+                            break  # the pattern cannot be placed on these pages
+                        Plain, Skips, Dbl, (V, A, B, Rev), Start, Need = Plant
+                        Tok = Sources[Name][::-1] if Rev else Sources[Name]
+                        Cipher = PlantPage(Plain, Tok[Start:Start + Need], V, A, B, Skips, Dbl, Rng, Page[0])
+                        Lo, Hi = max(0, Start - 30), min(len(Tok), Start + Need + 30)
+                        Eng = Engine(Tok[Lo:Hi].copy(), W29, W28)
+                        Eng.SetCombo(ViewModulus[V], B)
+                        Score, End = Eng.Run(PageEvents(Cipher, V, Skip[ViewModulus[V]]), A)
+                        Rows.append([V, Pattern, PageIndex, round(Score, 3), len(Skips), f"{BinLo}-{BinHi}"])
         Results["power"][Name] = Rows
         Log(f"power {Name}: {len(Rows)} plants ({time.time() - T:.0f}s)")
         Finish(Unit)

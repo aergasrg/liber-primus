@@ -1,4 +1,4 @@
-"""E0028 (B01): skip-tolerant, page-local running-key search over the text and file sources of E0008,
+"""E0029 (B01): skip-tolerant, page-local running-key search over the text and file sources of E0008,
 E0012 and E0024, with the lattice, view and polarity coverage of the council audit.
 
 Hypothesis: each LP page is enciphered with a running key read from one of these sources, starting
@@ -22,8 +22,8 @@ Stages:
   null      R shuffled-source replicates of the whole search (words permuted; bytes permuted before tiling)
   power     tier 1: 16 conditions (4 views x skip pattern none/early/mid/late) x 100 plants per source
   report    thresholds, verdicts, summary.txt
-Usage: python3 experiments/E0028_skip_tolerant_running_key.py STAGE [--source NAME] [--reps R]
-Outputs: results/E0028/ (small text/JSON); checkpoints in results/E0028/checkpoint/ (gitignored).
+Usage: python3 experiments/E0029_skip_tolerant_running_key.py STAGE [--source NAME] [--reps R]
+Outputs: results/E0029/ (small text/JSON); checkpoints in results/E0029/checkpoint/ (gitignored).
 """
 import argparse
 import json
@@ -42,7 +42,7 @@ from lp.detectors import FftRunningKeyScan  # noqa: E402
 from lp.gematria import LatinToRunes  # noqa: E402
 from lp import runningkey as Rk  # noqa: E402
 
-OutDir = os.path.join(RepoRoot, "results", "E0028")
+OutDir = os.path.join(RepoRoot, "results", "E0029")
 CheckDir = os.path.join(OutDir, "checkpoint")
 BookOrder = ["0_warning", "0_welcome", "0_wisdom", "0_koan_1", "0_loss_of_divinity", "jpg107-167", "jpg229",
              "p56_an_end", "p57_parable"]
@@ -238,7 +238,7 @@ def MakePlant(Rng, Corpus, Page, View, Pattern, Src):
         Dbl = [I for I in range(1, N) if Page[I] == Page[I - 1]]
     PlainLength = N if View == "raw29" else N - 1 - len(Dbl)
     DblPlain = {I - 1 - K for K, I in enumerate(Dbl)}
-    for _ in range(1000):
+    for _ in range(200):
         Off = Rng.randrange(len(Corpus) - PlainLength)
         Plain = [int(V) for V in Corpus[Off:Off + PlainLength]]
         Fs = [I for I, P in enumerate(Plain) if P == 0]
@@ -272,6 +272,19 @@ def MakePlant(Rng, Corpus, Page, View, Pattern, Src):
     return Cipher, (View, A, B, Rev), Start, Letters, Skips, Key
 
 
+LengthEdges = [(0, 140), (141, 220), (221, 999)]
+
+
+def LengthBins(PerPlant):
+    """Recovered/plants per page-length bin from [[length, margin], ...]."""
+    Out = {}
+    for Lo, Hi in LengthEdges:
+        In = [M for N, M in PerPlant if Lo <= N <= Hi]
+        if In:
+            Out[f"{Lo}-{Hi}"] = [int(sum(M > 0 for M in In)), len(In)]
+    return Out
+
+
 def StagePower(Name, Plants, Pool):
     Rng = random.Random(28)
     Corpus = PlantCorpus()
@@ -284,39 +297,53 @@ def StagePower(Name, Plants, Pool):
         RigidThreshold, *_ = Thresholds(Name, [len(R) for _, R in PageItems], PageAlpha(), Path=RigidPath)
     W29 = Rk.Weights(29)
     Rows = []
-    for View in Rk.Views:
-        for Pattern in ("none", "early", "mid", "late"):
-            Hits, Margins, Exact, RigidHits = 0, [], 0, 0
-            for Index in range(Plants):
-                PageIndex = Rng.randrange(len(PageItems))
+    for View, Pattern, (BinLo, BinHi) in [(V, P, E) for V in Rk.Views for P in ("none", "early", "mid", "late")
+                                          for E in LengthEdges]:
+        InBin = [I for I, (_, R) in enumerate(PageItems) if BinLo <= len(R) <= BinHi]
+        Hits, Margins, Exact, RigidHits, PerPlant = 0, [], 0, 0, []
+        for Index in range(Plants):
+            for Attempt in range(50):  # a page that can host the pattern (mid needs an F at plaintext 80-130)
+                PageIndex = Rng.choice(InBin)
                 Page = PageItems[PageIndex][1]
-                Cipher, (V, A, B, Rev), Start, Letters, Skips, Key = MakePlant(Rng, Corpus, Page, View, Pattern, Src)
-                S = Src.Reverse() if Rev else Src
-                Lo, Hi = max(0, Start - 30), min(S.Length, Start + Letters + 30)
-                Window = S.Slice(Lo, Hi)
-                Tab = Rk.Tables(Window, Rk.ViewModulus[V], B)
-                Vec = Rk.RunEvents(Rk.PageEvents(Cipher, V), Tab, A)
-                End = int(np.argmax(Vec))
-                Score = float(Vec[End])
-                Margin = Score - Threshold[PageIndex]
-                Hits += Margin > 0
-                Margins.append(Margin)
-                if Index < 3:
-                    Tr = Rk.Trace(Cipher, Window, V, A, B, End)
-                    Exact += Lo + Tr["StartY"] == Start
-                if V == "raw29" and RigidThreshold is not None:
-                    # best case for rigid: it is given the plant's own tokens, padded with single-letter
-                    # tokens of the neighbouring source, and every offset in between
-                    Ext = np.array(list(S.Tok1[max(0, Start - 40):Start]) + Key + list(S.Tok1[Start + Letters:Start + Letters + 40]), dtype=np.int64)
-                    Ci = np.asarray(Cipher)
-                    Rigid = max(float(W29[(A * Ci + B * Ext[O:O + len(Ci)]) % 29].sum())
-                                for O in range(0, len(Ext) - len(Ci) + 1))
-                    RigidHits += Rigid > RigidThreshold[PageIndex]
-            Rows.append({"view": View, "pattern": Pattern, "recovered": Hits, "plants": Plants,
-                         "min_margin": round(min(Margins), 1), "median_margin": round(float(np.median(Margins)), 1),
-                         "start_exact_of_3": Exact,
-                         "rigid_recovered": RigidHits if (V == "raw29" and RigidThreshold is not None) else None})
-            Log(f"power {Name} {View} {Pattern}: {Hits}/{Plants}, min margin {min(Margins):.1f}")
+                try:
+                    Cipher, (V, A, B, Rev), Start, Letters, Skips, Key = MakePlant(Rng, Corpus, Page, View, Pattern, Src)
+                    break
+                except RuntimeError:
+                    continue
+            else:
+                break
+            S = Src.Reverse() if Rev else Src
+            Lo, Hi = max(0, Start - 30), min(S.Length, Start + Letters + 30)
+            Window = S.Slice(Lo, Hi)
+            Tab = Rk.Tables(Window, Rk.ViewModulus[V], B)
+            Vec = Rk.RunEvents(Rk.PageEvents(Cipher, V), Tab, A)
+            End = int(np.argmax(Vec))
+            Score = float(Vec[End])
+            Margin = float(Score - Threshold[PageIndex])
+            Hits += int(Margin > 0)
+            Margins.append(Margin)
+            if Index < 3:
+                Tr = Rk.Trace(Cipher, Window, V, A, B, End)
+                Exact += Lo + Tr["StartY"] == Start
+            if V == "raw29" and RigidThreshold is not None:
+                # best case for rigid: it is given the plant's own tokens, padded with single-letter
+                # tokens of the neighbouring source, and every offset in between
+                Ext = np.array(list(S.Tok1[max(0, Start - 40):Start]) + Key + list(S.Tok1[Start + Letters:Start + Letters + 40]), dtype=np.int64)
+                Ci = np.asarray(Cipher)
+                Rigid = max(float(W29[(A * Ci + B * Ext[O:O + len(Ci)]) % 29].sum())
+                            for O in range(0, len(Ext) - len(Ci) + 1))
+                RigidHits += int(Rigid > RigidThreshold[PageIndex])
+            PerPlant.append([len(Page), round(Margin, 1)])
+        if not Margins:
+            Log(f"power {Name} {View} {Pattern} {BinLo}-{BinHi}: pattern impossible on these pages")
+            continue
+        Rows.append({"view": View, "pattern": Pattern, "bin": f"{BinLo}-{BinHi}", "recovered": Hits, "plants": len(Margins),
+                     "min_margin": round(min(Margins), 1), "median_margin": round(float(np.median(Margins)), 1),
+                     "start_exact_of_3": Exact,
+                     "rigid_recovered": RigidHits if (V == "raw29" and RigidThreshold is not None) else None,
+                     "by_page_length": LengthBins(PerPlant)})
+        Log(f"power {Name} {View} {Pattern} {BinLo}-{BinHi}: {Hits}/{len(Margins)}, min margin {min(Margins):.1f}"
+            + (f", rigid {RigidHits}" if V == "raw29" and RigidThreshold is not None else ""))
     SaveJson(os.path.join(OutDir, f"power_{Name}.json"), {"source": Name, "rows": Rows})
 
 
@@ -399,7 +426,7 @@ def StageControls(Pool, Reps=20):
 
 
 def StageImportGpu(Path):
-    """Turn gpu/E0028_bytes_gpu.py's results file into real_/null_/power_ files for the report."""
+    """Turn gpu/E0029_bytes_gpu.py's results file into real_/null_/power_ files for the report."""
     Gpu = LoadJson(Path)
     Pages = RealPages()
     Lengths = [len(R) for _, R in Pages]
@@ -419,12 +446,14 @@ def StageImportGpu(Path):
         Rows = []
         for View in Rk.Views:
             for Pattern in ("none", "early", "mid", "late"):
-                Plants = [R for R in Gpu["power"].get(Name, []) if R[0] == View and R[1] == Pattern]
-                Margins = [R[3] - Threshold[R[2]] for R in Plants]
-                if Margins:
-                    Rows.append({"view": View, "pattern": Pattern, "recovered": int(sum(M > 0 for M in Margins)),
-                                 "plants": len(Margins), "min_margin": round(min(Margins), 1),
-                                 "median_margin": round(float(np.median(Margins)), 1)})
+                for BinLo, BinHi in LengthEdges:
+                    Bin = f"{BinLo}-{BinHi}"
+                    Plants = [R for R in Gpu["power"].get(Name, []) if R[0] == View and R[1] == Pattern and R[5] == Bin]
+                    Margins = [R[3] - Threshold[R[2]] for R in Plants]
+                    if Margins:
+                        Rows.append({"view": View, "pattern": Pattern, "bin": Bin,
+                                     "recovered": int(sum(M > 0 for M in Margins)), "plants": len(Margins),
+                                     "min_margin": round(min(Margins), 1), "median_margin": round(float(np.median(Margins)), 1)})
         SaveJson(os.path.join(OutDir, f"power_{Name}.json"), {"source": Name, "rows": Rows, "via": "gpu"})
         Lines.append(f"{Name}: imported ({len(Null)} null reps)")
     with open(os.path.join(OutDir, "gpu_import.txt"), "w") as Handle:
@@ -439,7 +468,7 @@ def StageReport():
     Sources = [S for S in CpuSources + GpuSources if os.path.exists(os.path.join(OutDir, f"null_{S}.json"))
                and os.path.exists(os.path.join(OutDir, f"real_{S}.json"))]
     Alpha = PageAlpha()
-    Lines = ["E0028 (B01) skip-tolerant page-local running-key search: summary", ""]
+    Lines = ["E0029 (B01) skip-tolerant page-local running-key search: summary", ""]
     if os.path.exists(os.path.join(OutDir, "controls.json")):
         Lines.append("Real-world controls (key hidden in the Mabinogion, full 32-form search):")
         for Tag, Row in LoadJson(os.path.join(OutDir, "controls.json")).items():
@@ -467,9 +496,13 @@ def StageReport():
         Power = os.path.join(OutDir, f"power_{Name}.json")
         if os.path.exists(Power):
             Rows = LoadJson(Power)["rows"]
-            Worst = min(Rows, key=lambda R: R["recovered"])
-            Line += (f"\n    power: min {Worst['recovered']}/{Worst['plants']} ({Worst['view']}, {Worst['pattern']}); "
-                     + ", ".join(f"{R['view']}/{R['pattern']} {R['recovered']}" for R in Rows))
+            for Bin in sorted({R.get("bin", "all") for R in Rows}):
+                In = [R for R in Rows if R.get("bin", "all") == Bin]
+                Worst = min(In, key=lambda R: R["recovered"] / R["plants"])
+                Line += (f"\n    power, pages {Bin} runes: worst {Worst['recovered']}/{Worst['plants']} ({Worst['view']}/{Worst['pattern']}); "
+                         + ", ".join(f"{R['view'][:6]}/{R['pattern']} {R['recovered']}/{R['plants']}"
+                                     + (f" rigid {R['rigid_recovered']}" if R.get("rigid_recovered") is not None else "")
+                                     for R in In))
         Lines.append(Line)
         Summary[Name] = {"best_page": Numbers[Top], "best_form": Best[Top][1], "best_std": round(float(RealStd[Top]), 2),
                          "p_vs_null_reps": round(P, 3), "above_threshold": Above}
@@ -482,7 +515,7 @@ def StageReport():
 def Main():
     Parser = argparse.ArgumentParser()
     Parser.add_argument("stage", choices=["controls", "real", "null", "power", "report", "all", "import-gpu", "rigid"])
-    Parser.add_argument("--file", default=os.path.join(RepoRoot, "gpu", "results_E0028_gpu.json"))
+    Parser.add_argument("--file", default=os.path.join(RepoRoot, "gpu", "results_E0029_gpu.json"))
     Parser.add_argument("--source", default=None)
     Parser.add_argument("--reps", type=int, default=20)
     Parser.add_argument("--plants", type=int, default=100)
