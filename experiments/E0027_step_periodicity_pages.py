@@ -12,9 +12,10 @@ the F is transparent - shift the key phase identically):
   unit28z1  u_i = s_i - 1 mod 28 over non-zero steps; a zero step consumes a key symbol
   unit28z2  the same; a zero step does not consume a key symbol
 Detector: pair-weighted column IoC as a z score, z = (C - P q) / sqrt(P q (1 - q)), C = same-symbol
-pairs in the same column, P = pairs in the same column, q = coincidence rate of the page's own symbols
-(for a uniform alphabet, pair coincidences sharing a symbol are uncorrelated, so the binomial variance
-is exact under the null).
+pairs in the same column, P = pairs in the same column. q = 1/M by default (--baseline uniform); run A
+used q = the page's own coincidence rate (--baseline perm), which hides short periods because a short
+periodic key raises the page's own IoC (tier 1 showed it). For a uniform alphabet, pair coincidences
+sharing a symbol are uncorrelated, so the binomial variance is exact under the null.
 Skips: a skip mask over a page's ciphertext Fs shifts the phase of every later symbol by one. Pairs are
 tabulated per (segment pair, t_j - t_i mod L), so any mask scores in one lookup per segment pair.
 Masks: every subset with <= 11 skips if that is <= 4096 subsets, else all subsets with <= K skips, K the
@@ -34,7 +35,7 @@ Usage:
   python3 experiments/E0027_step_periodicity_pages.py surrogates --count 999
   python3 experiments/E0027_step_periodicity_pages.py power --plants 100
   python3 experiments/E0027_step_periodicity_pages.py report
-Outputs: results/E0027/ (small text); checkpoints in results/E0027/checkpoint_*/ (gitignored).
+Outputs: results/E0027/<baseline>/ (small text); checkpoints in .../checkpoint_runs/ (gitignored).
 """
 import argparse
 import itertools
@@ -51,7 +52,8 @@ import numpy as np
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from lp.data import LoadAllUnsolved, Pages, RepoRoot, SolvedPlaintext, SolvedPlainNames  # noqa: E402
 
-OutDir = os.path.join(RepoRoot, "results", "E0027")
+Baseline = "uniform"
+OutDir = os.path.join(RepoRoot, "results", "E0027", Baseline)
 CheckpointDir = os.path.join(OutDir, "checkpoint_runs")
 ViewNames = ["raw29", "step29", "unit28z1", "unit28z2"]
 ViewModulus = {"raw29": 29, "step29": 29, "unit28z1": 28, "unit28z2": 28}
@@ -86,6 +88,9 @@ def BuildViews(Runes):
 
 
 def CoincidenceRate(Symbols, Modulus):
+    """Null coincidence rate q: the page's own symbol rate (Baseline 'perm') or 1/M ('uniform')."""
+    if Baseline == "uniform":
+        return 1.0 / Modulus
     N = len(Symbols)
     if N < 2:
         return 1.0 / Modulus
@@ -548,7 +553,12 @@ def Main():
     Parser.add_argument("--count", type=int, default=999)
     Parser.add_argument("--plants", type=int, default=100)
     Parser.add_argument("--workers", type=int, default=max(1, (os.cpu_count() or 2)))
+    Parser.add_argument("--baseline", choices=["uniform", "perm"], default="uniform")
     Args = Parser.parse_args()
+    global Baseline, OutDir, CheckpointDir
+    Baseline = Args.baseline
+    OutDir = os.path.join(RepoRoot, "results", "E0027", Baseline)
+    CheckpointDir = os.path.join(OutDir, "checkpoint_runs")
     os.makedirs(CheckpointDir, exist_ok=True)
     if Args.mode == "real":
         RunReal()
