@@ -24,7 +24,12 @@ f1672d7bef5e891c6e2274568926a49fb4f45132c2a8b4
 3288 3294 3296 2472
 4516 1206  708 1820
 ```
-= 3301 +- primes whose prime indices are Fibonacci numbers (Zeckendorf spiral).
+Exact rule (mortlach, 2016, reproduces every cell): take the primes at 0-based index
+0, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987 (the Fibonacci numbers; the (F+1)-th
+prime, 1-based), B = 2, 3, 5, 7, 13, 23, 43, 79, 149, 263, 463, 829, 1481, 2593, 4507, 7817; then
+C = |3301 - B| = 3299, 3298, 3296, 3294, 3288, 3278, 3258, 3222, 3152, 3038, 2838, 2472, 1820, 708,
+1206, 4516, laid out in a spiral. Note the absolute value: 4516 and 1206 come from 7817 and 4507.
+(Verified 2026-10-18; the earlier wording "3301 +- primes with Fibonacci prime indices" was imprecise.)
 
 ## Numbers printed in the unsolved pages — B11
 
