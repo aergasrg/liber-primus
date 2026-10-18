@@ -1,0 +1,20 @@
+id: E0009
+title: Word-level shifts and Playfair-style pairs
+family: word-level
+hypothesis: Each word has its own shift, or runes are enciphered in pairs (Playfair-like).
+coverage: per-word shifts; pair ciphers
+detector: English score / pair statistics
+control:
+  method: not reported
+  score: not reported
+'null':
+  method: not reported
+  ceiling: not reported
+result:
+  best: nothing above noise
+  verdict: negative
+skips_handled: 'no'
+source: LPA; jbo cicada_tools
+date: '2026-10-17'
+artifacts: []
+notes: external result; control and null not reproduced in this lab

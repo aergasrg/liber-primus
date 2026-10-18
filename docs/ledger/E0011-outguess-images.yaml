@@ -1,0 +1,21 @@
+id: E0011
+title: OutGuess on all page images
+family: stego-image
+hypothesis: Page images hide OutGuess payloads with no key or a Cicada word as key.
+coverage: all 75 page images, no key and 96 keys
+detector: OutGuess extraction, payload inspection
+control:
+  method: not reported
+  score: not reported
+'null':
+  method: not reported
+  ceiling: not reported
+result:
+  best: only the known 2014 payloads
+  verdict: negative
+skips_handled: n/a
+source: LPA
+date: '2026-10-17'
+artifacts: []
+notes: external result; control and null not reproduced in this lab. A 2025 wiki note claiming hidden
+  data on every page is random LSB noise (controlled runs).

@@ -1,0 +1,21 @@
+id: E0017
+title: Sequences run backwards from each section end
+family: sequence-key
+hypothesis: A sequence key is aligned to the END of each section (key runs backwards).
+coverage: 9 sequences (primes, totient, naturals, squares, triangular, Fibonacci, pi digits, prime gaps,
+  phi(n)); 60 offsets; both signs; raw and chain; first 300 runes from the end
+detector: IoC (raw mod 29, chain mod 28)
+control:
+  method: totient key applied from the end of synthetic English
+  score: IoC 1.93
+'null':
+  method: random-text IoC on 300 runes
+  ceiling: ~1.00 +- 0.03
+result:
+  best: IoC 1.08-1.13
+  verdict: negative
+skips_handled: 'no'
+source: seed session 2026-10-17 (seed/seed_scripts)
+date: '2026-10-17'
+artifacts:
+- seed/seed_scripts/StructureTests.py

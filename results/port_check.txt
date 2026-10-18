@@ -1,0 +1,12 @@
+control raw: best seed 777777 IoC 1.875 (seed session 1.88)
+control chain: best seed 777777 IoC 1.810 (seed session 1.81)
+p0-2    seeds 0..4095 best IoC 1.147
+p3-7    seeds 0..4095 best IoC 1.137
+p8-14   seeds 0..4095 best IoC 1.127
+p15-22  seeds 0..4095 best IoC 1.166
+p23-26  seeds 0..4095 best IoC 1.127
+p27-32  seeds 0..4095 best IoC 1.153
+p33-39  seeds 0..4095 best IoC 1.118
+p40-53  seeds 0..4095 best IoC 1.119
+p54-55  seeds 0..4095 best IoC 1.143
+runtime 1.8s

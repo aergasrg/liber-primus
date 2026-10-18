@@ -1,0 +1,21 @@
+id: E0013
+title: Page-56 hash preimage search
+family: hash-search
+hypothesis: The page-56 hash is SHA-512 (or BLAKE2b) of a findable onion page or archive file.
+coverage: 692k archive candidates with SHA-512 (LPA); onion lists and numeric domains with SHA-512 and
+  BLAKE2b (relikd)
+detector: exact hash match
+control:
+  method: exact match test (trivial)
+  score: not reported
+'null':
+  method: exact match only
+  ceiling: n/a
+result:
+  best: no match
+  verdict: negative
+skips_handled: n/a
+source: LPA; relikd
+date: '2026-10-17'
+artifacts: []
+notes: external result; control and null not reproduced in this lab. The hash algorithm is unconfirmed.

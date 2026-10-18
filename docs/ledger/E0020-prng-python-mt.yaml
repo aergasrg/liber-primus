@@ -1,0 +1,21 @@
+id: E0020
+title: Python Mersenne Twister keystreams
+family: prng-key
+hypothesis: Key comes from Python random seeded with a small integer.
+coverage: seeds 0..262,143; Py3 randrange(29/28) and Py2 int(random()*29/28); first 300 runes; 4 forms
+detector: IoC on 300 runes
+control:
+  method: shared with E0019 (planted drand48 stream, identical scorer); no MT-specific plant
+  score: IoC ~1.88 raw, 1.81 chain
+'null':
+  method: extreme-value IoC on 300-rune windows
+  ceiling: ~1.20-1.25
+result:
+  best: best ~1.2 on 300 runes; seed 85098 falls to ~1.0 on full p8-14
+  verdict: negative
+skips_handled: 'no'
+source: seed session 2026-10-17 (seed/seed_scripts)
+date: '2026-10-17'
+artifacts:
+- seed/seed_scripts/HashAndMt.py
+- seed/seed_scripts/Recheck.py

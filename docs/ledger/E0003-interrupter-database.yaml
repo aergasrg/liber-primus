@@ -1,0 +1,22 @@
+id: E0003
+title: relikd interrupter database (short keys with interrupting runes)
+family: periodic-polyalphabetic
+hypothesis: Short Vigenere key (<= 32) where some rune acts as interrupter that does not consume key (generalised
+  F-skip).
+coverage: key length <= 32, every rune as interrupter, first 20 interrupts
+detector: IoC after decryption
+control:
+  method: not reported
+  score: not reported
+'null':
+  method: 'implicit: best values are overfit to the free interrupt choices'
+  ceiling: not reported
+result:
+  best: best IoC 1.3-1.4 (overfit)
+  verdict: negative
+skips_handled: 'yes: this is the skip search'
+source: relikd LiberPrayground
+date: '2026-10-17'
+artifacts: []
+notes: external result; control and null not reproduced in this lab; the 1.3-1.4 maxima are attributed
+  to overfitting.

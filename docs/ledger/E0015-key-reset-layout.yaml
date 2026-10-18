@@ -1,0 +1,24 @@
+id: E0015
+title: Key resets per word, sentence, line, page
+family: structure-reset
+hypothesis: The key restarts at every word, sentence, line or page, so runes at the same in-unit position
+  share a key symbol.
+coverage: all 9 sections; word, sentence, line, page positions; (word length, position) for words; raw
+  and chain (steps) form; any key
+detector: coincidence rate of runes (or steps) sharing an in-unit position; z vs 1/29
+control:
+  method: English poured into p40-53's layout, encrypted with a random 40-symbol key that resets per unit,
+    raw and chain
+  score: z 5.6-6.1
+'null':
+  method: permutation null for the outlier
+  ceiling: z ~3 is reached by chance (one z 3.0 in p54-55 explained by permutation null)
+result:
+  best: real z -0.7..+1.0 (one 3.0 in p54-55, chance)
+  verdict: negative
+skips_handled: 'no'
+source: seed session 2026-10-17 (seed/seed_scripts)
+date: '2026-10-17'
+artifacts:
+- seed/seed_scripts/StructureTests.py
+notes: Page positions use blank-line page breaks, which are wrong for p3-7, p15-22, p33-39, p40-53.

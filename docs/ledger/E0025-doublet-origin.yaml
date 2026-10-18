@@ -1,0 +1,22 @@
+id: E0025
+title: Doublets as plaintext doubled letters or one rare letter
+family: doublet-origin
+hypothesis: The 86 ciphertext doublets mark plaintext doubled letters, or one rare plaintext letter mapped
+  to step 0.
+coverage: all 86 doublets; position-in-word profile vs English doubled letters and vs each single rune
+detector: chi-square (df 7) of position profiles; rates
+control:
+  method: 'theory: doubled letters in English runes occur at 3.49%'
+  score: 3.49%
+'null':
+  method: chi-square critical value p=0.01, df 7
+  ceiling: 18.5
+result:
+  best: chi2 255 vs doubled letters; no single rune fits
+  verdict: negative
+skips_handled: n/a
+source: seed session 2026-10-17 (seed/seed_scripts)
+date: '2026-10-17'
+artifacts:
+- seed/seed_scripts/DoubletOrigin.py
+notes: Doublet rate 0.66% is far below English doubling 3.49%.

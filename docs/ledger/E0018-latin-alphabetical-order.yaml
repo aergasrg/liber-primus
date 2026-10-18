@@ -1,0 +1,20 @@
+id: E0018
+title: Shift arithmetic in Latin-alphabetical rune order
+family: alt-order-arithmetic
+hypothesis: Additions are done after re-indexing runes in Latin-alphabetical order of their names.
+coverage: 24 keywords (both signs) and 9 sequences x 40 offsets; first 600 runes of each section
+detector: IoC
+control:
+  method: DIVINITY in alphabetical order over synthetic English
+  score: IoC 1.76
+'null':
+  method: random text
+  ceiling: ~1.00
+result:
+  best: IoC 1.02-1.08
+  verdict: negative
+skips_handled: 'no'
+source: seed session 2026-10-17 (seed/seed_scripts)
+date: '2026-10-17'
+artifacts:
+- seed/seed_scripts/StructureTests.py

@@ -1,0 +1,22 @@
+id: E0023
+title: The 256-byte grid as running key
+family: grid-numbers
+hypothesis: The decoded 8x32 grid (256 bytes) is a running key for some stretch of ciphertext.
+coverage: every offset in every section, raw and chain, bytes and reversed, both signs
+detector: IoC over 256 runes
+control:
+  method: theory (keyed English ~1.7-1.8 IoC)
+  score: not reported
+'null':
+  method: 6 random 256-byte keys, same scan
+  ceiling: 1.17-1.27
+result:
+  best: 1.16-1.18
+  verdict: negative
+skips_handled: 'no'
+source: seed session 2026-10-17 (seed/seed_scripts)
+date: '2026-10-17'
+artifacts:
+- seed/seed_scripts/Grid60.py
+- seed/seed_scripts/GridKey.py
+notes: No planted control was run; the null is the evidence.
