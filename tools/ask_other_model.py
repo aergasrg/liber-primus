@@ -491,7 +491,8 @@ def Attempt(Root, Call, Origin, PollSeconds, DeadlineSeconds):
         Note = (Note + "; " if Note else "") + "no usage reported, whole reservation counted"
     Entry = {Key: Call[Key] for Key in ("id", "branch", "session", "model", "mode", "effort", "purpose",
                                          "max_output", "prompt_sha256")}
-    Entry.update(UsageData, time=NowIso(), status=Status, response_id=Response.get("id", ""), note=Note)
+    Entry.update(UsageData, time=NowIso(), status=Status, response_id=Response.get("id", ""), note=Note,
+                 service_tier=Response.get("service_tier"))
     AppendEntry(Root, Entry)
     if Status == "tier-violation":
         Warn(f"STOP written: {os.path.relpath(WriteStop(Root, Call, Response, Note), Root)}")

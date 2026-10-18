@@ -166,6 +166,7 @@ def test_completed_call_logs_and_saves(Mock, Root):
     assert [Entry["status"] for Entry in Entries] == ["reserved", "completed"]
     assert Entries[0]["id"] == Entries[1]["id"]
     assert Entries[1]["total_tokens"] == 600 and Entries[1]["reasoning_tokens"] == 300
+    assert Entries[1]["service_tier"] == "default"
     for Key in ("time", "branch", "session", "model", "mode", "effort", "purpose", "input_tokens", "output_tokens"):
         assert Key in Entries[1]
     Body = Mock.Bodies[0]
@@ -245,6 +246,7 @@ def test_other_service_tier_writes_stop_and_blocks(Mock, Root, Model):
     Stop = Root / "budget" / "openai" / "STOP"
     assert Stop.exists() and "default" in Stop.read_text()
     assert Finals(Root)[0]["status"] == "tier-violation"
+    assert Finals(Root)[0]["service_tier"] in ("priority", "flex", None)
     if Model == "mock-priority":
         assert Mock.Cancelled == ["resp_1"]  # caught on the create response, cancelled at once
     Before = len(Mock.Bodies)

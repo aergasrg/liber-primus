@@ -37,3 +37,10 @@ A candidate rule must reproduce, on solved plaintext through its own pipeline:
 - Example shapes to plant: "skip the key symbol that would give step 0, except when <condition with
   probability ~0.19 per position>", where the condition is independent of position, such as a key
   symbol in a set of 5-6 of 29, or a plaintext rune class holding ~19% of English text.
+
+## Council midpoint addition (docs/council/2026-10-18/08-gpt-6-astra-midpoint-ideas.md, construction 6)
+A rule shape to plant: the excluded symbol is normally c_(i-1), and the exclusion is released (a doublet
+becomes possible, rate 1/28) when the plaintext rune five positions back lies in a class holding ~19%
+of encoded text, e.g. {R, N, S} = {4, 9, 15}. Predicted q = f / 28 ~ 0.0068. Measure f on solved LP;
+do not tune the class or the delay on the unsolved doublets. Ciphertext-only power is low, so this
+belongs with a key search, not as a standalone placement test.
