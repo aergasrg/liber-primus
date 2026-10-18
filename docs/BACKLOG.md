@@ -6,7 +6,7 @@ Open and claimed items first, by rank. Claim an item by editing its own file.
 | rank | id | title | status | claimed_by | ledger |
 | --- | --- | --- | --- | --- | --- |
 | 1 | [B01](backlog/B01-skip-tolerant-running-key.md) | Skip-tolerant running-key engine | open |  | E0008, E0012, E0024 |
-| 2 | [B02](backlog/B02-plaintext-reactive-key.md) | Plaintext-reactive key rules over long key sources | open |  | E0006, E0007 |
+| 2 | [B02](backlog/B02-plaintext-reactive-key.md) | Plaintext-reactive key rules over long key sources | open |  | E0006, E0007, E0028 |
 | 3 | [B03](backlog/B03-cicada-public-domain-texts.md) | Public-domain Cicada texts as running keys | open |  | E0008 |
 | 4 | [B04](backlog/B04-titles-as-cribs.md) | Section titles as cribs | open |  | E0010 |
 | 4 | [B19](backlog/B19-prng-page-local-skip-aware.md) | Rerun E0019/E0020 page-locally, skip-aware, with reduction … | open |  | E0019, E0020 |
@@ -18,7 +18,6 @@ Open and claimed items first, by rank. Claim an item by editing its own file.
 | 9 | [B09](backlog/B09-other-arithmetic-orders.md) | Other arithmetic orders | open |  | E0018 |
 | 10 | [B10](backlog/B10-prime-fibonacci-keystreams.md) | Prime-Fibonacci keystreams | open |  |  |
 | 11 | [B11](backlog/B11-self-keyed-book-codes.md) | Self-keyed book codes (page/line/sentence-indexed) | open |  | E0026 |
-| 12 | [B12](backlog/B12-doublet-event-process.md) | Structure of the doublet event process (spacing, clustering… | open |  |  |
 | 13 | [B13](backlog/B13-doublet-rare-rune-escape.md) | Doublets as escapes for a set of rare plaintext runes | open |  | E0025 |
 | 14 | [B14](backlog/B14-self-addressing-book-walks.md) | Self-addressing walks through LP's own plain pages | open |  |  |
 | 15 | [B15](backlog/B15-deck-state-keystreams.md) | Deck and permutation-state keystreams (Solitaire-style) | open |  |  |
@@ -26,3 +25,4 @@ Open and claimed items first, by rank. Claim an item by editing its own file.
 | 17 | [B17](backlog/B17-hash-pads-binary-seeds.md) | Hash pads from binary leads with section labels | open |  | E0021 |
 | 18 | [B20](backlog/B20-timestamp-seeds.md) | PRNG seeds from release timestamps (32-bit range) | open |  | E0019, E0020 |
 | 3 | [B18](backlog/B18-periodicity-in-steps-page-local.md) | Rerun E0002 in the step domain, page by page, with bounded … | done | claude/eager-brahmagupta-exiu52 | E0002, E0027 |
+| 12 | [B12](backlog/B12-doublet-event-process.md) | Structure of the doublet event process (spacing, clustering… | done | claude/serene-pasteur-5lrf49 | E0028 |

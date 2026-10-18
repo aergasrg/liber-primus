@@ -1,0 +1,77 @@
+E0028 (B12) doublet event process
+
+Doublets 86; per section {'p0-2': 4, 'p3-7': 6, 'p8-14': 9, 'p15-22': 10, 'p23-26': 11, 'p27-32': 13, 'p33-39': 12, 'p40-53': 18, 'p54-55': 3}
+Null: 100000 within-section permutations of the doublet positions
+
+stat          real      null mean   null 1%..99%       p
+GapKS            0.073      0.082     0.044..0.148    0.6218
+MinGap           6.000      2.334     1.000..9.000    0.1198
+GapCV            0.950      0.962     0.768..1.221    0.9607
+AutoChi2        17.321     19.713     9.237..48.196   0.4722
+ShortPairs       6.000     10.883     4.000..19.000   0.1492
+WordPairs        1.000      1.284     0.000..5.000    1.0000
+Pk16             1.000      3.879     0.000..8.000    0.1575
+Pk29             4.000      6.840     2.000..12.000   0.2796
+Pk32             4.000      7.495     3.000..13.000   0.1704
+PkLine           3.000      5.332     1.000..10.000   0.3655
+Fano200          0.907      0.947     0.627..1.387    0.8682
+PeriodRes        3.646      3.727     2.258..6.073    0.4772
+PeriodPairs      2.923      3.619     2.389..5.845    0.8611
+PeriodColl       5.796      3.428     2.237..5.795    0.0086
+RuneChi2        26.731     27.781    13.752..48.071   0.5200
+LineStart        4.000      3.885     0.000..9.000    1.0000
+PageStart        0.000      0.304     0.000..2.000    1.0000
+WordStart       23.000     19.134    11.000..28.000   0.3802
+
+min p 0.0086; family-wise p (min-p over 18 stats) 0.0896
+best period: residue L 252, pair-distance L 167, corpus collision L 215
+per-section counts chi2 6.19 on 8 df, multinomial p 0.6267
+
+Tier 1 power (100 plants each; recovered = family-wise p <= 0.01; designated = that statistic alone at p <= 0.01)
+kind           param   family  designated  (designated stat)
+Uniform        0          1         -      none (calibration)
+Refractory     3          1         2      MinGap
+Refractory     5          1        11      MinGap
+Refractory     7          2         8      MinGap
+Refractory     10        11        62      MinGap
+Refractory     15       100       100      MinGap
+Refractory     20       100       100      MinGap
+Regime         5         25         5      GapCV/Fano200
+Regime         20        99        73      GapCV/Fano200
+Regime         100      100       100      GapCV/Fano200
+Regime         300      100       100      GapCV/Fano200
+Packet         Pk16       7         0      Pk16
+Packet         Pk29     100       100      Pk29
+Packet         Pk32     100       100      Pk32
+Packet         PkLine     8       100      PkLine
+PeriodGlobal   (0.1, 2, 30)    4         7      PeriodRes
+PeriodGlobal   (0.1, 31, 300)   57        72      PeriodRes
+PeriodGlobal   (0.25, 2, 30)   86        83      PeriodRes
+PeriodGlobal   (0.25, 31, 300)  100       100      PeriodRes
+PeriodGlobal   (0.5, 2, 30)   99        98      PeriodRes
+PeriodGlobal   (0.5, 31, 300)  100       100      PeriodRes
+PeriodSection  (0.1, 2, 30)    1         1      PeriodPairs
+PeriodSection  (0.1, 31, 300)    5         8      PeriodPairs
+PeriodSection  (0.25, 2, 30)    5        12      PeriodPairs
+PeriodSection  (0.25, 31, 300)   53        68      PeriodPairs
+PeriodSection  (0.5, 2, 30)   73        83      PeriodPairs
+PeriodSection  (0.5, 31, 300)  100       100      PeriodPairs
+PeriodAllowed  (0.25, 2, 30)  100        47      PeriodColl
+PeriodAllowed  (0.25, 31, 300)   28         3      PeriodColl
+PeriodAllowed  (0.5, 2, 30)   35        12      PeriodColl
+PeriodAllowed  (0.5, 31, 300)    3         2      PeriodColl
+PeriodAllowed  (0.75, 2, 30)    9         4      PeriodColl
+PeriodAllowed  (0.75, 31, 300)    0         2      PeriodColl
+WordSubset     0.1       96        99      WordPairs
+WordSubset     0.25      17        38      WordPairs
+WordSubset     0.5        3         3      WordPairs
+LineStart      0.05       7        13      LineStart
+LineStart      0.1       50        55      LineStart
+LineStart      0.2       99        99      LineStart
+PageStart      0.05      66        80      PageStart
+PageStart      0.1       98        99      PageStart
+WordStart      1.5        5        12      WordStart
+WordStart      2.0       33        63      WordStart
+RunePref       2.0        6        15      RuneChi2
+RunePref       3.0       45        69      RuneChi2
+SectionRates   sigma   0.3: 18/100, 0.5: 58/100, 0.8: 89/100  (SectionChi2 alone)
