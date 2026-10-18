@@ -20,4 +20,7 @@ Fetch() {
 }
 for Name in $Pages; do Fetch "$Base/pages/$Name.txt" "data/pages/$Name.txt"; done
 Fetch "$Base/data/baseline-rune-words.txt" "data/baseline-rune-words.txt"
+# Independent transcription with explicit page (%) and line (/) markers (scripts/crosscheck_rtkd.py)
+mkdir -p data/rtkd
+Fetch "https://raw.githubusercontent.com/rtkd/iddqd/master/liber-primus__transcription--master/liber-primus__transcription--master.txt" "data/rtkd/transcription.txt"
 echo "data/: $(ls data/pages | wc -l) page files, baseline $(wc -l < data/baseline-rune-words.txt) words"

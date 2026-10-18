@@ -28,13 +28,13 @@ docs/BACKLOG.md; unused clues in docs/LEADS.md.
 | Some Wisdom [0_wisdom] | plain; ends in a word/number square |
 | Koan 1 [0_koan_1] | Atbash then +3 |
 | The Loss of Divinity [0_loss_of_divinity] | plain |
-| Koan 2 [jpg107-167] | Vigenere FIRFUMFERENFE (= CIRCUMFERENCE with C->F), 2 F-skips |
+| Koan 2 [jpg107-167] | Vigenere FIRFUMFERENFE (= CIRCUMFERENCE with C->F); the 2nd and 3rd of 5 ciphertext F pass through (2 F-skips) |
 | An Instruction [jpg229] | plain; 5x5 square, rows sum 3301 |
 | An End [p56_an_end] | subtract (prime_n - 1), one F-skip (the 4th F) |
 | Parable [p57_parable] | plain |
 
 Every key came from the book's own plain pages. Every keyed solved section uses F-skips.
-The gate reproduces Warning, Welcome, Koan 1 and An End exactly; Koan 2 is not in the gate yet.
+The gate reproduces Warning, Welcome, Koan 1, Koan 2 and An End exactly.
 
 ## Unsolved: 9 sections, 12,956 runes, 2,896 words
 
@@ -65,6 +65,11 @@ length (4.47 = 12,956 / 2,896) matches 2,896. The gate pins 2,896.
   with this loader); two-rune words 15.5%.
 - Real page map (2026-10-18, from the page images; `lp.data.PageLines`): 55 rune pages, 66-277 runes
   each; page 50 is digits only; blank lines in the transcription are page or paragraph breaks.
+- Cross-check (2026-10-18, `scripts/crosscheck_rtkd.py`) against rtkd/iddqd's independent transcription,
+  which marks pages (%) and lines (/): all 12,956 unsolved runes identical, 0 page and 0 line boundary
+  disagreements. Only difference anywhere: solved Koan 1 runes 142-143 and 279-280, where relikd has
+  W S (plain "WHAT YOU ARE") and rtkd has EA (plain "WHO YOU ARE", the known wording). Not fixed:
+  relikd's cipher and plaintext files agree with each other and the gate uses them as a pair.
 - One repeated 6-gram, DJUBEI, at corpus positions 6555 and 12950 (0-based, sections concatenated in order).
 
 ## Working model

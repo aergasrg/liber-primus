@@ -1,0 +1,68 @@
+id: E0029
+title: Skip-tolerant page-local running keys (lattice, 4 views, 8 polarity/direction forms) - text and small file sources (B01)
+family: running-key-text
+hypothesis: Each LP page is enciphered with a running key read from a known source starting anywhere
+  (independently per page), with any ciphertext F possibly a non-consuming F-skip, English sources
+  tokenised either way at every digraph, in the raw, step or chain-unit view.
+coverage: 'lp.runningkey exact DP over source position (any start, any skip set, any lattice path) on all
+  55 real pages (12,956 runes), 4 views (raw29; step29; unit28z1 = zero step consumes one key symbol
+  unscored; unit28z2 = zero step consumes nothing; step-view skips literal or transparent) x 4 polarities
+  (p = a c + b k, a, b = +-1) x 2 directions (reversed token lattice) = 32 forms. Sources (CPU): lp_plain
+  = relikd''s 9 solved plaintext files in book order (2,979 runes); lp_cipher = the same 9 solved
+  ciphertext files (the unsolved ciphertext as its own key is not covered); self_reliance = Emerson''s
+  essay only (Gutenberg 2944, 43,891 letters, lattice); mabinogion = Guest''s translation, Gutenberg
+  5160 body including notes (439,056 letters, lattice); growing_string = final 256-byte onion string
+  (2014), byte % 29, tiled cyclically to 4,352; c560_13 = Cicada OS DATA/560.13 (134 B, tiled to 4,154);
+  wisdom = Cicada OS tmp/wisdom (3,368 B, tiled to 10,104). Mod-28 views use token % 28. NOT covered here
+  (GPU job gpu/E0029_bytes_gpu.py, ready, not yet run): 761.MP3, _560.00, 560.17, the 75 LP page images.'
+detector: English unigram log ratio summed along the best path (raw29/step29 mod 29; unit28 views mod 28
+  with F and EA merged); a skip scores W[F]. Page statistic = max over the 32 forms and every start.
+control:
+  method: 'Real-world: Koan 2 (FIRFUMFERENFE x25) and Welcome (DIVINITY x66) hidden as words in the
+    middle of the Mabinogion, full 32-form search. Tier 1: per source 4 views x 4 skip patterns (none;
+    first skip at a plaintext F before rune 50; first skip at an F in runes 80-130; skips only in the last
+    70) x 3 page-length bins (<=140, 141-220, >=221 runes) x 100 plants: baseline-English plaintext poured
+    into a random real page of the bin (its length and, for unit28 plants, its doublet positions), key
+    from the source at a random offset with each digraph/ING merged with prob 0.5, random polarity and
+    direction, later Fs skipped with prob 0.3 (0.5 late); scored by the identical DP restricted to a
+    window around the key (a lower bound on the full search). Rigid baseline (raw29, Self-Reliance): best
+    rigid alignment given the plant''s own tokens, against a rigid-FFT null (20 shuffled sources).'
+  score: 'Koan 2: top form raw29 +1-1 fwd, 147.4 vs null max -6.7 (Gumbel z 48.8), start, both skips
+    (cipher 49, 58) and plaintext exact. Welcome: top raw29 +1-1 fwd, 182.9 vs null max -36.8 (z 60.7),
+    start exact, 9 of 11 skips exact; the other 2 sit on FF pairs (47 for 48, 165 for 160), a near-tied
+    alternative path. Rigid FFT also finds both (z 30.8, 19.8) because the hidden keys are periodic;
+    rigid at the true start scores -116.9 and -264.4.'
+  power: '>= 221 runes: 100/100 in all 16 view x pattern rows for every source. 141-220 runes: 99-100/100
+    (worst 99, e.g. mabinogion step29/early). <= 140 runes: 50-86/100 (worst mabinogion unit28z1/late 50):
+    not identifiable. Rigid with known tokens, Self-Reliance, 141-220 runes: none 100, early 61, mid 25,
+    late 91 (engine 100 in each). Traced start exact in 123/144 checked Mabinogion plants, else off by
+    one letter (lattice ambiguity at the first token).'
+'null':
+  method: 'Whole 32-form search on 20 shuffled sources per source (words permuted for text, bytes
+    permuted before tiling). Per page: Gumbel location from the replicate mean, scale pooled as
+    kappa * sqrt(n). Pooled standardised null (1,100 values per source) matches Gumbel (lp_plain: mean 0.58,
+    sd 1.25, P(>3) 0.043 vs 0.049, max 7.3). Threshold: standardised 11.01 = per-page alpha 1.65e-5,
+    family-wise 0.01 over 55 pages x 11 sources (7 CPU + 4 GPU).'
+  ceiling: 'standardised 11.01 per page; null max-over-pages 2.1-8.5 across sources'
+  surrogates: '20 shuffled-source replicates per source (tier 2 not run: nothing above threshold)'
+result:
+  best: 'best page per source (standardised; p vs the 20 null max-over-pages): lp_plain p18 5.03 (0.29),
+    lp_cipher p29 3.17 (0.76), self_reliance p41 3.29 (0.95), growing_string p5 3.70 (0.67), c560_13 p13
+    4.14 (0.38), wisdom p31 2.15 (1.00), mabinogion p54 4.26 (0.43). No page above threshold.'
+  verdict: negative
+skips_handled: 'yes: exact DP, every ciphertext F may skip (raw: plaintext F, no key; step views: literal or
+  transparent chain convention), no cap on skips per page'
+source: claude/blissful-gates-2v36sv
+date: '2026-10-18'
+artifacts: [lp/runningkey.py, experiments/E0029_skip_tolerant_running_key.py, gpu/E0029_bytes_gpu.py,
+  results/E0029/summary.txt, results/E0029/controls.json, results/E0029/power_mabinogion.json]
+notes: 'Supersedes E0008 (rigid, no control) for its LP-solved and Self-Reliance/Mabinogion sources, E0012
+  for the growing string, and E0024 for 560.13 and wisdom, on the 49 pages of >= 141 runes (12,333
+  runes). Excluded there for page-local keys in these 32 forms; the six pages of <= 140 runes (p14, p22,
+  p32, p49, p51, p55) stay not identifiable (B22). Not covered: keys continuing across pages (each page
+  is searched independently, which also covers a continuing key page by page), word-level or bigram
+  scoring, other editions of Self-Reliance (Cicada''s 2014 book code used a specific one), non-English
+  plaintext. GPU sources (761.MP3, _560.00, 560.17, page images) are pending: run gpu/E0029_bytes_gpu.py,
+  then `import-gpu` and `report`, and record them in a new ledger entry. The unigram LLR in the chain
+  views is valid because the key is given (chain decrypt yields p % 28). This experiment was numbered
+  E0028 during the run and renamed (E0028 on main is B12).'

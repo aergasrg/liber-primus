@@ -50,7 +50,11 @@ Corpus positions (e.g. DJUBEI at 6555 and 12950) are 0-based over the 9 sections
   top hits on the whole section.
 - Binomial tails with p = 1/29 are skewed; use permutation nulls, not normal z.
 - Log-likelihood scoring needs letter identities (raw form only); the chain form needs IoC, since
-  the step-to-letter mapping is unknown.
+  the step-to-letter mapping is unknown. Exception: when the key itself is given (running-key
+  tests), chain decryption yields p % 28 and the LLR works with F and EA merged (`lp.runningkey`).
 - A 2025 wiki note says every page hides OutGuess data; controlled runs show that is random LSB noise.
 - The word count is 2,896 (the session-one brief's 2,921 was inconsistent with its own mean length).
-- Running-key scans with rigid alignment (FFT) silently fail if the key skips at an F; see B01.
+- Running-key scans with rigid alignment (FFT) silently fail if the key skips at an F. Use
+  `lp.runningkey` (B01, E0029): exact DP over source position with any F-skip set, the digraph
+  lattice (TH, NG/ING, EO, OE, AE, IA/IO, EA as one rune or letters), 4 views x 4 polarities x 2
+  directions, page-local. It cannot verify pages of <= 140 runes (p14, p22, p32, p49, p51, p55).
