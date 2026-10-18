@@ -5,7 +5,7 @@ Open and claimed items first, by rank. Claim an item by editing its own file.
 
 | rank | id | title | status | claimed_by | ledger |
 | --- | --- | --- | --- | --- | --- |
-| 1 | [B01](backlog/B01-skip-tolerant-running-key.md) | Skip-tolerant running-key engine | open |  | E0008, E0012, E0024 |
+| 1 | [B01](backlog/B01-skip-tolerant-running-key.md) | Skip-tolerant running-key engine | claimed | claude/blissful-gates-2v36sv | E0008, E0012, E0024 |
 | 2 | [B02](backlog/B02-plaintext-reactive-key.md) | Plaintext-reactive key rules over long key sources | open |  | E0006, E0007 |
 | 3 | [B03](backlog/B03-cicada-public-domain-texts.md) | Public-domain Cicada texts as running keys | open |  | E0008 |
 | 4 | [B04](backlog/B04-titles-as-cribs.md) | Section titles as cribs | open |  | E0010 |

@@ -1,8 +1,8 @@
 ---
 id: B01
 title: Skip-tolerant running-key engine
-status: open
-claimed_by: ""
+status: claimed
+claimed_by: claude/blissful-gates-2v36sv
 rank: 1
 ledger: [E0008, E0012, E0024]
 ---
