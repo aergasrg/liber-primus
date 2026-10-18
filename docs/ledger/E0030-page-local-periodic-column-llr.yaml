@@ -1,4 +1,4 @@
-id: E0029
+id: E0030
 title: Page-local periodic keys L 2-20 scored by best-shift English likelihood per column (B21)
 family: periodic-polyalphabetic
 hypothesis: Each LP page (real page map) has its own periodic key of period L 2..20, applied to the raw
@@ -29,7 +29,7 @@ control:
     137 runes (p14) L 3 and 5; L 8 for 6 of 9 (chain random-skip and chain-literal Welcome 92-94/100);
     L 10 raw no/random skips only; nothing at L >= 12 (best 82/100);
     76 runes (p55) raw L 3 only (95-99/100); chain L 3 84-91/100; L >= 5 at most 74/100.
-    Full table: results/E0029/summary.txt.'
+    Full table: results/E0030/summary.txt.'
 'null':
   method: 'tier 2: 999 surrogate corpora (E0027 SurrogateLayout: non-zero steps permuted within each page,
     zero positions and page lengths kept, re-integrated from a random first rune, Fs recomputed), whole
@@ -45,11 +45,11 @@ skips_handled: 'yes: every subset of a page''s ciphertext Fs with <= 11 skips, c
 source: claude/eloquent-hopper-k6fff6
 date: '2026-10-18'
 artifacts:
-- experiments/E0029_column_shift_llr_pages.py
-- results/E0029/summary.txt
-- results/E0029/analysis.json
-- results/E0029/real.json
-- results/E0029/run_all.sh
+- experiments/E0030_column_shift_llr_pages.py
+- results/E0030/summary.txt
+- results/E0030/analysis.json
+- results/E0030/real.json
+- results/E0030/run_all.sh
 notes: 'Extends E0027''s verified region (single-page key L 3 only, pages >= 217 runes) to L 3-13 on pages
   of >= 217 runes for every model and skip mask, and L 3-20 on 273 runes. 42 of 55 pages (10,963 of 12,956
   runes) are >= 217 runes, but power was verified on the p3 and p25 layouts only; other pages of that
@@ -57,6 +57,7 @@ notes: 'Extends E0027''s verified region (single-page key L 3 only, pages >= 217
   L >= 16 on 217-272 runes in most chain conditions, L >= 10 on 137 runes (chain) and L >= 12 (all), anything
   but raw L 3 on 76 runes, periods > 20 anywhere (not searched; E0027 covers them only as not identifiable),
   keys continuing across pages (E0027 S2). Real data null, so nothing went to the skeptic. Single statistic,
-  one look, level 0.01 (no x2 correction as in E0027, which had two baselines). Renumbered from E0028 (taken
-  on main by B12 while this ran); the plant seed label in the script stays "E0028" so plants reproduce.
+  one look, level 0.01 (no x2 correction as in E0027, which had two baselines). Renumbered E0028 -> E0029 -> E0030
+  (taken on main by B12, then B01, while this ran); the plant seed label in the script stays "E0028" so
+  plants reproduce. Its follow-up item was renumbered B22 -> B23 for the same reason.
   Runtime: 16.5 s per corpus single-thread, ~70 min for 999 on 4 cores, power ~20 min.'

@@ -1,4 +1,4 @@
-E0029 report: 999 surrogate corpora (whole search on each)
+E0030 report: 999 surrogate corpora (whole search on each)
 
 Real S1 (max over pages, standardised by each page's surrogate mean/sd) 3.14
   surrogate p 0.153; tier-1 threshold (surrogate quantile 0.99) 4.17; surrogate S1 median 2.39, max 5.97

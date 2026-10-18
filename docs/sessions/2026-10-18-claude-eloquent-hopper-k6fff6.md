@@ -1,10 +1,10 @@
 # 2026-10-18 claude/eloquent-hopper-k6fff6
 
 Item: B21 Column-shift likelihood detector to extend E0027's power to longer page-local periods  |  Status: done
-Ledger: E0029
+Ledger: E0030
 
 ## What I did
-- `experiments/E0029_column_shift_llr_pages.py` imports E0027's views, skip masks, surrogate generator
+- `experiments/E0030_column_shift_llr_pages.py` imports E0027's views, skip masks, surrogate generator
   and plants. Only the detector is new:
   - Each column is scored by its best-of-28/29-shift English unigram LLR. In the chain view, F and EA are
     merged as p mod 28.
@@ -17,8 +17,9 @@ Ledger: E0029
   It uses one statistic, S1, at level 0.01.
 - Runs: real data, 999 surrogates (resumed from a 210-surrogate checkpoint after a container restart) and
   288 tier-1 conditions x 100 plants.
-- Renumbered E0028 -> E0029, because B12 merged E0028 to main while this ran. The plant seed label stays
-  "E0028" in the script so the recorded plants reproduce.
+- Renumbered E0028 -> E0029 -> E0030 (B12, then B01, merged those ids to main while this ran), and its
+  follow-up item B22 -> B23. The plant seed label stays "E0028" in the script so the recorded plants
+  reproduce.
 
 ## Results (control / null / best)
 - Null: S1 threshold 4.17 (0.99 quantile of 999 surrogates). Real S1 3.14, p 0.153, so the real data is
@@ -35,14 +36,14 @@ Ledger: E0029
   plants were run on the p3 and p25 layouts only.
 
 ## Next steps (most useful first)
-- B22 (new): bigram-refined column shifts, to reach L 14-40 on long pages and L 5-20 on the 13 pages of
+- B23 (new): bigram-refined column shifts, to reach L 14-40 on long pages and L 5-20 on the 13 pages of
   < 217 runes.
-- B01 skip-tolerant running-key engine (still rank 1). B19 PRNG page-local: E0029's rolled-count mask
-  trick also works for any per-column score that is linear in counts.
+- B19 PRNG page-local: E0030's rolled-count mask trick also works for any per-column score that is
+  linear in counts.
 
 ## Do not repeat
-- Unigram best-shift periodicity per page at L 2-20 with these views and masks (E0029). Inside the
-  region above it is excluded; outside it, extend with B22, not by rerunning E0029.
+- Unigram best-shift periodicity per page at L 2-20 with these views and masks (E0030). Inside the
+  region above it is excluded; outside it, extend with B23, not by rerunning E0030.
 
 ## Needs a human
 - Nothing.

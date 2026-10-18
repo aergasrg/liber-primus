@@ -1,4 +1,4 @@
-"""E0029 (B21): page-local periodic keys scored by best-shift English likelihood per column.
+"""E0030 (B21): page-local periodic keys scored by best-shift English likelihood per column.
 
 Hypothesis: each LP page (real page map) is enciphered with its own periodic key of period L 2..20,
 applied to the raw runes (Vigenere) or to the chain units (u = s - 1 mod 28), with up to 11 ciphertext
@@ -21,8 +21,8 @@ Control (tier 1): E0027 PlantPage (raw, chain literal-F z1, chain transparent-F 
 Welcome ordinals) on real layouts, 100 plants per condition, standardised by the page's surrogate stats.
 
 Usage:
-  python3 experiments/E0029_column_shift_llr_pages.py time|real|surrogates|power|report
-Outputs: results/E0029/ (small text); checkpoints in results/E0029/checkpoint_runs/ (gitignored).
+  python3 experiments/E0030_column_shift_llr_pages.py time|real|surrogates|power|report
+Outputs: results/E0030/ (small text); checkpoints in results/E0030/checkpoint_runs/ (gitignored).
 """
 import argparse
 import json
@@ -40,7 +40,7 @@ from lp.detectors import EnglishModel  # noqa: E402
 from lp.gematria import ToLatin  # noqa: E402
 import E0027_step_periodicity_pages as E27  # noqa: E402
 
-OutDir = os.path.join(RepoRoot, "results", "E0029")
+OutDir = os.path.join(RepoRoot, "results", "E0030")
 CheckpointDir = os.path.join(OutDir, "checkpoint_runs")
 ViewNames = ["raw29", "unit28z1", "unit28z2"]
 ViewModulus = {"raw29": 29, "unit28z1": 28, "unit28z2": 28}
@@ -211,7 +211,7 @@ def Report():
     Threshold = float(np.quantile(S1Surr, Level))
     Numbers = [N for _, PageList in E27.RealLayout() for N, _ in PageList]
     Lengths = {N: len(R) for _, PageList in E27.RealLayout() for N, R in PageList}
-    Lines = [f"E0029 report: {NSurr} surrogate corpora (whole search on each)", "",
+    Lines = [f"E0030 report: {NSurr} surrogate corpora (whole search on each)", "",
              f"Real S1 (max over pages, standardised by each page's surrogate mean/sd) {S1:.2f}",
              f"  surrogate p {P:.3f}; tier-1 threshold (surrogate quantile {Level}) {Threshold:.2f};"
              f" surrogate S1 median {np.median(S1Surr):.2f}, max {S1Surr.max():.2f}", "",
