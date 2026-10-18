@@ -20,6 +20,19 @@ A result without a passing positive control and a null ceiling is not a result. 
    (shuffled ciphertext, random keys of the same length through the same scan) over normal z
    (binomial tails at p = 1/29 are skewed). The ceiling must reflect the number of trials: a max over
    10^6 windows of 300 runes reaches IoC ~1.2-1.25 by chance.
+   **Two-tier null rule** (adopted 2026-10-18 from the council audit; both tiers are required):
+   - *Tier 1, power, for any negative*: fix the detection threshold first (from the null below), then
+     plant 100 keys of the family (fresh keys, varied plaintext, realistic F-skips and layout) and push
+     each through the identical pipeline. A negative needs at least 95 of 100 plants recovered at that
+     threshold. Report the recovery count per condition (page length, period, skip pattern...). Where
+     fewer than 95 are recovered, the verdict for that condition is "not identifiable at this length",
+     never "excluded".
+   - *Tier 2, surrogates, for any claimed hit*: run the WHOLE optimised search (every period, view,
+     skip subset and threshold choice the real run made) on surrogate corpora that keep the real
+     layout (page lengths, doublet positions, F positions where the method depends on them) but
+     destroy the hypothesised key. 999 surrogates if feasible, otherwise as many as time allows; say
+     how many. The real best must reach p <= 0.01 against the surrogate maxima (p = (1 + #surrogates
+     at least as good) / (1 + N)) before anyone believes it, and then it still goes to the skeptic.
 6. **Run**. Anything over ~5 minutes runs in the background (`nohup ... > results/E####/run.log 2>&1 &`
    or the Bash tool's background mode), logs progress every few percent, and checkpoints partial
    results to disk so a paused or reclaimed VM can resume. Print only summaries.
@@ -36,8 +49,8 @@ family: running-key-text        # reuse an existing family name when it fits (se
 hypothesis: ...
 coverage: ...
 detector: ...
-control: {method: ..., score: ...}
-null: {method: ..., ceiling: ...}
+control: {method: ..., score: ..., power: "97/100 at threshold X"}
+null: {method: ..., ceiling: ..., surrogates: 999}
 result: {best: ..., verdict: negative}   # negative | positive | inconclusive
 skips_handled: "yes: drift DP at every ciphertext F"   # or "no"
 source: <branch name>
