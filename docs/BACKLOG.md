@@ -10,7 +10,7 @@ Open and claimed items first, by rank. Claim an item by editing its own file.
 | 3 | [B03](backlog/B03-cicada-public-domain-texts.md) | Public-domain Cicada texts as running keys | open |  | E0008 |
 | 4 | [B04](backlog/B04-titles-as-cribs.md) | Section titles as cribs | open |  | E0010 |
 | 4 | [B19](backlog/B19-prng-page-local-skip-aware.md) | Rerun E0019/E0020 page-locally, skip-aware, with reduction … | open |  | E0019, E0020 |
-| 4 | [B21](backlog/B21-column-shift-likelihood-detector.md) | Column-shift likelihood detector to extend E0027's power to… | open |  | E0027 |
+| 4 | [B21](backlog/B21-column-shift-likelihood-detector.md) | Column-shift likelihood detector to extend E0027's power to… | claimed | claude/eloquent-hopper-k6fff6 | E0027 |
 | 5 | [B05](backlog/B05-grid-as-ciphertext.md) | The 256-byte grid as ciphertext | open |  | E0014, E0023 |
 | 6 | [B06](backlog/B06-other-stego-tools.md) | Other stego tools on page images | open |  | E0011 |
 | 7 | [B07](backlog/B07-non-english-scoring.md) | Non-English plaintext scoring | open |  |  |

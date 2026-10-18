@@ -1,8 +1,8 @@
 ---
 id: B21
 title: Column-shift likelihood detector to extend E0027's power to longer page-local periods
-status: open
-claimed_by: ""
+status: claimed
+claimed_by: claude/eloquent-hopper-k6fff6
 rank: 4
 ledger: [E0027]
 ---
