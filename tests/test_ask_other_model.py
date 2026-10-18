@@ -19,7 +19,8 @@ sys.path.insert(0, os.path.join(RepoRoot, "tools"))
 import ask_other_model as Ask  # noqa: E402
 
 Tool = os.path.join(RepoRoot, "tools", "ask_other_model.py")
-MockModels = ["mock-completed", "mock-incomplete", "mock-failed", "mock-flagged", "mock-prohang", "mock-slow"]
+MockModels = ["mock-completed", "mock-incomplete", "mock-failed", "mock-flagged", "mock-prohang", "mock-slow",
+              "mock-priority", "mock-latepriority", "mock-notier"]
 FullUsage = {"input_tokens": 100, "output_tokens": 500, "total_tokens": 600,
              "output_tokens_details": {"reasoning_tokens": 300}}
 
@@ -40,7 +41,13 @@ def Advance(Record):
     """Status the mock reports on each GET for a given model and mode."""
     Model, Pro = Record["Body"]["model"], Record["Body"]["reasoning"].get("mode") == "pro"
     Record["Polls"] += 1
-    Base = {"id": Record["Id"], "model": Model}
+    Base = {"id": Record["Id"], "model": Model, "service_tier": Record["Body"].get("service_tier")}
+    if Model == "mock-priority":
+        Base["service_tier"] = "priority"
+    if Model == "mock-latepriority" and Record["Polls"] >= 2:
+        Base["service_tier"] = "flex"
+    if Model == "mock-notier" and Record["Polls"] >= 2:
+        del Base["service_tier"]
     if Model == "mock-prohang" and Pro:
         return dict(Base, status="in_progress")
     if Model == "mock-slow" and Record["Polls"] < 20:
@@ -48,6 +55,8 @@ def Advance(Record):
     if Record["Polls"] < 2:
         return dict(Base, status="in_progress")
     if Model in ("mock-completed", "mock-prohang", "mock-slow"):
+        return dict(Base, status="completed", usage=FullUsage, output=Message("ANSWER-TEXT"))
+    if Model in ("mock-latepriority", "mock-notier"):
         return dict(Base, status="completed", usage=FullUsage, output=Message("ANSWER-TEXT"))
     if Model == "mock-incomplete":
         return dict(Base, status="incomplete", usage=FullUsage, output=Message("PARTIAL-TEXT"),
@@ -91,7 +100,8 @@ def MakeHandler(State):
                 Id = f"resp_{len(State.Responses) + 1}"
                 State.Responses[Id] = {"Id": Id, "Body": Body, "Polls": 0}
                 State.Bodies.append(Body)
-            self.Reply({"id": Id, "status": "queued", "model": Body["model"]})
+            Tier = "priority" if Body["model"] == "mock-priority" else Body.get("service_tier")
+            self.Reply({"id": Id, "status": "queued", "model": Body["model"], "service_tier": Tier})
     return Handler
 
 
@@ -127,6 +137,16 @@ def Run(Mock, Root, *Extra, Cap="230000", Wait=True):
     return Proc.returncode, Out, Err
 
 
+def WriteEntries(Root, Entries):
+    Path = Root / "budget" / "openai" / "ledger.jsonl"
+    Path.parent.mkdir(parents=True, exist_ok=True)
+    Path.write_text("".join(json.dumps(Entry) + "\n" for Entry in Entries))
+
+
+def HoursAgo(Hours):
+    return (datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(hours=Hours)).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
 def Ledger(Root):
     Path = Root / "budget" / "openai" / "ledger.jsonl"
     return [json.loads(Line) for Line in Path.read_text().splitlines()] if Path.exists() else []
@@ -152,7 +172,9 @@ def test_completed_call_logs_and_saves(Mock, Root):
     assert Body["background"] is True and Body["max_output_tokens"] == 8000
     assert Body["input"][0] == {"role": "developer", "content": Ask.DeveloperMessage}
     assert "ANSWER-TEXT" in (Root / Lines[1][len("saved: "):]).read_text()
-    assert "remaining: 169400 general" in Lines[0]  # 220000 - 50000 - 600
+    assert Body["service_tier"] == "default" == Ask.ServiceTier
+    assert set(Body) <= Ask.AllowedBodyKeys and "tools" not in Body
+    assert "remaining: 219400 in the rolling 24 h window" in Lines[0]  # 220000 - 600
 
 
 def test_incomplete_keeps_partial_and_fails(Mock, Root):
@@ -192,19 +214,58 @@ def test_pro_that_never_finishes_falls_back_once(Mock, Root):
     assert Mock.Bodies[1]["reasoning"] == {"effort": "high"}
 
 
-def test_reserve_needs_verify_or_flag(Mock, Root):
-    # Cap 60000, so 10000 is spendable without the reserve.
-    Code, _, Err = Run(Mock, Root, "--model", "mock-completed", "--max-output", "16000", Cap="70000")
-    assert Code == 2 and "reserve" in Err and not Ledger(Root)
-    Code, _, _ = Run(Mock, Root, "--model", "mock-completed", "--max-output", "16000", "--use-reserve", Cap="70000")
-    assert Code == 0
-    Code, _, _ = Run(Mock, Root, "--model", "mock-completed", "--max-output", "16000", "--purpose", "verify",
-                     Cap="70000")
-    assert Code == 0
+def test_rolling_window_ignores_entries_older_than_24h(Mock, Root):
+    # 200000 spent 25 h ago no longer counts; 210000 spent 23 h ago does.
+    WriteEntries(Root, [{"id": "old", "status": "completed", "total_tokens": 200000, "time": HoursAgo(25)}])
+    Code, Out, Err = Run(Mock, Root, "--model", "mock-completed", "--max-output", "16000")
+    assert Code == 0, Err
+    assert "remaining: 219400 in the rolling 24 h window" in Out
+    WriteEntries(Root, [{"id": "new", "status": "completed", "total_tokens": 210000, "time": HoursAgo(23)}])
+    Code, _, Err = Run(Mock, Root, "--model", "mock-completed", "--max-output", "16000")
+    assert Code == 2 and "24 h cap" in Err
+    assert Run(Mock, Root, "--model", "mock-completed", "--use-reserve")[0] == 2  # flag removed
+
+
+def test_pro_once_per_24h_and_needs_60k(Mock, Root):
+    WriteEntries(Root, [{"id": "p", "status": "completed", "mode": "pro", "total_tokens": 1000, "time": HoursAgo(23)}])
+    Code, _, Err = Run(Mock, Root, "--model", "mock-completed", "--mode", "pro")
+    assert Code == 2 and "pro mode already used" in Err and not Mock.Bodies
+    WriteEntries(Root, [{"id": "p", "status": "completed", "mode": "pro", "total_tokens": 1000, "time": HoursAgo(25)}])
+    assert Run(Mock, Root, "--model", "mock-completed", "--mode", "pro", "--dry-run")[0] == 0
+    # 100000 cap -> 90000; 35000 spent leaves 55000 < 60000.
+    WriteEntries(Root, [{"id": "q", "status": "completed", "total_tokens": 35000, "time": HoursAgo(1)}])
+    Code, _, Err = Run(Mock, Root, "--model", "mock-completed", "--mode", "pro", "--dry-run", Cap="100000")
+    assert Code == 2 and "60000+" in Err
+
+
+@pytest.mark.parametrize("Model", ["mock-priority", "mock-latepriority", "mock-notier"])
+def test_other_service_tier_writes_stop_and_blocks(Mock, Root, Model):
+    Code, _, Err = Run(Mock, Root, "--model", Model, "--max-output", "8000")
+    assert Code == 4 and "STOP" in Err
+    Stop = Root / "budget" / "openai" / "STOP"
+    assert Stop.exists() and "default" in Stop.read_text()
+    assert Finals(Root)[0]["status"] == "tier-violation"
+    if Model == "mock-priority":
+        assert Mock.Cancelled == ["resp_1"]  # caught on the create response, cancelled at once
+    Before = len(Mock.Bodies)
+    Code, _, Err = Run(Mock, Root, "--model", "mock-completed", "--max-output", "8000")
+    assert Code == 2 and "STOP" in Err and len(Mock.Bodies) == Before
+    Code, _, Err = Run(Mock, Root, "--list-models")
+    assert Code == 2
+    Stop.unlink()  # the human deletes it
+    assert Run(Mock, Root, "--model", "mock-completed", "--max-output", "8000")[0] == 0
+
+
+def test_every_request_body_pins_default_tier(Mock, Root):
+    Run(Mock, Root, "--model", "mock-prohang", "--mode", "pro", "--deadline-seconds", "0.5")
+    Run(Mock, Root, "--model", "mock-completed", "--system-file", str(Root / "prompt.md"), "--max-output", "8000")
+    assert len(Mock.Bodies) == 3
+    for Body in Mock.Bodies:
+        assert Body["service_tier"] == "default" and set(Body) <= Ask.AllowedBodyKeys
 
 
 def test_cap_refusal(Mock, Root):
-    Code, _, Err = Run(Mock, Root, "--model", "mock-completed", "--max-output", "25000", "--use-reserve", Cap="30000")
+    Code, _, Err = Run(Mock, Root, "--model", "mock-completed", "--max-output", "25000", Cap="30000")
     assert Code == 2 and "refused" in Err
     assert not Mock.Bodies and not Ledger(Root)
     Code, _, Err = Run(Mock, Root, "--model", "mock-completed", "--max-output", "60000")
@@ -212,8 +273,8 @@ def test_cap_refusal(Mock, Root):
 
 
 def test_two_parallel_calls_share_the_lock(Mock, Root):
-    # 12000 general tokens: each call reserves ~8050, so exactly one of two simultaneous calls fits.
-    Procs = [Run(Mock, Root, "--model", "mock-slow", "--max-output", "8000", Cap="72000", Wait=False)
+    # 12000 tokens in the window: each call reserves ~8050, so exactly one of two simultaneous calls fits.
+    Procs = [Run(Mock, Root, "--model", "mock-slow", "--max-output", "8000", Cap="22000", Wait=False)
              for _ in range(2)]
     Codes = sorted(Proc.wait(timeout=60) for Proc in Procs)
     for Proc in Procs:
@@ -240,3 +301,4 @@ def test_merge_by_id_and_totals():
     Merged = Ask.MergeLedgers(Local, Origin)
     assert len(Merged) == 3
     assert Ask.SpentTokens(Merged) == 700 + 5000
+    assert Ask.SpentTokens(Merged, Since="2") == 700 + 5000 and Ask.SpentTokens(Merged, Since="3") == 5000

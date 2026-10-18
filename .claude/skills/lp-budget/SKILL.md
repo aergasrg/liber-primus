@@ -26,9 +26,18 @@ description: Token and compute frugality rules for the Liber Primus lab, plus ho
   or commit keys. `--list-models` costs no tokens; `--dry-run` checks the budget without sending.
 - Model: gpt-6-astra (our limit is tokens, not dollars). gpt-6.1-sol only when Astra flags a request
   or the key can't reach Astra. Skip the others.
-- Budget: Cap = min(`OPENAI_TOKEN_CAP` or 230000, 230000) - 10000 for the whole project; the last 50k
-  is a reserve that only `--purpose verify` or `--use-reserve` can spend. Hidden reasoning tokens are
-  billed as output and count; `--max-output` bounds reasoning plus answer.
+- **Service tier, never changed.** Every request sends `"service_tier": "default"` (Standard speed and
+  price). Never Fast, Ultrafast, priority or flex, and never omit the field (a project can default
+  untagged requests to a pricier tier). The value is pinned from a live call (2026-10-18: Standard
+  reports `default`). If any response reports another tier, or the final response reports none, the
+  tool cancels it, logs `tier-violation`, writes `budget/openai/STOP` and refuses every call (exit 2)
+  while that file exists locally or on origin/main. Only a human deletes it.
+- **Text only.** Never enable hosted tools (code interpreter, web search, file search, shell, or any
+  `tools` field); the request body is whitelisted in the tool.
+- Budget: a rolling 24-hour window. Cap = min(`OPENAI_TOKEN_CAP` or 230000, 230000) - 10000 = 220000
+  per 24 h; the tool sums ledger entries from the last 24 hours. There is no reserve: verify calls
+  simply go first on any day. Hidden reasoning tokens are billed as output and count;
+  `--max-output` bounds reasoning plus answer.
 - Effort policy:
 
 | use | effort | max-output |
@@ -36,7 +45,7 @@ description: Token and compute frugality rules for the Liber Primus lab, plus ho
 | brainstorming lists of hypotheses | medium | 16000 |
 | attacking a test design, hunting bugs, checking a claimed hit, an exact test spec | high | 25000 |
 | the single hardest question of a phase | xhigh | 40000 |
-| pro mode, at most once per project, final phase, 60k+ left | high + `--mode pro` | 40000 |
+| pro mode, at most once per 24 h, only with 60k+ left in the window | high + `--mode pro` | 40000 |
 
 - Never max effort (7+ minutes to a first token in a public run) and never low or none (do small jobs
   yourself). Deadlines: medium 8 min, high 12, xhigh 20, pro 30; a pro call that times out or fails

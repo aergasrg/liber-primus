@@ -6,7 +6,9 @@ description: Run one OpenAI council phase for the Liber Primus lab (kickoff, mid
 # lp-council
 
 The council gives second opinions. It never runs experiments; workers test what it suggests.
-The token budget for the whole project is about 220k (see `docs/models/openai.md`), so every call counts.
+The token budget is 220k per rolling 24 hours (see `docs/models/openai.md`), so every call counts.
+Never change the service tier (`default`, pinned) and never enable hosted tools. If
+`budget/openai/STOP` exists, stop: only a human may delete it.
 
 ## Every phase starts here
 
@@ -60,25 +62,26 @@ The token budget for the whole project is about 220k (see `docs/models/openai.md
    new ledger entries, their best scores against their ceilings). Ask for constructions that would
    explain those failures. Dedupe and file the ideas as in kickoff step 3.
 
-### final (about 30k plus whatever is left, in the project's last week)
+### final (about 30k plus whatever the 24 h window has left, in the project's last week)
 
 1. **Whole-ledger review** at **high** (`--purpose final-review`). Send a compact table of every
    ledger entry: family, coverage, control score, null ceiling, verdict. Ask which negatives are
    weakest, what is still untried, and what one experiment the remaining credits should buy.
-2. **The one pro question**, only if 60k or more remains after step 1 (check with `--dry-run`).
-   Use `--mode pro --effort high --max-output 40000 --purpose final-pro` on the single hardest open
-   question. This happens at most once per project: check `budget/openai/ledger.jsonl` for an
-   earlier `"mode": "pro"` entry first. If the pro call times out or fails, the tool falls back once
+2. **The pro question**, only if 60k or more remains in the 24 h window after step 1 (check with
+   `--dry-run`). Use `--mode pro --effort high --max-output 40000 --purpose final-pro` on the single
+   hardest open question. At most once per 24 hours; the tool refuses a second pro call in the
+   window and a pro call with under 60k left. If the pro call times out or fails, the tool falls back once
    to standard mode by itself. Do not retry beyond that.
 
-### verify (the 50k reserve, on a ledger id)
+### verify (on a ledger id; goes first on any day)
 
 Use this phase any time a result beats its noise ceiling and the skeptic agent has already reviewed
 it (`results/<id>/skeptic.md`).
 
 1. Brief: the method, the evidence (scores and positions, never rune characters), the positive
    control, the null and its trial count, and the skeptic's report.
-2. One call at **high** with `--purpose verify` (this may spend the reserve): "Attack this claim
+2. One call at **high** with `--purpose verify` (there is no reserve; make it before other calls that
+   day so the window has room): "Attack this claim
    independently: find the artefact, the leak or the multiple-testing error that explains it, and
    the one test that would settle it." Record the verdict next to the skeptic's verdict in the
    ledger entry's follow-up (a new ledger file if that entry belongs to another session).
