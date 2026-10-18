@@ -9,3 +9,5 @@ results/**/checkpoint*
 *.part
 budget/openai/ledger.lock
 budget/openai/*.tmp
+gpu/cache/
+gpu/results_*.json.tmp

@@ -1,0 +1,58 @@
+rtkd: 15933 runes, 73 pages, 797 lines
+0_warning: lp 184 runes, rtkd 184 at 0; rune diffs 0
+0_welcome: lp 515 runes, rtkd 515 at 184; rune diffs 0
+0_wisdom: lp 157 runes, rtkd 157 at 699; rune diffs 0
+0_koan_1: lp 780 runes, rtkd 778 at 856; rune diffs 2
+    replace lp[142:144]=WS rtkd=EA
+    replace lp[279:281]=WS rtkd=EA
+0_loss_of_divinity: lp 755 runes, rtkd 755 at 1634; rune diffs 0
+p56_an_end: lp 85 runes, rtkd 85 at 15753; rune diffs 0
+p57_parable: lp 95 runes, rtkd 95 at 15838; rune diffs 0
+jpg107-167: lp 319 runes, rtkd 319 at 2389; rune diffs 0
+jpg229: lp 89 runes, rtkd 89 at 2708; rune diffs 0
+p0-2: lp 729 runes, rtkd 729 at 2797; rune diffs 0
+    page breaks: lp 2, rtkd 2, only lp [], only rtkd []
+    line breaks: lp 32, rtkd 32, only lp [], only rtkd []
+    runes/page lp [262, 266, 201]
+    runes/page rtkd [262, 266, 201]
+p3-7: lp 1145 runes, rtkd 1145 at 3526; rune diffs 0
+    page breaks: lp 4, rtkd 4, only lp [], only rtkd []
+    line breaks: lp 54, rtkd 54, only lp [], only rtkd []
+    runes/page lp [217, 261, 263, 196, 208]
+    runes/page rtkd [217, 261, 263, 196, 208]
+p8-14: lp 1729 runes, rtkd 1729 at 4671; rune diffs 0
+    page breaks: lp 6, rtkd 6, only lp [], only rtkd []
+    line breaks: lp 78, rtkd 78, only lp [], only rtkd []
+    runes/page lp [255, 268, 263, 273, 261, 272, 137]
+    runes/page rtkd [255, 268, 263, 273, 261, 272, 137]
+p15-22: lp 1903 runes, rtkd 1903 at 6400; rune diffs 0
+    page breaks: lp 7, rtkd 7, only lp [], only rtkd []
+    line breaks: lp 85, rtkd 85, only lp [], only rtkd []
+    runes/page lp [159, 267, 273, 260, 271, 269, 273, 131]
+    runes/page rtkd [159, 267, 273, 260, 271, 269, 273, 131]
+p23-26: lp 1021 runes, rtkd 1021 at 8303; rune diffs 0
+    page breaks: lp 3, rtkd 3, only lp [], only rtkd []
+    line breaks: lp 45, rtkd 45, only lp [], only rtkd []
+    runes/page lp [213, 270, 273, 265]
+    runes/page rtkd [213, 270, 273, 265]
+p27-32: lp 1433 runes, rtkd 1433 at 9324; rune diffs 0
+    page breaks: lp 5, rtkd 5, only lp [], only rtkd []
+    line breaks: lp 64, rtkd 64, only lp [], only rtkd []
+    runes/page lp [234, 269, 277, 263, 269, 121]
+    runes/page rtkd [234, 269, 277, 263, 269, 121]
+p33-39: lp 1680 runes, rtkd 1680 at 10757; rune diffs 0
+    page breaks: lp 6, rtkd 6, only lp [], only rtkd []
+    line breaks: lp 79, rtkd 79, only lp [], only rtkd []
+    runes/page lp [214, 261, 271, 238, 228, 228, 240]
+    runes/page rtkd [214, 261, 271, 238, 228, 228, 240]
+p40-53: lp 3008 runes, rtkd 3008 at 12437; rune diffs 0
+    page breaks: lp 12, rtkd 12, only lp [], only rtkd []
+    line breaks: lp 134, rtkd 134, only lp [], only rtkd []
+    runes/page lp [231, 273, 272, 274, 273, 270, 270, 274, 271, 66, 92, 263, 179]
+    runes/page rtkd [231, 273, 272, 274, 273, 270, 270, 274, 271, 66, 92, 263, 179]
+p54-55: lp 308 runes, rtkd 308 at 15445; rune diffs 0
+    page breaks: lp 1, rtkd 1, only lp [], only rtkd []
+    line breaks: lp 14, rtkd 14, only lp [], only rtkd []
+    runes/page lp [232, 76]
+    runes/page rtkd [232, 76]
+TOTAL unsolved boundary disagreements: page 0, line 0
