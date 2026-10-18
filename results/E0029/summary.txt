@@ -1,0 +1,345 @@
+E0029 report: 999 surrogate corpora (whole search on each)
+
+Real S1 (max over pages, standardised by each page's surrogate mean/sd) 3.14
+  surrogate p 0.153; tier-1 threshold (surrogate quantile 0.99) 4.17; surrogate S1 median 2.39, max 5.97
+
+Top 8 pages (standardised, raw z, (view, L, skips), first 80 symbols at the best shifts):
+  p55    3.14  z   4.51  ('unit28z2', 13, 1)
+       CIEERRTSNNTAMAEEMSTIARYANARYOICEESSTEAENALORESRIEAESETYRDTELTAWNSEMO
+  p44    2.45  z   5.58  ('unit28z1', 5, 4)
+       TEFFWNGYWIBCSHWIMWGIOOCNGIOEWRDSSTHRUWBMEOFRAPIIOTAEBBICWENDDLNGDWNUFIOCTNLIYEUSNDHYRENGOF
+  p39    1.61  z   4.87  ('raw29', 2, 2)
+       HOACHGUPWAXPDTSYTHYAEAEOLTHMEHEOEBJMBLSEAHTHNNGUUBPTHLGLLPGUHIONGIOEFEAMPEEAFOHMEASYXFEASNTHINEASN
+  p9     1.47  z   4.96  ('raw29', 18, 6)
+       HWETHUSAILETAUACDSERIWDNEESMSYSYLEAURHAIUTLBIWHTHWHSOOSWRNYCTWIIOMGYHAAEDSHTWTIUDWI
+  p15    1.41  z   4.27  ('unit28z1', 5, 4)
+       CEURTHJLNGIDOSNGTANGEDDIBOEDUHTHSMHTHAENRNGTEATIEASUOWMIEUTHDWTHEOYNGXEEOEESGINSMNISSLCFSTOTH
+  p42    1.35  z   4.91  ('unit28z1', 2, 5)
+       EOIOTHSFRXEONGMTNWDEUIJYPNGBSTDIFMTIIAPHMNGEOPNTHUPARGFTFYSSRSNLUIOUELPFEDBSISESEONGAEIUOEFWW
+  p36    1.16  z   4.73  ('unit28z2', 9, 4)
+       UYDAAAIOGHASWSRLBGATPTSFOBADCTNHXCUYLEOMMYICLYFTSSTHFFTHNGRTHACLYAINAYECDODSLHGCRTHTHIYR
+  p1     1.02  z   4.60  ('raw29', 5, 6)
+       EALMHLMORDEMUIOSGFTHSTALSRANHIOOTPUAINRXUONGSWOMUUIDHEMPPHMRMUNEAWUOCITHSTHLSWSNWNGPWIOOEMT
+
+Tier 1 power (recovered = plant's standardised page score >= 4.17):
+  model                 page  n    L   skips    recovered  period-right  median std
+  chain-literal-z1      p25   273  3   none     100/100    100            20.08
+  chain-literal-z1      p25   273  3   random   100/100    100            20.33
+  chain-literal-z1      p25   273  3   welcome  100/100    100            20.10
+  chain-literal-z1      p25   273  5   none     100/100    100            17.50
+  chain-literal-z1      p25   273  5   random   100/100    100            17.81
+  chain-literal-z1      p25   273  5   welcome  100/100    100            17.64
+  chain-literal-z1      p25   273  8   none     100/100    100            15.31
+  chain-literal-z1      p25   273  8   random   100/100    100            15.07
+  chain-literal-z1      p25   273  8   welcome  100/100    100            14.62
+  chain-literal-z1      p25   273  10  none     100/100    100            12.96
+  chain-literal-z1      p25   273  10  random    99/100     99            13.13
+  chain-literal-z1      p25   273  10  welcome  100/100    100            13.24
+  chain-literal-z1      p25   273  12  none     100/100    100            11.79
+  chain-literal-z1      p25   273  12  random   100/100    100            11.45
+  chain-literal-z1      p25   273  12  welcome   99/100    100            11.93
+  chain-literal-z1      p25   273  13  none     100/100    100            11.40
+  chain-literal-z1      p25   273  13  random   100/100    100            11.44
+  chain-literal-z1      p25   273  13  welcome   98/100    100            11.08
+  chain-literal-z1      p25   273  16  none     100/100    100             8.94
+  chain-literal-z1      p25   273  16  random    98/100    100             9.19
+  chain-literal-z1      p25   273  16  welcome  100/100    100             9.28
+  chain-literal-z1      p25   273  20  none     100/100    100             7.87
+  chain-literal-z1      p25   273  20  random    94/100     98             7.39  NOT IDENTIFIABLE
+  chain-literal-z1      p25   273  20  welcome   98/100    100             7.84
+  chain-transparent-z2  p25   273  3   none     100/100     99            20.25
+  chain-transparent-z2  p25   273  3   random   100/100    100            20.25
+  chain-transparent-z2  p25   273  3   welcome  100/100     99            20.26
+  chain-transparent-z2  p25   273  5   none     100/100    100            17.86
+  chain-transparent-z2  p25   273  5   random   100/100    100            17.83
+  chain-transparent-z2  p25   273  5   welcome  100/100    100            17.76
+  chain-transparent-z2  p25   273  8   none     100/100    100            15.19
+  chain-transparent-z2  p25   273  8   random   100/100    100            15.00
+  chain-transparent-z2  p25   273  8   welcome  100/100    100            14.69
+  chain-transparent-z2  p25   273  10  none     100/100    100            13.48
+  chain-transparent-z2  p25   273  10  random    99/100    100            13.33
+  chain-transparent-z2  p25   273  10  welcome  100/100    100            13.11
+  chain-transparent-z2  p25   273  12  none     100/100    100            11.90
+  chain-transparent-z2  p25   273  12  random    98/100    100            11.93
+  chain-transparent-z2  p25   273  12  welcome  100/100    100            11.77
+  chain-transparent-z2  p25   273  13  none     100/100    100            11.60
+  chain-transparent-z2  p25   273  13  random    99/100    100            10.76
+  chain-transparent-z2  p25   273  13  welcome  100/100    100            10.89
+  chain-transparent-z2  p25   273  16  none     100/100    100             9.56
+  chain-transparent-z2  p25   273  16  random    99/100     99             9.28
+  chain-transparent-z2  p25   273  16  welcome  100/100    100             9.41
+  chain-transparent-z2  p25   273  20  none      99/100    100             8.14
+  chain-transparent-z2  p25   273  20  random    96/100    100             7.31
+  chain-transparent-z2  p25   273  20  welcome   99/100    100             7.50
+  raw                   p25   273  3   none     100/100    100            22.16
+  raw                   p25   273  3   random   100/100    100            22.07
+  raw                   p25   273  3   welcome  100/100    100            22.46
+  raw                   p25   273  5   none     100/100    100            20.47
+  raw                   p25   273  5   random   100/100    100            19.94
+  raw                   p25   273  5   welcome  100/100    100            20.16
+  raw                   p25   273  8   none     100/100    100            16.67
+  raw                   p25   273  8   random    99/100    100            17.37
+  raw                   p25   273  8   welcome  100/100    100            16.92
+  raw                   p25   273  10  none     100/100    100            14.99
+  raw                   p25   273  10  random   100/100    100            15.42
+  raw                   p25   273  10  welcome   99/100    100            15.21
+  raw                   p25   273  12  none     100/100    100            14.29
+  raw                   p25   273  12  random   100/100    100            15.31
+  raw                   p25   273  12  welcome   99/100    100            13.89
+  raw                   p25   273  13  none     100/100    100            13.68
+  raw                   p25   273  13  random    98/100     99            13.29
+  raw                   p25   273  13  welcome   99/100    100            13.73
+  raw                   p25   273  16  none     100/100    100            12.04
+  raw                   p25   273  16  random   100/100    100            11.08
+  raw                   p25   273  16  welcome   99/100    100            11.98
+  raw                   p25   273  20  none     100/100    100             9.56
+  raw                   p25   273  20  random    99/100    100             9.84
+  raw                   p25   273  20  welcome   99/100    100             9.59
+  chain-literal-z1      p3    217  3   none     100/100    100            16.02
+  chain-literal-z1      p3    217  3   random   100/100    100            16.17
+  chain-literal-z1      p3    217  3   welcome  100/100    100            16.61
+  chain-literal-z1      p3    217  5   none     100/100    100            14.21
+  chain-literal-z1      p3    217  5   random   100/100    100            13.76
+  chain-literal-z1      p3    217  5   welcome  100/100    100            13.97
+  chain-literal-z1      p3    217  8   none     100/100    100            11.31
+  chain-literal-z1      p3    217  8   random   100/100    100            10.87
+  chain-literal-z1      p3    217  8   welcome  100/100    100            11.16
+  chain-literal-z1      p3    217  10  none     100/100    100             9.90
+  chain-literal-z1      p3    217  10  random   100/100    100             9.46
+  chain-literal-z1      p3    217  10  welcome  100/100    100            10.07
+  chain-literal-z1      p3    217  12  none     100/100    100             8.36
+  chain-literal-z1      p3    217  12  random   100/100    100             8.38
+  chain-literal-z1      p3    217  12  welcome   99/100    100             8.28
+  chain-literal-z1      p3    217  13  none      98/100    100             7.85
+  chain-literal-z1      p3    217  13  random   100/100    100             7.84
+  chain-literal-z1      p3    217  13  welcome   99/100    100             7.87
+  chain-literal-z1      p3    217  16  none      90/100    100             5.99  NOT IDENTIFIABLE
+  chain-literal-z1      p3    217  16  random    85/100    100             5.54  NOT IDENTIFIABLE
+  chain-literal-z1      p3    217  16  welcome   92/100    100             5.89  NOT IDENTIFIABLE
+  chain-literal-z1      p3    217  20  none      74/100    100             5.16  NOT IDENTIFIABLE
+  chain-literal-z1      p3    217  20  random    60/100    100             4.40  NOT IDENTIFIABLE
+  chain-literal-z1      p3    217  20  welcome   67/100    100             5.10  NOT IDENTIFIABLE
+  chain-transparent-z2  p3    217  3   none     100/100    100            16.33
+  chain-transparent-z2  p3    217  3   random   100/100    100            16.37
+  chain-transparent-z2  p3    217  3   welcome  100/100    100            16.33
+  chain-transparent-z2  p3    217  5   none     100/100    100            13.76
+  chain-transparent-z2  p3    217  5   random   100/100    100            13.68
+  chain-transparent-z2  p3    217  5   welcome  100/100    100            14.01
+  chain-transparent-z2  p3    217  8   none     100/100    100            11.29
+  chain-transparent-z2  p3    217  8   random   100/100    100            10.99
+  chain-transparent-z2  p3    217  8   welcome  100/100    100            11.15
+  chain-transparent-z2  p3    217  10  none     100/100    100             9.51
+  chain-transparent-z2  p3    217  10  random   100/100    100             9.28
+  chain-transparent-z2  p3    217  10  welcome  100/100    100             9.62
+  chain-transparent-z2  p3    217  12  none     100/100    100             8.34
+  chain-transparent-z2  p3    217  12  random   100/100    100             8.13
+  chain-transparent-z2  p3    217  12  welcome  100/100    100             8.13
+  chain-transparent-z2  p3    217  13  none     100/100    100             7.54
+  chain-transparent-z2  p3    217  13  random   100/100    100             7.81
+  chain-transparent-z2  p3    217  13  welcome   99/100    100             8.10
+  chain-transparent-z2  p3    217  16  none      97/100    100             6.22
+  chain-transparent-z2  p3    217  16  random    90/100    100             6.14  NOT IDENTIFIABLE
+  chain-transparent-z2  p3    217  16  welcome   92/100    100             6.20  NOT IDENTIFIABLE
+  chain-transparent-z2  p3    217  20  none      64/100     99             4.71  NOT IDENTIFIABLE
+  chain-transparent-z2  p3    217  20  random    60/100     99             4.52  NOT IDENTIFIABLE
+  chain-transparent-z2  p3    217  20  welcome   70/100    100             4.88  NOT IDENTIFIABLE
+  raw                   p3    217  3   none     100/100    100            18.41
+  raw                   p3    217  3   random   100/100    100            18.43
+  raw                   p3    217  3   welcome  100/100    100            18.16
+  raw                   p3    217  5   none     100/100    100            15.79
+  raw                   p3    217  5   random   100/100    100            16.11
+  raw                   p3    217  5   welcome  100/100    100            16.65
+  raw                   p3    217  8   none     100/100    100            13.14
+  raw                   p3    217  8   random   100/100    100            12.98
+  raw                   p3    217  8   welcome  100/100    100            13.54
+  raw                   p3    217  10  none     100/100    100            12.06
+  raw                   p3    217  10  random   100/100    100            11.50
+  raw                   p3    217  10  welcome  100/100    100            11.48
+  raw                   p3    217  12  none     100/100    100            10.07
+  raw                   p3    217  12  random   100/100    100            10.16
+  raw                   p3    217  12  welcome  100/100    100            10.19
+  raw                   p3    217  13  none     100/100    100             9.86
+  raw                   p3    217  13  random   100/100    100             9.85
+  raw                   p3    217  13  welcome  100/100    100            10.20
+  raw                   p3    217  16  none      99/100    100             8.53
+  raw                   p3    217  16  random   100/100    100             8.02
+  raw                   p3    217  16  welcome  100/100    100             8.46
+  raw                   p3    217  20  none      97/100    100             6.54
+  raw                   p3    217  20  random    91/100    100             6.63  NOT IDENTIFIABLE
+  raw                   p3    217  20  welcome   93/100    100             7.12  NOT IDENTIFIABLE
+  chain-literal-z1      p14   137  3   none     100/100    100            11.28
+  chain-literal-z1      p14   137  3   random   100/100     99            11.74
+  chain-literal-z1      p14   137  3   welcome  100/100    100            11.55
+  chain-literal-z1      p14   137  5   none     100/100     99             9.09
+  chain-literal-z1      p14   137  5   random    99/100    100             8.89
+  chain-literal-z1      p14   137  5   welcome  100/100    100             8.92
+  chain-literal-z1      p14   137  8   none      98/100    100             6.47
+  chain-literal-z1      p14   137  8   random    94/100    100             6.39  NOT IDENTIFIABLE
+  chain-literal-z1      p14   137  8   welcome   92/100    100             6.55  NOT IDENTIFIABLE
+  chain-literal-z1      p14   137  10  none      72/100     99             5.29  NOT IDENTIFIABLE
+  chain-literal-z1      p14   137  10  random    77/100     99             5.43  NOT IDENTIFIABLE
+  chain-literal-z1      p14   137  10  welcome   74/100    100             5.28  NOT IDENTIFIABLE
+  chain-literal-z1      p14   137  12  none      47/100    100             4.02  NOT IDENTIFIABLE
+  chain-literal-z1      p14   137  12  random    52/100     99             4.22  NOT IDENTIFIABLE
+  chain-literal-z1      p14   137  12  welcome   54/100     99             4.38  NOT IDENTIFIABLE
+  chain-literal-z1      p14   137  13  none      38/100     97             3.77  NOT IDENTIFIABLE
+  chain-literal-z1      p14   137  13  random    38/100     95             3.85  NOT IDENTIFIABLE
+  chain-literal-z1      p14   137  13  welcome   35/100     95             3.50  NOT IDENTIFIABLE
+  chain-literal-z1      p14   137  16  none       8/100     87             2.08  NOT IDENTIFIABLE
+  chain-literal-z1      p14   137  16  random    15/100     82             2.59  NOT IDENTIFIABLE
+  chain-literal-z1      p14   137  16  welcome   10/100     89             2.30  NOT IDENTIFIABLE
+  chain-literal-z1      p14   137  20  none       3/100     81             1.71  NOT IDENTIFIABLE
+  chain-literal-z1      p14   137  20  random     5/100     83             1.45  NOT IDENTIFIABLE
+  chain-literal-z1      p14   137  20  welcome    4/100     78             1.55  NOT IDENTIFIABLE
+  chain-transparent-z2  p14   137  3   none     100/100    100            11.49
+  chain-transparent-z2  p14   137  3   random   100/100    100            11.23
+  chain-transparent-z2  p14   137  3   welcome  100/100     99            11.47
+  chain-transparent-z2  p14   137  5   none     100/100    100             8.99
+  chain-transparent-z2  p14   137  5   random   100/100    100             9.11
+  chain-transparent-z2  p14   137  5   welcome  100/100    100             9.25
+  chain-transparent-z2  p14   137  8   none      97/100    100             6.64
+  chain-transparent-z2  p14   137  8   random    92/100    100             6.23  NOT IDENTIFIABLE
+  chain-transparent-z2  p14   137  8   welcome   96/100    100             6.37
+  chain-transparent-z2  p14   137  10  none      72/100     98             5.26  NOT IDENTIFIABLE
+  chain-transparent-z2  p14   137  10  random    66/100     99             4.92  NOT IDENTIFIABLE
+  chain-transparent-z2  p14   137  10  welcome   70/100     99             4.88  NOT IDENTIFIABLE
+  chain-transparent-z2  p14   137  12  none      45/100     98             3.95  NOT IDENTIFIABLE
+  chain-transparent-z2  p14   137  12  random    50/100     99             4.19  NOT IDENTIFIABLE
+  chain-transparent-z2  p14   137  12  welcome   60/100    100             4.58  NOT IDENTIFIABLE
+  chain-transparent-z2  p14   137  13  none      45/100     96             3.93  NOT IDENTIFIABLE
+  chain-transparent-z2  p14   137  13  random    39/100     93             3.75  NOT IDENTIFIABLE
+  chain-transparent-z2  p14   137  13  welcome   36/100     98             3.74  NOT IDENTIFIABLE
+  chain-transparent-z2  p14   137  16  none      12/100     91             2.36  NOT IDENTIFIABLE
+  chain-transparent-z2  p14   137  16  random    12/100     86             2.33  NOT IDENTIFIABLE
+  chain-transparent-z2  p14   137  16  welcome   16/100     94             2.58  NOT IDENTIFIABLE
+  chain-transparent-z2  p14   137  20  none       8/100     87             1.86  NOT IDENTIFIABLE
+  chain-transparent-z2  p14   137  20  random     4/100     83             1.92  NOT IDENTIFIABLE
+  chain-transparent-z2  p14   137  20  welcome    8/100     74             1.74  NOT IDENTIFIABLE
+  raw                   p14   137  3   none     100/100    100            12.81
+  raw                   p14   137  3   random   100/100    100            12.83
+  raw                   p14   137  3   welcome  100/100    100            12.87
+  raw                   p14   137  5   none     100/100    100            10.48
+  raw                   p14   137  5   random   100/100    100            10.55
+  raw                   p14   137  5   welcome  100/100    100            10.73
+  raw                   p14   137  8   none      98/100    100             8.09
+  raw                   p14   137  8   random    99/100    100             7.97
+  raw                   p14   137  8   welcome   99/100    100             7.97
+  raw                   p14   137  10  none      95/100    100             6.39
+  raw                   p14   137  10  random    95/100    100             7.11
+  raw                   p14   137  10  welcome   93/100     99             6.46  NOT IDENTIFIABLE
+  raw                   p14   137  12  none      78/100     99             5.32  NOT IDENTIFIABLE
+  raw                   p14   137  12  random    81/100    100             5.61  NOT IDENTIFIABLE
+  raw                   p14   137  12  welcome   82/100    100             5.66  NOT IDENTIFIABLE
+  raw                   p14   137  13  none      78/100     99             5.26  NOT IDENTIFIABLE
+  raw                   p14   137  13  random    73/100     97             5.11  NOT IDENTIFIABLE
+  raw                   p14   137  13  welcome   67/100     99             5.16  NOT IDENTIFIABLE
+  raw                   p14   137  16  none      43/100     96             3.84  NOT IDENTIFIABLE
+  raw                   p14   137  16  random    44/100     96             3.98  NOT IDENTIFIABLE
+  raw                   p14   137  16  welcome   41/100     99             3.78  NOT IDENTIFIABLE
+  raw                   p14   137  20  none      16/100     91             2.60  NOT IDENTIFIABLE
+  raw                   p14   137  20  random    21/100     91             2.83  NOT IDENTIFIABLE
+  raw                   p14   137  20  welcome   20/100     90             2.68  NOT IDENTIFIABLE
+  chain-literal-z1      p55   76   3   none      91/100    100             6.23  NOT IDENTIFIABLE
+  chain-literal-z1      p55   76   3   random    84/100     98             6.41  NOT IDENTIFIABLE
+  chain-literal-z1      p55   76   3   welcome   90/100     99             6.21  NOT IDENTIFIABLE
+  chain-literal-z1      p55   76   5   none      45/100     93             3.96  NOT IDENTIFIABLE
+  chain-literal-z1      p55   76   5   random    47/100     96             4.14  NOT IDENTIFIABLE
+  chain-literal-z1      p55   76   5   welcome   37/100     95             3.69  NOT IDENTIFIABLE
+  chain-literal-z1      p55   76   8   none       7/100     87             2.04  NOT IDENTIFIABLE
+  chain-literal-z1      p55   76   8   random     6/100     82             1.58  NOT IDENTIFIABLE
+  chain-literal-z1      p55   76   8   welcome    6/100     79             1.89  NOT IDENTIFIABLE
+  chain-literal-z1      p55   76   10  none       1/100     78             1.23  NOT IDENTIFIABLE
+  chain-literal-z1      p55   76   10  random     2/100     68             1.38  NOT IDENTIFIABLE
+  chain-literal-z1      p55   76   10  welcome    2/100     68             1.30  NOT IDENTIFIABLE
+  chain-literal-z1      p55   76   12  none       2/100     72             0.74  NOT IDENTIFIABLE
+  chain-literal-z1      p55   76   12  random     3/100     61             1.15  NOT IDENTIFIABLE
+  chain-literal-z1      p55   76   12  welcome    2/100     69             0.69  NOT IDENTIFIABLE
+  chain-literal-z1      p55   76   13  none       3/100     40             0.81  NOT IDENTIFIABLE
+  chain-literal-z1      p55   76   13  random     0/100     42             0.69  NOT IDENTIFIABLE
+  chain-literal-z1      p55   76   13  welcome    4/100     46             0.64  NOT IDENTIFIABLE
+  chain-literal-z1      p55   76   16  none       0/100     44             0.41  NOT IDENTIFIABLE
+  chain-literal-z1      p55   76   16  random     0/100     39             0.36  NOT IDENTIFIABLE
+  chain-literal-z1      p55   76   16  welcome    0/100     48             0.62  NOT IDENTIFIABLE
+  chain-literal-z1      p55   76   20  none       2/100     43             0.20  NOT IDENTIFIABLE
+  chain-literal-z1      p55   76   20  random     0/100     38             0.40  NOT IDENTIFIABLE
+  chain-literal-z1      p55   76   20  welcome    1/100     35             0.44  NOT IDENTIFIABLE
+  chain-transparent-z2  p55   76   3   none      91/100     99             6.14  NOT IDENTIFIABLE
+  chain-transparent-z2  p55   76   3   random    87/100     98             6.06  NOT IDENTIFIABLE
+  chain-transparent-z2  p55   76   3   welcome   90/100     99             6.36  NOT IDENTIFIABLE
+  chain-transparent-z2  p55   76   5   none      45/100     96             4.02  NOT IDENTIFIABLE
+  chain-transparent-z2  p55   76   5   random    43/100     99             3.92  NOT IDENTIFIABLE
+  chain-transparent-z2  p55   76   5   welcome   38/100     96             3.65  NOT IDENTIFIABLE
+  chain-transparent-z2  p55   76   8   none       3/100     79             1.89  NOT IDENTIFIABLE
+  chain-transparent-z2  p55   76   8   random     9/100     79             1.82  NOT IDENTIFIABLE
+  chain-transparent-z2  p55   76   8   welcome   11/100     91             1.78  NOT IDENTIFIABLE
+  chain-transparent-z2  p55   76   10  none       0/100     74             1.32  NOT IDENTIFIABLE
+  chain-transparent-z2  p55   76   10  random     4/100     73             1.25  NOT IDENTIFIABLE
+  chain-transparent-z2  p55   76   10  welcome    3/100     71             1.13  NOT IDENTIFIABLE
+  chain-transparent-z2  p55   76   12  none       2/100     68             0.95  NOT IDENTIFIABLE
+  chain-transparent-z2  p55   76   12  random     3/100     66             0.94  NOT IDENTIFIABLE
+  chain-transparent-z2  p55   76   12  welcome    2/100     75             1.01  NOT IDENTIFIABLE
+  chain-transparent-z2  p55   76   13  none       2/100     55             0.58  NOT IDENTIFIABLE
+  chain-transparent-z2  p55   76   13  random     0/100     38             0.77  NOT IDENTIFIABLE
+  chain-transparent-z2  p55   76   13  welcome    1/100     54             0.37  NOT IDENTIFIABLE
+  chain-transparent-z2  p55   76   16  none       1/100     41             0.46  NOT IDENTIFIABLE
+  chain-transparent-z2  p55   76   16  random     1/100     43             0.94  NOT IDENTIFIABLE
+  chain-transparent-z2  p55   76   16  welcome    1/100     49             0.38  NOT IDENTIFIABLE
+  chain-transparent-z2  p55   76   20  none       0/100     38             0.23  NOT IDENTIFIABLE
+  chain-transparent-z2  p55   76   20  random     0/100     48             0.34  NOT IDENTIFIABLE
+  chain-transparent-z2  p55   76   20  welcome    0/100     51             0.21  NOT IDENTIFIABLE
+  raw                   p55   76   3   none      99/100    100             7.82
+  raw                   p55   76   3   random    95/100    100             7.51
+  raw                   p55   76   3   welcome   99/100    100             7.59
+  raw                   p55   76   5   none      74/100     98             5.40  NOT IDENTIFIABLE
+  raw                   p55   76   5   random    71/100     98             5.47  NOT IDENTIFIABLE
+  raw                   p55   76   5   welcome   68/100     95             5.36  NOT IDENTIFIABLE
+  raw                   p55   76   8   none      21/100     95             2.80  NOT IDENTIFIABLE
+  raw                   p55   76   8   random    24/100     94             2.90  NOT IDENTIFIABLE
+  raw                   p55   76   8   welcome   24/100     97             3.02  NOT IDENTIFIABLE
+  raw                   p55   76   10  none      10/100     78             1.80  NOT IDENTIFIABLE
+  raw                   p55   76   10  random     8/100     80             2.13  NOT IDENTIFIABLE
+  raw                   p55   76   10  welcome   11/100     79             1.95  NOT IDENTIFIABLE
+  raw                   p55   76   12  none       1/100     74             1.20  NOT IDENTIFIABLE
+  raw                   p55   76   12  random     5/100     85             1.52  NOT IDENTIFIABLE
+  raw                   p55   76   12  welcome    2/100     77             1.41  NOT IDENTIFIABLE
+  raw                   p55   76   13  none       4/100     57             1.25  NOT IDENTIFIABLE
+  raw                   p55   76   13  random     6/100     61             1.26  NOT IDENTIFIABLE
+  raw                   p55   76   13  welcome    6/100     70             1.41  NOT IDENTIFIABLE
+  raw                   p55   76   16  none       1/100     58             0.33  NOT IDENTIFIABLE
+  raw                   p55   76   16  random     3/100     50             0.63  NOT IDENTIFIABLE
+  raw                   p55   76   16  welcome    0/100     38             0.37  NOT IDENTIFIABLE
+  raw                   p55   76   20  none       2/100     55             0.37  NOT IDENTIFIABLE
+  raw                   p55   76   20  random     1/100     49             0.41  NOT IDENTIFIABLE
+  raw                   p55   76   20  welcome    1/100     52             0.38  NOT IDENTIFIABLE
+
+Lab-verified negative region (>= 95/100 at the threshold, real data null):
+  chain-literal-z1      p14 n=137   skips none     L = 3(100), 5(100), 8(98)
+  chain-literal-z1      p14 n=137   skips random   L = 3(100), 5(99)
+  chain-literal-z1      p14 n=137   skips welcome  L = 3(100), 5(100)
+  chain-transparent-z2  p14 n=137   skips none     L = 3(100), 5(100), 8(97)
+  chain-transparent-z2  p14 n=137   skips random   L = 3(100), 5(100)
+  chain-transparent-z2  p14 n=137   skips welcome  L = 3(100), 5(100), 8(96)
+  raw                   p14 n=137   skips none     L = 3(100), 5(100), 8(98), 10(95)
+  raw                   p14 n=137   skips random   L = 3(100), 5(100), 8(99), 10(95)
+  raw                   p14 n=137   skips welcome  L = 3(100), 5(100), 8(99)
+  chain-literal-z1      p25 n=273   skips none     L = 3(100), 5(100), 8(100), 10(100), 12(100), 13(100), 16(100), 20(100)
+  chain-literal-z1      p25 n=273   skips random   L = 3(100), 5(100), 8(100), 10(99), 12(100), 13(100), 16(98)
+  chain-literal-z1      p25 n=273   skips welcome  L = 3(100), 5(100), 8(100), 10(100), 12(99), 13(98), 16(100), 20(98)
+  chain-transparent-z2  p25 n=273   skips none     L = 3(100), 5(100), 8(100), 10(100), 12(100), 13(100), 16(100), 20(99)
+  chain-transparent-z2  p25 n=273   skips random   L = 3(100), 5(100), 8(100), 10(99), 12(98), 13(99), 16(99), 20(96)
+  chain-transparent-z2  p25 n=273   skips welcome  L = 3(100), 5(100), 8(100), 10(100), 12(100), 13(100), 16(100), 20(99)
+  raw                   p25 n=273   skips none     L = 3(100), 5(100), 8(100), 10(100), 12(100), 13(100), 16(100), 20(100)
+  raw                   p25 n=273   skips random   L = 3(100), 5(100), 8(99), 10(100), 12(100), 13(98), 16(100), 20(99)
+  raw                   p25 n=273   skips welcome  L = 3(100), 5(100), 8(100), 10(99), 12(99), 13(99), 16(99), 20(99)
+  chain-literal-z1      p3 n=217    skips none     L = 3(100), 5(100), 8(100), 10(100), 12(100), 13(98)
+  chain-literal-z1      p3 n=217    skips random   L = 3(100), 5(100), 8(100), 10(100), 12(100), 13(100)
+  chain-literal-z1      p3 n=217    skips welcome  L = 3(100), 5(100), 8(100), 10(100), 12(99), 13(99)
+  chain-transparent-z2  p3 n=217    skips none     L = 3(100), 5(100), 8(100), 10(100), 12(100), 13(100), 16(97)
+  chain-transparent-z2  p3 n=217    skips random   L = 3(100), 5(100), 8(100), 10(100), 12(100), 13(100)
+  chain-transparent-z2  p3 n=217    skips welcome  L = 3(100), 5(100), 8(100), 10(100), 12(100), 13(99)
+  raw                   p3 n=217    skips none     L = 3(100), 5(100), 8(100), 10(100), 12(100), 13(100), 16(99), 20(97)
+  raw                   p3 n=217    skips random   L = 3(100), 5(100), 8(100), 10(100), 12(100), 13(100), 16(100)
+  raw                   p3 n=217    skips welcome  L = 3(100), 5(100), 8(100), 10(100), 12(100), 13(100), 16(100)
+  raw                   p55 n=76    skips none     L = 3(99)
+  raw                   p55 n=76    skips random   L = 3(95)
+  raw                   p55 n=76    skips welcome  L = 3(99)
