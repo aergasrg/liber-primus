@@ -1,0 +1,20 @@
+id: E0006
+title: Totient/prime streams and prime-value feedback
+family: prime-stream
+hypothesis: Key is phi(prime_n), prime_n or a feedback rule on prime values (as in An End).
+coverage: totient and prime streams, six prime-value feedback variants, raw and inside the chain
+detector: IoC
+control:
+  method: not reported
+  score: not reported
+'null':
+  method: not reported
+  ceiling: not reported
+result:
+  best: nothing above noise
+  verdict: negative
+skips_handled: partial (per source)
+source: LPA; relikd
+date: '2026-10-17'
+artifacts: []
+notes: external result; control and null not reproduced in this lab

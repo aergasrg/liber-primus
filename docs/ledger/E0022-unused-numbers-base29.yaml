@@ -1,0 +1,21 @@
+id: E0022
+title: Unused Cicada numbers in base 29 as running keys
+family: number-key
+hypothesis: A Cicada number written in base 29 is the key.
+coverage: 2012 P.S. number and both factors, 2013 cookies 167/761, page-56 hash, parable 1595277641, 845145127,
+  1231507051321, PGP key id; MSD and LSD first; both signs; each section start
+detector: English unigram LLR per rune
+control:
+  method: 'theory: English scores ~+0.40/rune'
+  score: '+0.40'
+'null':
+  method: 200 random keys of the same length through the same scan
+  ceiling: random 99th percentile per number
+result:
+  best: all below the random 99th percentile
+  verdict: negative
+skips_handled: 'no'
+source: seed session 2026-10-17 (seed/seed_scripts)
+date: '2026-10-17'
+artifacts:
+- seed/seed_scripts/HashAndMt.py

@@ -1,0 +1,21 @@
+id: E0001
+title: Monoalphabetic, Caesar, Atbash, affine, transposition
+family: classical-substitution
+hypothesis: Unsolved sections are a monoalphabetic substitution (incl. Caesar, Atbash, affine) or a pure
+  transposition.
+coverage: all 9 unsolved sections
+detector: IoC and unigram distribution
+control:
+  method: 'theory: any monoalphabetic substitution or transposition preserves English IoC (~1.78 in runes)'
+  score: 1.78
+'null':
+  method: uniform random text
+  ceiling: '1.00'
+result:
+  best: IoC 0.98-1.00 in every section
+  verdict: negative
+skips_handled: n/a (excluded by statistics)
+source: Cicada wiki; relikd LiberPrayground; LiberPrimusAnalysis (LPA)
+date: '2026-10-17'
+artifacts: []
+notes: 'Excluded by flat statistics: these ciphers cannot flatten IoC.'

@@ -1,0 +1,21 @@
+id: E0007
+title: Ciphertext and plaintext autokey
+family: autokey
+hypothesis: Key is earlier ciphertext (lag L) or earlier plaintext (lag L with a primer).
+coverage: ciphertext autokey lags 1-60; plaintext autokey lags 1-3 with all seeds; raw and inside the
+  chain
+detector: IoC
+control:
+  method: not reported
+  score: not reported
+'null':
+  method: not reported
+  ceiling: not reported
+result:
+  best: nothing above noise
+  verdict: negative
+skips_handled: 'no'
+source: LPA; relikd
+date: '2026-10-17'
+artifacts: []
+notes: external result; control and null not reproduced in this lab

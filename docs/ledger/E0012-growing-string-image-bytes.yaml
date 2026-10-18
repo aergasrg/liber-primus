@@ -1,0 +1,20 @@
+id: E0012
+title: 2014 growing string and raw page-image bytes as running keys
+family: running-key-bytes
+hypothesis: Key is the 2014 onion 'growing string' or the raw bytes of the page images.
+coverage: every offset (per source)
+detector: IoC / English score
+control:
+  method: not reported
+  score: not reported
+'null':
+  method: not reported
+  ceiling: not reported
+result:
+  best: nothing above noise
+  verdict: negative
+skips_handled: 'no'
+source: LPA
+date: '2026-10-17'
+artifacts: []
+notes: external result; control and null not reproduced in this lab

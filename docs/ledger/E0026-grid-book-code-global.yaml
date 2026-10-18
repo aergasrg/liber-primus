@@ -1,0 +1,22 @@
+id: E0026
+title: 'Urquhart-style book code: grid numbers as global word indices'
+family: book-code
+hypothesis: The 256 grid numbers index words of LP itself (first or last letter gives plaintext).
+coverage: '0- and 1-based, direct and running-sum indices into: LP solved plaintext words, all unsolved
+  cipher words, p40-53 words, p54-55 words; first and last letters'
+detector: English bigram gain over unigram
+control:
+  method: planted book code into the solved corpus
+  score: '+0.35'
+'null':
+  method: 200 random index sequences through the same mapping
+  ceiling: random 99th percentile
+result:
+  best: below the random 99th percentile everywhere
+  verdict: negative
+skips_handled: n/a
+source: seed session 2026-10-17 (seed/seed_scripts)
+date: '2026-10-17'
+artifacts:
+- seed/seed_scripts/GridBookCode.py
+notes: Page-, line- and sentence-indexed variants are open (B11).

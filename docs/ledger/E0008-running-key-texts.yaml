@@ -1,0 +1,22 @@
+id: E0008
+title: 'Running keys: LP solved text and ciphertext, Self-Reliance, The Mabinogion'
+family: running-key-text
+hypothesis: Key is a known text (LP's own solved plaintext or ciphertext, Emerson's Self-Reliance, The
+  Mabinogion).
+coverage: every offset of each text against every section
+detector: English score
+control:
+  method: not reported
+  score: not reported
+'null':
+  method: not reported
+  ceiling: not reported
+result:
+  best: nothing above noise
+  verdict: negative
+skips_handled: 'no (rigid alignment: one F-skip breaks the match; see B01)'
+source: LPA
+date: '2026-10-17'
+artifacts: []
+notes: external result; control and null not reproduced in this lab. Rerun with the skip-tolerant engine
+  is B01.

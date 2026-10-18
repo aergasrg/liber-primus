@@ -1,0 +1,21 @@
+id: E0002
+title: Periodic Vigenere/Beaufort up to period 300/section, 600/corpus
+family: periodic-polyalphabetic
+hypothesis: A repeating key of period <= 300 (section) or <= 600 (corpus), Vigenere or Beaufort.
+coverage: periods 1-300 per section and 1-600 overall; with and without F-skips and skip-on-collision
+detector: periodic IoC / column statistics
+control:
+  method: not reported
+  score: not reported
+'null':
+  method: not reported
+  ceiling: not reported
+result:
+  best: no period stands out
+  verdict: negative
+skips_handled: 'yes: F-skips and skip-on-collision variants'
+source: LPA
+date: '2026-10-17'
+artifacts: []
+notes: 'external result; control and null not reproduced in this lab. Also: no shared keystream between
+  sections at overlaps of 600+.'

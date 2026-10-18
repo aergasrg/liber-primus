@@ -1,0 +1,23 @@
+id: E0016
+title: Page pairs sharing a key from their first rune
+family: depth
+hypothesis: Two pages are encrypted with the same keystream aligned at their first rune (in depth).
+coverage: every pair of unsolved pages (blank-line pages), aligned at the first rune; p54 vs p55 shift
+  scan
+detector: agreement count vs 1/29, z > 3 count
+control:
+  method: theory (pages in depth agree at ~6.6% vs 3.4%)
+  score: not reported
+'null':
+  method: pages shuffled within themselves, 40 trials
+  ceiling: median 7 pairs above z 3
+result:
+  best: 7 pairs above z 3 (= null median)
+  verdict: negative
+skips_handled: 'no'
+source: seed session 2026-10-17 (seed/seed_scripts)
+date: '2026-10-17'
+artifacts:
+- seed/seed_scripts/PageDepth.py
+- seed/seed_scripts/PageDepthNull.py
+notes: No planted control was run for this one; the null is solid. Re-run with a plant if revisited.

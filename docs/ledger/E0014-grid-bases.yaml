@@ -1,0 +1,21 @@
+id: E0014
+title: Base-60 grid read in bases 58-63
+family: grid-numbers
+hypothesis: The 8x32 token grid encodes data in some base near 60.
+coverage: bases 58-63
+detector: inspection / entropy
+control:
+  method: not reported
+  score: not reported
+'null':
+  method: not reported
+  ceiling: not reported
+result:
+  best: nothing meaningful
+  verdict: negative
+skips_handled: n/a
+source: relikd
+date: '2026-10-17'
+artifacts: []
+notes: external result; control and null not reproduced in this lab. Base 60 gives 256 bytes spanning
+  0..255 (see LEADS).

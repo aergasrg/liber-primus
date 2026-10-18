@@ -1,0 +1,22 @@
+id: E0024
+title: 2013 Cicada OS files as running keys
+family: running-key-file
+hypothesis: Bytes of a 2013 Cicada OS file (mod 29) are a running key.
+coverage: 761.MP3, _560.00, 560.17, 560.13, wisdom (= folly); forwards and reversed; every offset; raw
+  form; both signs; first 300 runes
+detector: English unigram LLR via FFT
+control:
+  method: 300-byte slice of 761.MP3 (offset 1,234,567) planted over solved plaintext
+  score: +0.40/rune (English)
+'null':
+  method: random-key mean
+  ceiling: -0.84 mean; best-of-offsets ceiling not computed
+result:
+  best: best -0.28 to -0.47
+  verdict: negative
+skips_handled: no (raw form only, no F-skips; B01)
+source: seed session 2026-10-17 (seed/seed_scripts)
+date: '2026-10-17'
+artifacts:
+- seed/seed_scripts/FileKeyScan.py
+notes: Files from github.com/scream314/cicada3301 (assets/2013/cicados). Rerun with skips is part of B01.

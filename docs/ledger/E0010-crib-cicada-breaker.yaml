@@ -1,0 +1,21 @@
+id: E0010
+title: Crib dragging with Cicada_Breaker (2016)
+family: crib
+hypothesis: Known or guessed words (cribs) can be dragged to expose key fragments.
+coverage: community crib runs with the Cicada_Breaker tool
+detector: manual inspection
+control:
+  method: not reported
+  score: not reported
+'null':
+  method: not reported
+  ceiling: not reported
+result:
+  best: no confirmed crib
+  verdict: inconclusive
+skips_handled: 'no'
+source: Cicada_Breaker (2016)
+date: '2026-10-17'
+artifacts: []
+notes: external result; control and null not reproduced in this lab. Manual and undocumented coverage,
+  so recorded as inconclusive; B04 is the systematic version.

@@ -1,0 +1,26 @@
+id: E0019
+title: Perl drand48 and glibc rand() keystreams
+family: prng-key
+hypothesis: Key is int(rand(29)) / int(rand(28)) from Perl (drand48) or rand()%29 / %28 from glibc, for
+  some seed.
+coverage: seeds 0..1,048,575 plus 22 Cicada numbers; first 300 runes of each section; 4 forms (raw +-,
+  chain +-)
+detector: IoC on 300 runes
+control:
+  method: drand48 seed 777777 planted in solved plaintext, swept over seeds 777000-777999
+  score: IoC 1.88 raw, 1.81 chain
+'null':
+  method: extreme-value of IoC over ~10^6 trials on 300-rune windows
+  ceiling: ~1.20-1.25
+result:
+  best: best 1.23 on 300 runes, ~1.01 on the full sections (Recheck.py)
+  verdict: negative
+skips_handled: 'no'
+source: seed session 2026-10-17 (seed/seed_scripts)
+date: '2026-10-17'
+artifacts:
+- seed/seed_scripts/PrngSweep.py
+- seed/seed_scripts/Recheck.py
+- experiments/port_check.py
+notes: Generators validated bit-exact against perl and libc. Port check 2026-10-18 reproduced the controls
+  (1.875, 1.810).

@@ -1,0 +1,9 @@
+data/
+__pycache__/
+*.pyc
+.pytest_cache/
+results/**/*.bin
+results/**/*.npy
+results/**/checkpoint*
+*.log
+*.part

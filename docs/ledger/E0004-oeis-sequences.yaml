@@ -1,0 +1,20 @@
+id: E0004
+title: All 294k OEIS sequences as keys (relikd)
+family: sequence-key
+hypothesis: Key is an integer sequence from OEIS (mod 29).
+coverage: all ~294k OEIS sequences, first 40 terms, small offsets, all shifts, F-skip combos
+detector: IoC / English score on short windows
+control:
+  method: not reported
+  score: not reported
+'null':
+  method: not reported
+  ceiling: not reported
+result:
+  best: nothing above noise
+  verdict: negative
+skips_handled: 'yes: F-skip combos'
+source: relikd LiberPrayground
+date: '2026-10-17'
+artifacts: []
+notes: external result; control and null not reproduced in this lab. Only the first 40 terms were used.

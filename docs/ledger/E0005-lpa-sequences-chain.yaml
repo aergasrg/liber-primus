@@ -1,0 +1,20 @@
+id: E0005
+title: Selected sequences, raw and chain form with step orderings (LPA)
+family: sequence-key
+hypothesis: Key is a known integer sequence applied raw or inside the chain (step) form.
+coverage: 24 sequences x 200 offsets raw; 22 sequences x 300 offsets in chain form with 14 step orderings
+detector: IoC
+control:
+  method: not reported
+  score: not reported
+'null':
+  method: not reported
+  ceiling: not reported
+result:
+  best: nothing above noise
+  verdict: negative
+skips_handled: partial (per source)
+source: LPA
+date: '2026-10-17'
+artifacts: []
+notes: external result; control and null not reproduced in this lab

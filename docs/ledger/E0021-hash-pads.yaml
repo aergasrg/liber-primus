@@ -1,0 +1,22 @@
+id: E0021
+title: Hash-derived pads from Cicada words
+family: hash-pad
+hypothesis: Key is a hash-derived pad seeded by a Cicada word or number.
+coverage: '4,032 pads: 96 words x MD5/SHA-1/SHA-256/SHA-512/SHA3-256/SHA3-512/BLAKE2b x digest chain/hex
+  chain/counter x byte%29 or base-29 digits; first 300 runes; 4 forms'
+detector: IoC on 300 runes
+control:
+  method: one pad planted in solved plaintext and removed
+  score: IoC 1.88
+'null':
+  method: random-text IoC on 300 runes (per trial ~1.00 +- 0.03); best-of-145k-trials ceiling not computed;
+    E0019 shows ~1.2-1.25 for 10^6 trials
+  ceiling: ~1.2 (extrapolated)
+result:
+  best: best 1.16
+  verdict: negative
+skips_handled: 'no'
+source: seed session 2026-10-17 (seed/seed_scripts)
+date: '2026-10-17'
+artifacts:
+- seed/seed_scripts/HashAndMt.py
