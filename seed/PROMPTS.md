@@ -1,8 +1,8 @@
 # Liber Primus lab: Claude Code cloud prompts
 
-Three prompts: one bootstrap session that builds the repo, a reusable worker prompt for every
-later session, and a review prompt. Paste each into a new cloud session at claude.ai/code on the
-repo.
+Prompts for new cloud sessions at claude.ai/code on the repo: the bootstrap that builds the repo,
+the OpenAI helper v3 upgrade, a worker prompt for every later session, an open-ended hunt, the
+OpenAI council phases, and a review prompt.
 
 ## One-time setup (5 minutes, before session 0)
 
@@ -10,20 +10,44 @@ repo.
 2. Optional but recommended: unzip `lp-seed.zip` into a folder named `seed/` in the repo and commit it.
    The bootstrap session then ports working, verified code instead of rewriting it.
 3. Cloud environment for this repo (claude.ai/code, edit environment):
-   - **Network access: Custom**, keep the defaults, and add: `www.gutenberg.org`, `gutenberg.org`,
-     `en.wikisource.org`, `sacred-texts.com`, `www.sacred-texts.com`, `uncovering-cicada.fandom.com`,
-     `cicadasolvers.com`, `www.cicadasolvers.com`.
-   - **Environment variables:**
+   - **Network access: Full** if the OpenAI key goes in as an API credential (or you skip the
+     key). Nothing secret is on the machine then, and sessions never stall on a blocked site. If
+     the key has to be an environment variable, pick **Limited**, keep "Allow package managers"
+     checked, and paste this into Allowed domains:
+     ```
+     api.openai.com
+     developers.openai.com
+     platform.openai.com
+     gutenberg.org
+     *.gutenberg.org
+     wikisource.org
+     *.wikisource.org
+     sacred-texts.com
+     *.sacred-texts.com
+     *.fandom.com
+     *.nocookie.net
+     cicadasolvers.com
+     *.cicadasolvers.com
+     archive.org
+     *.archive.org
+     ```
+   - **Environment variables** (anyone using the environment can read these, so no secrets here):
      ```
      BASH_DEFAULT_TIMEOUT_MS=600000
      BASH_MAX_TIMEOUT_MS=1800000
-     OPENAI_MODEL=<the OpenAI model name you want>
-     OPENAI_TOKEN_CAP=250000
+     OPENAI_TOKEN_CAP=230000
      ```
-   - **OpenAI key:** on a Pro or Max plan, add it under **API credentials** (type Bearer, header
-     `Authorization`, prefix `Bearer`, host `api.openai.com`). The key then never enters the VM.
-     Otherwise put `OPENAI_API_KEY=...` in the variables (anyone using the environment can read it).
-     Also set a hard spending limit on the OpenAI side.
+     The first two let Claude wait up to 10 minutes on a command (30 if it asks) before Claude Code
+     moves it to the background. The cap is read by tools/ask_other_model.py, which stops at 220k
+     and holds 50k of that back for checking results. There is no model variable: each call names
+     its model. A running session keeps old values until its machine restarts, so start a new
+     session after changing them.
+   - **OpenAI key (optional):** on Pro or Max, edit the environment and use **API credentials** →
+     Add credential: type Bearer, allowed website `api.openai.com`, header `Authorization`, prefix
+     `Bearer`, paste the key, Connect. The key never enters the VM, and that host gets through the
+     network allowlist automatically. Without that section, put `OPENAI_API_KEY=...` in the
+     variables and use Limited (above). Give the key a lifetime that runs to the end of the
+     project, not one day (see "OpenAI council phases"), and delete it when the project ends.
    - **Setup script:** `pip install numpy scipy sympy pyyaml`
 4. Models: Opus 5.5 for the bootstrap and most workers. Save Fable 5.1 for design-heavy items
    (B02, B04) and the review session.
@@ -85,11 +109,8 @@ REPO TO BUILD
 - tests/test_gate.py: must pass before any experiment: reproduce Welcome (Vigenere DIVINITY with
   the 4,5,6,7,10,11,14,18,20,21,25th ciphertext F passing through without consuming key), Koan 1
   (Atbash then +3) and the unsolved stats (12,956 runes, 86 doublets).
-- tools/ask_other_model.py: optional second-opinion calls to OpenAI. Reads OPENAI_MODEL. Sends no
-  key itself if OPENAI_API_KEY is unset (the environment's credential proxy adds it); make one tiny
-  test call first. Logs usage (input + output tokens) per call to budget/openai/<branch>.jsonl
-  (committed). Before each call, sum ALL files in budget/openai/: refuse if total >= 240,000 or if
-  this branch already used 60,000. Cap each call at 4,000 output tokens and ~20,000 input tokens.
+- tools/ask_other_model.py: a stub that prints "not set up yet". A later "OpenAI helper v3"
+  session builds it.
 - .claude/skills/ (each a folder with SKILL.md and frontmatter name + description):
   lp-start (read CLAUDE.md, STATE, generated indexes; pick the top open item or the one named;
   claim it by setting status: claimed and claimed_by in that item's file; plan), lp-experiment
@@ -236,6 +257,107 @@ re-run the heavy sweeps, only the gate and one quick seed script to confirm the 
 
 ---
 
+## OpenAI helper v3 (paste once into a session; no key needed yet)
+
+Replaces the earlier v2 upgrade prompt. Delete `OPENAI_MODEL` from the environment if it is there.
+
+```text
+Maintenance session, no experiments. This supersedes the earlier "OpenAI helper v2" prompt; if
+parts of it already exist, update them to match. Follow CLAUDE.md (PascalCase, never print keys).
+
+1. docs/models/openai.md, dated 17 Oct 2026 with source links. These models are newer than your
+   training data: trust this file and the live model list over memory.
+   - gpt-6-astra: OpenAI's flagship, released 3 Sep 2026. Effort low|medium|high|xhigh|max (none
+     returns HTTP 400). 1.05M context, 128k max output, knowledge to 30 Apr 2026. Safety monitors
+     can stop a request. It asks clarifying questions readily, so prompts tell it to answer anyway.
+   - gpt-6.1-sol: released 29 Sep 2026, near-Astra quality at about a fifth of the price. Effort
+     low|medium(default)|high|xhigh|max.
+   - gpt-6-luna: cheapest and fastest. Effort none|low|medium(default)|high|xhigh|max.
+   - gpt-5.6-sol: previous generation (Jul 2026).
+   - Pro is a mode, not a model: "reasoning": {"mode": "pro"} in the Responses API, set
+     independently of effort. Much slower and several times the tokens.
+   - Hidden reasoning tokens are billed as output and count toward our cap. max_output_tokens
+     bounds reasoning plus answer; if it runs out first, the response is "incomplete" with no answer.
+   - Our limit is tokens, not dollars, so use gpt-6-astra. Use gpt-6.1-sol only when Astra stops a
+     request or the key can't use Astra. Skip the others.
+   - Refresh rule: if this file is over 30 days old, or --list-models shows an id it doesn't
+     describe, look the model up (web search, developers.openai.com/api/docs/models) and update
+     the file before using that model.
+   Add to CLAUDE.md: "OpenAI models newer than your training exist. Read docs/models/openai.md
+   before calling tools/ask_other_model.py."
+
+2. Effort policy (in that file and in the lp-budget skill):
+   - medium, max-output 16000: brainstorming lists of hypotheses.
+   - high, max-output 25000: attacking a test design, hunting bugs, checking a claimed hit,
+     writing an exact test spec.
+   - xhigh, max-output 40000: the single hardest question of a phase.
+   - pro mode (effort high, max-output 40000): at most once per project, final phase, 60k+ left.
+   - Never max effort (one public run waited 7+ minutes for the first token) and never low or
+     none (do small jobs yourself).
+
+3. tools/ask_other_model.py, standard library only:
+   - --list-models: GET /v1/models (no tokens); flag ids missing from docs/models/openai.md.
+   - Base URL from OPENAI_BASE_URL (default https://api.openai.com/v1). Send an Authorization
+     header only if OPENAI_API_KEY is set; otherwise the environment's API credential adds it.
+   - Flags: --model (required), --prompt-file, --system-file, --purpose, --effort,
+     --mode standard|pro, --max-output (default from the effort policy, hard max 48000),
+     --dry-run, --use-reserve.
+   - Every call: POST /v1/responses with "background": true, then poll GET /v1/responses/{id}
+     every 15 s. Always prepend a developer message: "One-shot request from an automated research
+     lab. You cannot ask questions. State any assumption and answer fully, concretely, testably."
+   - Deadlines: medium 8 min, high 12, xhigh 20, pro 30. At the deadline, POST
+     /v1/responses/{id}/cancel and read its usage; with no usage, count the whole reservation.
+   - Pro fallback, the only automatic retry: if a pro call hits its deadline or fails, rerun it
+     once in standard mode with the same model and effort, after a fresh budget check. Log both.
+   - Stopped by a safety check: log status "flagged", don't retry that model, print a hint to ask
+     gpt-6.1-sol instead. Incomplete: log it, keep any partial text, exit non-zero.
+   - Budget: Cap = min(OPENAI_TOKEN_CAP or 230000, 230000) - 10000; Reserve = 50000, spendable
+     only with --purpose verify or --use-reserve. Ledger budget/openai/ledger.jsonl, one entry per
+     call with a unique id: time, branch, CLAUDE_CODE_REMOTE_SESSION_ID, model, mode, effort,
+     purpose, input_tokens, output_tokens, reasoning_tokens, total_tokens, status. Before each
+     call, git fetch origin main and merge origin/main's ledger with the local one by id.
+   - Under an exclusive fcntl lock on budget/openai/ledger.lock: total the ledger, reserve
+     prompt chars / 3 + max-output, refuse if that passes Cap (or Cap - Reserve without verify or
+     --use-reserve), append a "reserved" entry, release the lock. After the call, append the final
+     entry with the same id; it replaces the reservation in totals. Drop any per-branch rule.
+   - Save prompt, reply and usage to docs/council/<date>/<NN>-<model>-<purpose>.md. Print only
+     the remaining budget and that path.
+   - Tests against a local mock server: completed, incomplete, failed, flagged, a pro call that
+     never finishes (must fall back), cap and reserve refusals, two parallel calls. If a key or
+     credential works, one live call: gpt-6-luna, effort none, max-output 200.
+
+4. Agents. .claude/agents/council.md (model: sonnet; tools: Bash, Read, Write, Glob, Grep): makes
+   ONE helper call from a brief the lead gives it and returns at most 15 lines, each testable idea
+   as name, mechanism, why it fits the fingerprint, cheapest falsifying test; never runs
+   experiments. .claude/agents/worker.md (model: sonnet): runs one claimed backlog item with
+   lp-experiment, writes only its own ledger file and artifacts, stays until its long jobs
+   finish. .claude/agents/skeptic.md: model fable.
+
+5. .claude/skills/lp-council/SKILL.md with four phases. Each starts with --list-models and the
+   refresh rule, runs in only one key-using session at a time, and ends with
+   docs/council/<date>/README.md and lp-handoff. Briefs use rune numbers or Latin letters, never
+   rune characters, and stay under 5,000 tokens.
+   - kickoff (about 75k): brief.md with the fingerprint, solved methods, LEADS and the 15 biggest
+     negative families. Two Astra calls at medium, one framed as a cryptanalyst and one as a
+     puzzle designer in Cicada's style: "Give 12 concrete, testable constructions that would
+     produce exactly this fingerprint, each with its cheapest falsifying test." Dedupe against the
+     ledger and file the best as backlog items. Then one call at high: how could our 3 most
+     important negative tests have missed a real signal?
+   - midpoint (about 65k, after the first wave of results): bug hunt on the newest engine code at
+     high, then fresh ideas starting from what failed and why.
+   - final (about 30k plus whatever is left, the project's last week): whole-ledger review; the
+     one pro question if 60k+ remains.
+   - verify (the 50k reserve, any time a result beats its noise ceiling, after the skeptic): send
+     the method, evidence, control and null and ask for an independent attack at high.
+
+6. If a download is blocked by the network allowlist, add the domain to docs/NETWORK.md for the
+   human; don't work around it.
+
+7. Commit on a branch and open a PR titled "OpenAI helper v3: models, effort policy, council phases".
+```
+
+---
+
 ## Every later session: worker (paste, optionally naming an item)
 
 ```text
@@ -249,6 +371,8 @@ a file), write it in the handoff and stop.
 ```
 
 Run two or three workers at a time on different items, then merge their PRs before the next wave.
+Inside one session you can also fan out: "Use worker subagents on B01, B05 and B10 in parallel."
+Keep it to three or four: they share one machine and the same credits.
 
 ## Open-ended hunt (Fable 5.1, modeled on the Vals AI Urquhart run)
 
@@ -270,13 +394,29 @@ verify script anyone can run, a SOLUTION.md with the exact rule, and a skeptic-a
 Record everything with lp-experiment, then finish with lp-handoff.
 ```
 
+## OpenAI council phases
+
+After the v3 PR is merged and the key is added, run one phase per session. Never run two
+key-using sessions at once, and merge each council PR before the next phase.
+
+| Phase | When | Paste | Budget |
+| --- | --- | --- | --- |
+| kickoff | now | `Run the lp-council skill, kickoff phase.` | ~75k |
+| midpoint | after the first 3-4 worker PRs are merged | `Run the lp-council skill, midpoint phase.` | ~65k |
+| final | the last week before the Claude credits expire | `Run the lp-council skill, final phase.` | ~30k + leftovers |
+| verify | when a result beats its noise ceiling and survives the skeptic | `Run the lp-council skill, verify phase, on <ledger id>.` | 50k held back |
+
+Use Opus 5.5 or Fable 5.1 for these sessions. Workers test the new backlog items on Claude
+credits and never touch the key.
+
 ## Review session (Fable 5.1, optional OpenAI second opinion)
 
 ```text
 Run lp-start, then review every ledger entry added since the last review note in docs/sessions/.
 For each: re-run its positive control, check the null, and look for alignment, leakage or
-multiple-testing mistakes using the skeptic agent. Use tools/ask_other_model.py at most a few
-times for an independent critique of the riskiest claims, staying inside the token cap. Then
+multiple-testing mistakes using the skeptic agent. If the OpenAI key is live and no other session
+is using it, get an independent critique of the riskiest claims through tools/ask_other_model.py,
+inside the cap. Then
 re-rank docs/backlog/ with a short reason per change, add new items you believe are untried, and
 finish with lp-handoff.
 ```
