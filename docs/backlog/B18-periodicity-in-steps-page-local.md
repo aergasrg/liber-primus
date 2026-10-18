@@ -1,8 +1,8 @@
 ---
 id: B18
 title: Rerun E0002 in the step domain, page by page, with bounded F-skips
-status: open
-claimed_by: ""
+status: claimed
+claimed_by: claude/eager-brahmagupta-exiu52
 rank: 3
 ledger: [E0002]
 ---

@@ -8,7 +8,7 @@ Open and claimed items first, by rank. Claim an item by editing its own file.
 | 1 | [B01](backlog/B01-skip-tolerant-running-key.md) | Skip-tolerant running-key engine | open |  | E0008, E0012, E0024 |
 | 2 | [B02](backlog/B02-plaintext-reactive-key.md) | Plaintext-reactive key rules over long key sources | open |  | E0006, E0007 |
 | 3 | [B03](backlog/B03-cicada-public-domain-texts.md) | Public-domain Cicada texts as running keys | open |  | E0008 |
-| 3 | [B18](backlog/B18-periodicity-in-steps-page-local.md) | Rerun E0002 in the step domain, page by page, with bounded … | open |  | E0002 |
+| 3 | [B18](backlog/B18-periodicity-in-steps-page-local.md) | Rerun E0002 in the step domain, page by page, with bounded … | claimed | claude/eager-brahmagupta-exiu52 | E0002 |
 | 4 | [B04](backlog/B04-titles-as-cribs.md) | Section titles as cribs | open |  | E0010 |
 | 4 | [B19](backlog/B19-prng-page-local-skip-aware.md) | Rerun E0019/E0020 page-locally, skip-aware, with reduction … | open |  | E0019, E0020 |
 | 5 | [B05](backlog/B05-grid-as-ciphertext.md) | The 256-byte grid as ciphertext | open |  | E0014, E0023 |
