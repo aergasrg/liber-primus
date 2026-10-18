@@ -1,10 +1,10 @@
 ---
 id: B18
 title: Rerun E0002 in the step domain, page by page, with bounded F-skips
-status: open
-claimed_by: ""
+status: done
+claimed_by: claude/eager-brahmagupta-exiu52
 rank: 3
-ledger: [E0002]
+ledger: [E0002, E0027]
 ---
 
 # B18 Rerun E0002 in the step domain, page by page, with bounded F-skips
@@ -43,3 +43,11 @@ Cost before skips: 3 views x 300 periods x 12,956 = 1.2e7 symbol visits; trivial
 dominate; run them for the top periods only after the no-skip pass, and say so in the ledger.
 Not worth doing (per the audit): Beaufort as a separate IoC test (reflection preserves IoC), initial
 phase variants, periods beyond the page length, arbitrary interrupter runes (E0003 overfits).
+
+## Outcome
+- Step 1 done: real page map in `lp.data.PageLines` (from relikd's page images); `PageId`, `PosInPage`,
+  `PageNumber`, `Pages()`; gate test pins runes per page. Blank lines are page or paragraph breaks.
+- E0027: null on the real data in both detector baselines (family-wise p 0.259 and 0.765; x2 corrected
+  0.518; 999 surrogates each). Lab-verified negative only for: single-page key L 3 on >= 217 runes;
+  section-wide key L 7 (308 and 1145 runes) and L 60 (1145 runes); one period shared by all pages at
+  L 5, 20, 60. Everything else tested is "not identifiable at this length". Stronger detector: B21.

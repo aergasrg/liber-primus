@@ -43,8 +43,9 @@ Corpus positions (e.g. DJUBEI at 6555 and 12950) are 0-based over the 9 sections
 
 ## Pitfalls
 
-- Blank lines are not reliable page breaks: p3-7, p15-22, p33-39 and p40-53 parse to the wrong
-  page count. Use line counts or the page images.
+- Blank lines are page OR paragraph breaks. `LoadSection` now takes real pages from
+  `lp.data.PageLines` (from the page images, 2026-10-18): use `PageId`/`PosInPage`/`PageNumber` or
+  `Pages(Section)`. `BlockId` keeps the old blank-line blocks. Page 50 is digits only (no runes).
 - IoC maxima over millions of trials on 300-rune windows reach ~1.2-1.25 by chance; always re-score
   top hits on the whole section.
 - Binomial tails with p = 1/29 are skewed; use permutation nulls, not normal z.

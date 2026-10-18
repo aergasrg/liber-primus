@@ -8,9 +8,9 @@ Open and claimed items first, by rank. Claim an item by editing its own file.
 | 1 | [B01](backlog/B01-skip-tolerant-running-key.md) | Skip-tolerant running-key engine | open |  | E0008, E0012, E0024 |
 | 2 | [B02](backlog/B02-plaintext-reactive-key.md) | Plaintext-reactive key rules over long key sources | open |  | E0006, E0007 |
 | 3 | [B03](backlog/B03-cicada-public-domain-texts.md) | Public-domain Cicada texts as running keys | open |  | E0008 |
-| 3 | [B18](backlog/B18-periodicity-in-steps-page-local.md) | Rerun E0002 in the step domain, page by page, with bounded … | open |  | E0002 |
 | 4 | [B04](backlog/B04-titles-as-cribs.md) | Section titles as cribs | open |  | E0010 |
 | 4 | [B19](backlog/B19-prng-page-local-skip-aware.md) | Rerun E0019/E0020 page-locally, skip-aware, with reduction … | open |  | E0019, E0020 |
+| 4 | [B21](backlog/B21-column-shift-likelihood-detector.md) | Column-shift likelihood detector to extend E0027's power to… | open |  | E0027 |
 | 5 | [B05](backlog/B05-grid-as-ciphertext.md) | The 256-byte grid as ciphertext | open |  | E0014, E0023 |
 | 6 | [B06](backlog/B06-other-stego-tools.md) | Other stego tools on page images | open |  | E0011 |
 | 7 | [B07](backlog/B07-non-english-scoring.md) | Non-English plaintext scoring | open |  |  |
@@ -25,3 +25,4 @@ Open and claimed items first, by rank. Claim an item by editing its own file.
 | 16 | [B16](backlog/B16-expansion-digits.md) | Expansion digits of Cicada numbers as keystreams | open |  | E0022 |
 | 17 | [B17](backlog/B17-hash-pads-binary-seeds.md) | Hash pads from binary leads with section labels | open |  | E0021 |
 | 18 | [B20](backlog/B20-timestamp-seeds.md) | PRNG seeds from release timestamps (32-bit range) | open |  | E0019, E0020 |
+| 3 | [B18](backlog/B18-periodicity-in-steps-page-local.md) | Rerun E0002 in the step domain, page by page, with bounded … | done | claude/eager-brahmagupta-exiu52 | E0002, E0027 |

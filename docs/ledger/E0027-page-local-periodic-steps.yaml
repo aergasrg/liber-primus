@@ -1,0 +1,74 @@
+id: E0027
+title: Page-local periodic keys in raw, step and chain-unit views with F-skip masks (B18)
+family: periodic-polyalphabetic
+hypothesis: Each LP page (real page map, lp.data.PageLines) has its own periodic key, period L <= n/2,
+  applied to the raw runes (Vigenere) or to the chain steps (u = s - 1 mod 28), with up to 11 ciphertext
+  Fs passing through without consuming key; also section-wide periodic keys (L 2-300) and one period
+  shared by all pages with independent page keys.
+coverage: 55 rune-bearing pages (page 50 is digits only), 4 views (raw29; step29 with zero steps as a
+  symbol; unit28 with a doublet consuming / not consuming key), first edge of each page omitted, Fs and
+  every F-adjacent step left out of the columns (makes the literal-F and transparent-F chain conventions
+  shift the phase identically). Page pass L = 2..min(n/2, 138), no skips; skip pass at the top 4 no-skip
+  and top 4 within-segment periods per view, every F subset with <= 11 skips if that is <= 4096 subsets,
+  else every subset with <= K skips (K the largest that fits in 4096). Sections L = 2..300, no skips.
+  S3 shared period L = 2..138, no skips. Two detector baselines run as two looks at the real data
+  (run A q = page's own coincidence rate, run B q = 1/M).
+detector: 'pair-weighted column IoC as a binomial z, z = (C - P q) / sqrt(P q (1 - q)); S1 = max over pages
+  of the page best z standardised by that page''s surrogate mean/sd; S2 the same over sections; S3 = max
+  over views and L of sum of page z / sqrt(pages)'
+control:
+  method: 'tier 1: 100 plants per condition, solved plaintext poured into real layouts (page length and
+    doublet positions), fresh random periodic key, models raw Vigenere, chain literal-F + doublet
+    consumes key, chain transparent-F + doublet does not; skip masks none / random half of plaintext Fs
+    (<= 11) / Welcome ordinals; layouts p55 (76 runes), p14 (137), p3 (217), p25 (273); periods 3, 8,
+    13, 29, 60, 100, n/2 - 2; section plants on p54-55 (308) and p3-7 (1145) at L 7, 60, 250; shared-period
+    plants on all 55 pages at L 5, 20, 60. Recovered = plant reaches the x2-corrected family threshold
+    (surrogate quantile 1 - 0.005/3 of S1, S2 or S3).'
+  score: 'page plants z 10-17 at L 3 on 273 runes (run B); see results/E0027/combined.txt'
+  power: 'lab-verified only in this region (>= 95/100 at the x2-corrected threshold):
+    S1 single-page key: L = 3 on 273 runes (p25) for all 3 models x 3 skip masks (98-100/100); L = 3 on
+    217 runes (p3) for raw (100/100 x3) and chain literal-F (95-97/100 x3) and chain transparent-F with
+    Welcome skips (95/100); chain transparent-F on 217 runes with no or random skips reached 94/100 (not
+    verified). Nothing at L >= 8 on any page (best 92/100, raw L 8 on 273 runes) and nothing on pages of
+    <= 137 runes at any period (best 78/100, raw L 3 on 137 runes; 16/100 on 76 runes).
+    S2 section-wide key, no skips: L = 7 on 308 and 1145 runes (raw and chain, both runs, 97-100/100);
+    L = 60 on 1145 runes (raw and chain, both runs, 100/100); L = 250 on 1145 runes raw, run A only
+    (96/100). Not verified: L = 60 on 308 runes (<= 14/100), L = 250 chain (<= 80/100) or on 308 runes.
+    S3 one period shared by all pages, independent page keys, no skips: L = 5, 20, 60 for raw and chain
+    literal-F, both runs, 100/100.'
+'null':
+  method: 'tier 2: 999 surrogate corpora per run, non-zero steps permuted within each page (zero
+    positions and page lengths kept), re-integrated from a random first rune, Fs recomputed; the whole
+    search (all views, periods, candidate selection, skip masks, S1-S3) rerun on each'
+  ceiling: 'x2-corrected thresholds (surrogate quantile 1 - 0.005/3), standardised units: run A S1 5.47,
+    S2 5.35, S3 4.72; run B S1 5.46, S2 4.67, S3 8.49. Real: run A 1.97 / 2.87 / 2.92, run B 2.76 / 1.73 /
+    5.36'
+  surrogates: 999 per run (1998 total)
+result:
+  best: 'run A family-wise p 0.259 (S1 p 0.863, S2 0.097, S3 0.620); run B family-wise p 0.765 (S1 0.410,
+    S2 0.421, S3 0.697); over both runs x2 corrected p = 0.518. Best page p13 step29 L 2 with 4 skips
+    (z 7.41, 2.76 surrogate sd above its own surrogate mean)'
+  verdict: negative
+skips_handled: 'yes: every subset of a page''s ciphertext Fs with <= 11 skips, capped at 4096 subsets per
+  page (pages with > 12 Fs get fewer skips: 17 Fs -> <= 4), at 8 candidate periods per view'
+source: claude/eager-brahmagupta-exiu52
+date: '2026-10-18'
+artifacts:
+- experiments/E0027_step_periodicity_pages.py
+- results/E0027/combined.txt
+- results/E0027/uniform/summary.txt
+- results/E0027/perm/summary.txt
+- results/E0027/uniform/real.json
+- results/E0027/perm/real.json
+notes: 'Negative ONLY in the power region above; every other tested condition is "not identifiable at
+  this length", not excluded. In particular a single page with its own key of period >= 8, or any page
+  of <= 137 runes, is not tested by this experiment. The real data is null on every statistic, so nothing
+  went to the skeptic. New vs E0002: real page map, step and chain-unit views, page-local keys, skip-mask
+  enumeration, lab control and surrogate null. Run A (own-rate baseline) was run first; its tier 1 showed
+  a short periodic key raises the page''s own IoC and hides itself, so run B uses q = 1/M; both runs are
+  reported and the family p carries a x2 correction. Under q = 1/M the step29 view keeps zero steps, so
+  the doublet deficit gives it a positive offset largest at small L (the p13 L 2 best and the S3 best at
+  step29 L 2); surrogates keep the zero steps, so this is calibrated (S3 p 0.70). Single-page power is
+  limited by IoC on short columns (L 29 on 273 runes = 9 symbols per column) against the multiplicity of
+  55 pages x 4 views x ~135 periods x up to 4096 masks; a stronger column detector is filed as B21.
+  Supersedes nothing; E0002 stays an external, unverified entry.'
