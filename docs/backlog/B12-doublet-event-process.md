@@ -1,10 +1,10 @@
 ---
 id: B12
 title: Structure of the doublet event process (spacing, clustering, autocovariance)
-status: open
-claimed_by: ""
+status: done
+claimed_by: claude/serene-pasteur-5lrf49
 rank: 12
-ledger: []
+ledger: [E0028]
 ---
 
 # B12 Structure of the doublet event process
@@ -40,3 +40,12 @@ Cheap: minutes of compute.
 ## Notes
 If everything is memoryless, the doublets carry no placement information and B08 is downgraded.
 If clustering inside words appears, B13 goes first.
+
+## Outcome
+E0028: memoryless. Family-wise p 0.09 over 18 statistics (10^5 within-section permutations); per-section
+counts p 0.63. Lab-verified exclusions: refractory R >= 15, on/off regimes with stay >= 0.95, one per 29/32
+packet, strong periodic gates, word confinement to 10% of text, line-start 0.2, page-start 0.1; strict
+rules excluded by logic: refractory R >= 7, one per line, one per P-packet for P >= 15 (section-aligned) or
+P >= 19 (page-aligned). The best period (corpus-wide collisions at L 215, z 5.8) is post hoc, fails tier 2,
+and has no trace in steps or raw runes. Rune preference, word-start preference, section-rate differences
+and short refractory windows (R <= 6) are not identifiable at 86 events. The B02 target is updated.

@@ -1,0 +1,12 @@
+Best corpus-wide collision period L 215: z 5.80; collisions 40 (null mean 16.7), 37 of them across section breaks
+Residues holding k doublets: {0: 157, 1: 40, 2: 10, 3: 6, 4: 2}
+Top L by collision z: [(215, 5.8), (268, 3.52), (256, 3.52), (43, 3.33), (134, 3.13), (128, 2.61)]
+  drop the 1 fullest residue(s) (4 doublets): z ~4.91
+  drop the 2 fullest residue(s) (8 doublets): z ~3.92
+  drop the 3 fullest residue(s) (11 doublets): z ~3.52
+non-zero steps: column-coincidence z at L 215 = -0.10 (rank 177 of 299); best L 79 z 3.43; null max-over-L 99% 3.88 (200 shuffles)
+raw runes: column-coincidence z at L 215 = 0.39 (rank 141 of 299); best L 30 z 3.30; null max-over-L 99% 4.03 (200 shuffles)
+control raw Vigenere plant, steps view: z at L 215 = 11.4
+control raw Vigenere plant, raw view: z at L 215 = 95.4
+control chain plant, steps view: z at L 215 = 67.5
+control chain plant, raw view: z at L 215 = 0.3

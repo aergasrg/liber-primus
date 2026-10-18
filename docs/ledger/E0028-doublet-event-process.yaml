@@ -1,0 +1,77 @@
+id: E0028
+title: Doublet event process - spacing, clustering, packets, periodicity, rune and layout preference (B12)
+family: doublet-origin
+hypothesis: The 86 doublets (zero chain steps) are placed by an independent memoryless gate, uniform
+  within each section; tested against refractory rules, hidden on/off regimes, one-per-packet rules,
+  periodic gates (global phase, per-section phase, allowed-residue sets), word clustering, line/page/
+  word-break preference, doublet-rune preference and per-section rate differences.
+coverage: all 86 doublets in reading order (pair i-1,i inside one section; 12,947 candidate positions;
+  per section 4,6,9,10,11,13,12,18,3). 18 statistics, each over the whole corpus - gap KS, min gap, gap
+  CV, lag 1..20 pair counts (chi2 and total), W = same-word pairs, packets of 16/29/32 aligned at section
+  start and printed lines holding >= 2, Fano factor in 200-position windows, three periodicity searches
+  over L = 2..300 (max residue count of corpus position mod L; within-section pairs at distance = 0 mod L;
+  corpus-wide collision count sum C(n_r, 2) of corpus position mod L), doublet-rune chi2, pairs spanning a
+  line, page or word break. Separately, per-section counts vs a multinomial. Also deterministic checks of
+  strict rules (refractory R, one-per-P packets for P 2..128 at every section- and page-aligned offset,
+  one per line), and a step-7 recheck of the best period on the non-zero steps and raw runes.
+detector: family-wise p = min-p over the 18 statistics (two-sided where the direction is open,
+  upper for chi2/KS/max-z), calibrated by the min-p distribution of the same permutations
+control:
+  method: 'tier 1: 100 synthetic chain ciphertexts per condition (uniform steps 1..28, zero steps at
+    planted positions, real layout and exact per-section counts; doublets re-extracted from the runes by
+    the identical function). 46 conditions plus section-rate plants: uniform calibration; refractory R
+    3,5,7,10,15,20; on/off regime (p_on 1/29, on-fraction 0.193) with mean on-run 5, 20, 100, 300 (stay
+    0.80, 0.95, 0.99, 0.997); one per packet 16/29/32/line; periodic gate with fraction 0.1/0.25/0.5 of
+    doublets on one residue (global or per-section phase) at L 2-30 and 31-300; allowed-residue gates
+    (0.25/0.5/0.75 of residues) at L 2-30 and 31-300; doublets only in words covering 0.1/0.25/0.5;
+    line-start fraction 0.05/0.1/0.2; page-start 0.05/0.1; word-start weight 1.5/2; 7 preferred runes
+    with weight 2/3 (insertion construction); section rate lognormal sigma 0.3/0.5/0.8.
+    Recovered = family-wise p <= 0.01. Recheck control: period-215 key (raw Vigenere and chain) on
+    English plaintext over the real layout.'
+  score: 'uniform calibration 1/100 recovered (expected ~1). Recheck controls z 11-95 at L 215.'
+  power: 'lab-verified (>= 95/100): refractory R >= 15 (100); regimes with mean on-run >= 20, i.e. stay
+    >= 0.95 (99-100); one per 29 or 32 packet (100); global-phase periodic gate with 25% of doublets on one
+    residue at L 31-300 (100) or 50% at L 2-30 (99); per-section-phase 50% at L 31-300 (100);
+    allowed-residue gate on 25% of residues at L 2-30 (100); doublets confined to words covering 10% of
+    text (96); line-start fraction 0.2 (99); page-start fraction 0.1 (98). Not identifiable (< 95):
+    refractory R <= 10 (1-11), regime on-run 5 / stay 0.80 (25), one per 16 or per line (7, 8; but see
+    strict-rule logic), 10% periodic fractions (1-57), per-section 25% (5-53), allowed-residue gates
+    except 25% at short L (0-35), word subsets >= 25% (3-17), line-start 0.05/0.1 (7, 50), page-start
+    0.05 (66), word-start weight <= 2 (5-33), rune preference weight <= 3 on 7 runes (6-45), section-rate
+    sigma <= 0.8 (18-89).'
+'null':
+  method: 100,000 within-section permutations of the doublet positions (per-section counts fixed);
+    per-statistic references from a separate 20,000-permutation pilot; section counts vs 100,000
+    multinomial draws
+  ceiling: family-wise p 0.01 (min-p quantile over 18 statistics); per-statistic 1%..99% in
+    results/E0028/summary.txt (e.g. PeriodColl 99% = 5.80)
+  surrogates: 100000
+result:
+  best: 'family-wise p 0.090; best single statistic PeriodColl z 5.80 at L 215 (p 0.0086 alone, after
+    the L search); all others p >= 0.12 (MinGap 6 vs null mean 2.3, p 0.12). Section counts chi2 6.19,
+    p 0.63. Gap CV 0.95, rune chi2 26.7, line-start 4 (null 3.9), page-start 0 (0.3), word-break 23 (19.1).'
+  verdict: negative
+skips_handled: n/a (positions only; F handling does not enter)
+source: claude/serene-pasteur-5lrf49
+date: '2026-10-18'
+artifacts:
+- experiments/E0028_doublet_event_process.py
+- results/E0028/summary.txt
+- results/E0028/real.json
+- results/E0028/power.jsonl
+- results/E0028/strict_rules.txt
+- results/E0028/top_period_recheck.txt
+- results/E0028/doublets.tsv
+notes: 'First lab test of where the doublets fall; confirms a preliminary run outside the lab (18 Oct chat:
+  gap CV 0.94, min gap 6, best L 215 at p 0.016 over 2000 placements, rune chi2 26.6, no line/page-start
+  excess). The L 215 signal is the corpus-wide collision form (40 pairs vs 16.7 expected; 37 of the 40
+  pairs cross a section break, 8 residues hold 3-4 doublets). PeriodColl was added to the family after
+  seeing the preliminary, so its p is post hoc. It fails tier 2 (family p 0.09 > 0.01), and the step-7
+  recheck kills it: column coincidence at L 215 is z -0.10 in the non-zero steps and 0.39 in the raw runes,
+  against 11-95 for planted period-215 keys. It was not sent to the skeptic because it is below the
+  family-wise ceiling. Strict rules, excluded by logic given the transcription: refractory R >= 7 (min gap
+  6), one per printed line (3 lines hold 2), one per P-packet for P >= 15 at every section-aligned offset
+  and P >= 19 at every page-aligned offset (results/E0028/strict_rules.txt). Still consistent:
+  memoryless leaks, and a short refractory window R <= 6 (0 gaps <= 5 against ~2.6 expected; p 0.12, a
+  hint only). Leak rate 86/446 = 0.19 of the random doublet rate. The memoryless verdict does not
+  downgrade B08: positions chosen to encode numbers would look uniform to every statistic here.'
