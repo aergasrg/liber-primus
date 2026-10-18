@@ -1,8 +1,8 @@
 ---
 id: B25
 title: Key-free tests of repeat-avoiding leak rules (lag-k coincidences, preceding-step gate, running-checksum gate, step-band deficit, guard and word lanes)
-status: open
-claimed_by: ""
+status: claimed
+claimed_by: claude/admiring-brown-6qihly
 rank: 2
 ledger: [E0025, E0028]
 ---

@@ -1,8 +1,8 @@
 ---
 id: B24
 title: Engine fixes from the midpoint bug hunt (F-runs in runningkey step views, plant doublet handling, E0030 hardening)
-status: open
-claimed_by: ""
+status: claimed
+claimed_by: claude/admiring-brown-6qihly
 rank: 3
 ledger: [E0029, E0030]
 ---
