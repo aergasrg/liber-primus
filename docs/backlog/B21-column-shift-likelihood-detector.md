@@ -1,10 +1,10 @@
 ---
 id: B21
 title: Column-shift likelihood detector to extend E0027's power to longer page-local periods
-status: claimed
+status: done
 claimed_by: claude/eloquent-hopper-k6fff6
 rank: 4
-ledger: [E0027]
+ledger: [E0027, E0029]
 ---
 
 # B21 Column-shift likelihood detector for page-local periodic keys
@@ -32,3 +32,10 @@ column of 5-30 symbols.
 Cost: 28-29 shifts x L columns per period; precompute per-column symbol counts, so a mask only changes
 which column each segment's counts land in (same segment-pair trick does not apply directly; use
 per-segment column count matrices rolled by the drift). Budget the skip pass the same way as E0027.
+
+## Outcome
+E0029 (negative, S1 p 0.153 on 999 surrogates; threshold 4.17 at the 0.99 quantile). Best-shift unigram
+LLR per column, skip masks at every period, L 2-20. Lab-verified (>= 95/100) for all 3 models x 3 skip
+masks: L 3-20 on 273 runes (one condition 94/100 at L 20), L 3-13 on 217 runes, L 3-5 on 137 runes; partly
+L 8-10 on 137 runes and L 16-20 on 217 runes; raw L 3 only on 76 runes. E0027 had L 3 on >= 217 runes
+only. Short pages and L >= 16 remain not identifiable: see B22.
