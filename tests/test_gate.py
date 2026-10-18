@@ -9,7 +9,7 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from lp.ciphers import ApplyKeyStream, Atbash, ChainEncrypt, ChainUnits, FSkipPositions, Shift, TotientStream, Vigenere  # noqa: E402
-from lp.data import LoadAllUnsolved, LoadSection  # noqa: E402
+from lp.data import LoadAllUnsolved, LoadSection, Pages  # noqa: E402
 from lp.keysources import ValidateGenerators  # noqa: E402
 from lp.stats import DoubletCount, StepHistogram  # noqa: E402
 
@@ -53,6 +53,14 @@ def test_unsolved_fingerprint():
     for S in Sections:
         Steps = [A + B for A, B in zip(Steps, StepHistogram(S["Runes"]))]
     assert Steps == ExpectedSteps
+
+
+def test_page_map():
+    # Runes per LP page from lp.data.PageLines (page images, 2026-10-18); page 50 holds digits only.
+    Got = {Number: len(Runes) for S in LoadAllUnsolved() for Number, Runes in Pages(S)}
+    assert sorted(Got) == [N for N in range(56) if N != 50]
+    assert [Got[N] for N in (0, 3, 7, 15, 33, 39, 49, 51, 53, 55)] == [262, 217, 208, 159, 214, 240, 66, 92, 179, 76]
+    assert sum(Got.values()) == 12956
 
 
 def test_chain_roundtrip():
