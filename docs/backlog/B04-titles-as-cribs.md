@@ -1,8 +1,8 @@
 ---
 id: B04
 title: Section titles as cribs
-status: open
-claimed_by: ""
+status: claimed
+claimed_by: claude/clever-cori-kgjv4w
 rank: 4
 ledger: [E0010]
 ---
