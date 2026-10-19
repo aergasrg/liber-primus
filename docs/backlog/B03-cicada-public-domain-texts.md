@@ -1,8 +1,8 @@
 ---
 id: B03
 title: Public-domain Cicada texts as running keys
-status: open
-claimed_by: ""
+status: claimed
+claimed_by: claude/charming-babbage-raidxt
 rank: 3
 ledger: [E0008]
 ---
