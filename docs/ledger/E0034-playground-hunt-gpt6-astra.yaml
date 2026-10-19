@@ -1,0 +1,40 @@
+id: E0034
+title: 18 Oct Playground hunt (gpt-6-astra, outside the lab) - multiplicative periodic key with null zero-steps, word-slot and prime-sum doublet rules, doublets as F
+family: doublet-origin
+hypothesis: 'Four checks. (A) A periodic multiplicative key in which the zero steps (the doublets) are null
+  steps that skip the key, so the key advances only on nonzero steps. (B) One doublet slot per word at most.
+  (C) A doublet (zero) is allowed only after a word whose gematria sum is prime. (D) The doublets are
+  plaintext F.'
+coverage: '(A) nonzero-step column IoC for periods 2-3000 globally and 2 to n/4 per section (n = section
+  length). (B) doublets per word and doublets inside two-rune words. (C) primality of the gematria word sum
+  preceding each of the 86 doublets. (D) the F rate in English runes against the doublet rate. About 25k
+  tokens of Playground work, run outside the lab and reported to it.'
+detector: '(A) column IoC of the nonzero steps, period by period; (B) counts of doublets per word and of
+  doublets in two-rune words against expectation; (C) count of doublets following a non-prime word sum;
+  (D) frequency of F in English runes.'
+control:
+  method: 'A: planted periodic multiplicative key (same pipeline, null zero-steps skipping the key).'
+  score: 'A: planted control at period L=97 detected at column IoC 2.01. B, C, D are counting arguments with
+    no planted control.'
+'null':
+  method: 'A: permutation null of the step sequence, per period.'
+  ceiling: 'A: every real value inside the permutation null (ceiling value not reported to the lab).'
+result:
+  best: 'A: all periods 2-3000 globally and 2 to n/4 per section inside the permutation null. B: excluded - one
+    word holds two doublets, and 1 doublet falls inside two-rune words against 3.0 expected. C: excluded -
+    73 of 86 doublets follow non-prime sums. D: excluded - F is 2.3% of English runes, far below the 0.66%
+    doublet rate being a plaintext F (see E0025 for the doubled-letter and rare-rune tests).'
+  verdict: negative
+skips_handled: 'A: yes, zero steps skip the key by construction. B-D: n/a (positions and counts only).'
+source: gpt-6-astra via OpenAI Playground, 18 Oct 2026 (outside the lab; not reproduced here)
+date: '2026-10-19'
+artifacts: []
+notes: 'External result, recorded verbatim in outline; the lab has not rerun it, so the positive control is the
+  Playground''s own and the null ceiling is not numerically reported. New against E0002, E0027 and E0030: the
+  key is multiplicative and the zero steps do not consume it, scored on the nonzero-step columns, to period
+  3000 globally. Also reported: a proof that iid-step mechanisms are indistinguishable from ciphertext
+  statistics alone, i.e. any generator whose steps are independent and uniform on 1..28 with rare zeros
+  gives the same step histogram, IoC and lag statistics, so no test on the ciphertext alone can tell such
+  mechanisms apart; only a key source or a crib can. This matches the lab''s working model (STATE.md) and is a
+  reason to prioritise key-source and crib items over further ciphertext-statistics tests. The counts for
+  B and D are as reported; B (3.0 expected) and the 0.66% rate were not recomputed in the lab this session.'
