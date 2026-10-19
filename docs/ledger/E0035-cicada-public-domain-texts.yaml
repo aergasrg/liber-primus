@@ -1,0 +1,54 @@
+id: E0035
+title: Skip-tolerant page-local running keys from Liber AL vel Legis, the 1911 Britannica "Cicada" article and Blake's Marriage of Heaven and Hell (B03)
+family: running-key-text
+hypothesis: Each LP page is enciphered with a running key read from one of the three public-domain texts
+  Cicada used elsewhere (Liber AL, 2013 book code; Britannica "Cicada", 2012; Blake, 2012), starting
+  anywhere, independently per page, with any ciphertext F possibly a non-consuming F-skip.
+coverage: 'lp.runningkey exact DP (the E0029 engine, unchanged), 55 real pages, 4 views x 4 polarities x 2
+  directions = 32 forms, English sources as a digraph/ING lattice. Sources, fetched by
+  scripts/fetch_keysources.sh: liber_al = Wikisource wikitext of Liber AL vel Legis, markup stripped,
+  verses and Comment, 23,588 letters; britannica = Wikisource parse of EB1911 "Cicada", 1,804 letters (a
+  short source: it covers any page only once); blake = Gutenberg 45315 body, 19,888 letters. Pages of
+  <= 140 runes (6 pages) are not identifiable (power below). NOT covered: keys continuing across pages,
+  word-level or bigram scoring, other editions or the Cicada 2013 transcription of Liber AL (Wikisource
+  text used), the three texts concatenated, non-English plaintext.'
+detector: English unigram log ratio along the best path, page statistic = max over the 32 forms and every
+  start, Gumbel-standardised per page (as E0029).
+control:
+  method: 'E0029 tier-1 plants per source: 4 views x 4 skip patterns (none; first skip at an F before rune
+    50; at an F in runes 80-130; only in the last 70) x 3 page-length bins x 100 plants, baseline-English
+    plaintext in a random real page layout (doublets kept for the unit views), key from the source at a
+    random offset with digraphs merged with prob 0.5, random polarity and direction, later Fs skipped with
+    prob 0.3 (0.5 late), scored by the identical DP on a window around the key (a lower bound on the full
+    search). The unrelated-text comparison for B03 is E0029''s Self-Reliance and Mabinogion rows.'
+  score: 'Recovered over the threshold: >= 141 runes 100/100 in all 16 rows for every source (median margin
+    56-98). <= 140 runes 52-100 per row (worst liber_al unit28z2/early 52, blake unit28z1/none 64,
+    britannica unit28z1/none 69; median margin 10-14): the six short pages are not identifiable, as in E0029.
+    Exact start recovery was not measured: E0029''s Trace diagnostic raises StopIteration on every unit28z2
+    plant (85 of 85 failures were unit28z2, none in other views), counted as inexact by experiments/E0035''s
+    wrapper; detection is unaffected.'
+'null':
+  method: '20 shuffled-source replicates per source (words permuted), whole 32-form search each; Gumbel per
+    page from the replicate mean, scale pooled as kappa * sqrt(n) (E0029).'
+  ceiling: 'standardised 9.71 per page (alpha 6.06e-5 = family-wise 0.01 over 55 pages x 3 sources); null
+    max-over-pages liber_al 2.30-6.75, britannica 1.93-5.58, blake 2.75-9.18'
+result:
+  best: 'best page per source (standardised; p vs the 20 null max-over-pages): liber_al p40 5.14 (0.24),
+    britannica p1 5.21 (0.14), blake p53 5.02 (0.24). No page above 9.71. For scale, the E0029 unrelated
+    texts gave Self-Reliance 3.29 and Mabinogion 4.26; the three here are inside the null max-over-pages.'
+  verdict: negative
+skips_handled: 'yes: exact DP, every ciphertext F may skip, no cap (as E0029)'
+source: claude/charming-babbage-raidxt
+date: '2026-10-19'
+artifacts: [experiments/E0035_cicada_public_domain_texts.py, scripts/fetch_keysources.sh, results/E0035/summary.txt,
+  results/E0035/summary.json, results/E0035/real_liber_al.json, results/E0035/real_britannica.json,
+  results/E0035/real_blake.json, results/E0035/null_liber_al.json, results/E0035/null_britannica.json,
+  results/E0035/null_blake.json, results/E0035/power_liber_al.json, results/E0035/power_britannica.json,
+  results/E0035/power_blake.json]
+notes: 'Supersedes E0008 for these three texts only in the sense that E0008 never scanned them; B03 asked for
+  exactly this. New against E0008/E0029: three texts not previously scanned, run through the skip-tolerant
+  engine. Nothing exceeded its noise ceiling, so the skeptic was not called. Found: lp.runningkey.Trace
+  raises StopIteration for unit28z2 plants (layout/atom mismatch); it affects only the exact-start
+  diagnostic, not the scores, and is open as a fix. The Britannica source is only 1,804 letters, so its
+  null sees few distinct windows; its power is still 100/100 at >= 141 runes because page-local keys need
+  only the page length. Scanning every Wikisource/Gutenberg edition variant of these texts was not done.'

@@ -1,0 +1,37 @@
+id: E0033
+title: Skip-tolerant page-local running keys from the big byte sources (GPU run of E0029; B01 completion)
+family: running-key-text
+hypothesis: Each LP page is enciphered with a running key read from the bytes (mod 29) of 761.MP3, _560.00,
+  560.17 or the 75 original LP page images, starting anywhere, with any ciphertext F possibly a non-consuming
+  F-skip (same as E0029).
+coverage: 'Same engine, 32 forms and 55 pages as E0029 (gpu/E0029_bytes_gpu.py, RTX 4050, torch 2.9.1, peak
+  1.56 GB, finished). Sources: 560.17 (1,183,811 B), _560.00 (3,992,970 B), 761.MP3 (4,010,732 B), 75 LP page
+  images (52,248,065 B), byte % 29. Imported with `E0029_skip_tolerant_running_key.py import-gpu`, then `report`
+  (adds the four sources to results/E0029/summary.txt and summary.json).'
+detector: same as E0029 (English unigram log ratio along the best path; page statistic = max over 32 forms and
+  starts, Gumbel-standardised).
+control:
+  method: 'GPU-side planted control per source: 2 plants each (raw29 early-skip, unit28z1 mid-skip), key from the
+    source, identical search. Power: planted pages by view x skip pattern x length bin, as E0029.'
+  score: 'All 8 of 8 plants recovered (scores 92-131, ok true, 2 skips found). Power: 141-220 and >= 221 runes
+    100/100 in every row for every source; <= 140 runes 49-98/100 (worst lp_images unit28z1/none 49, mp3_761
+    and c560_00 52, c560_17 61): not identifiable, same six short pages as E0029 (B22).'
+'null':
+  method: 'Shuffled-source replicates, whole 32-form search per replicate (bytes permuted before use); Gumbel
+    per page as E0029. Fewer replicates than the CPU sources (10, 10, 10, 6 against 20) because of GPU time.'
+  ceiling: 'standardised 11.01 per page (family-wise 0.01 over 55 pages x 11 sources); null max-over-pages
+    2.6-5.5 (c560_17 5.54, c560_00 5.34, lp_images 5.36)'
+result:
+  best: 'best page per source (standardised; p vs the null max-over-pages): lp_images p45 7.30 (0.143, 6 reps),
+    mp3_761 p30 6.17 (0.182), c560_00 p47 5.80 (0.091), c560_17 p34 4.20 (0.455). No page above threshold;
+    lp_images 7.30 exceeds every null max (2.86-5.36) but with 6 reps that is p 0.14 and far under 11.01.'
+  verdict: negative
+skips_handled: 'yes: exact DP, every ciphertext F may skip (as E0029)'
+source: claude/charming-babbage-raidxt
+date: '2026-10-19'
+artifacts: [gpu/results_E0029_gpu.json, results/E0029/gpu_import.txt, results/E0029/summary.txt,
+  results/E0029/summary.json]
+notes: 'Completes E0029 (11 of 11 sources). Not covered, unchanged: the six pages of <= 140 runes (B22), keys
+  continuing across pages, word or bigram scoring. Null replicate count is below E0029''s 20; the two best
+  sources by p (c560_00 0.09, lp_images 0.14) would need more reps only if a later run puts them near the
+  threshold, which 5.8 and 7.3 against 11.01 do not. Not sent to the skeptic: nothing above the noise ceiling.'
