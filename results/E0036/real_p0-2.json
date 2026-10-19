@@ -1,0 +1,1 @@
+{"title": "p0-2", "cipher": "SHEOGMIOFSYENGC", "wordlens": [8, 5], "fpos": [7], "sources": {"bounded": {"expected_uniform": 0.000337179601585301, "hits": []}, "oeis": {"expected_uniform": 0.0004473433023795644, "hits": []}}}
