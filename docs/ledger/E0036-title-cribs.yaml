@@ -1,0 +1,69 @@
+id: E0036
+title: Section titles as word-level cribs against 10 bounded key families and the full OEIS, with F-skip variants (B04)
+family: crib
+hypothesis: The heading of each unsolved section (7 titles, 9-19 runes) is enciphered with a contiguous key
+  window from a bounded number-theoretic family, LP's own solved text, or an OEIS sequence, so some window
+  decrypts every title word to a common English/LP word.
+coverage: 'Titles = text before the first heading mark in p0-2 [8,5], p3-7 [2,11,3], p15-22 [4,5], p23-26
+  [2,6,3,5], p27-32 [3,12,4], p33-39 [2,8], p54-55 [1,8] (p8-14 and p40-53 have no heading). Six additive
+  forms: raw p = c-k, k-c, c+k; chain p = s-k, k-s, s+k with s_i = c_i - c_(i-1) mod 29 (first chain rune
+  unknown, matched as a wildcard; key consumed there too). Sources (A) bounded, ported from
+  outside/CribTest.py: primes, prime-1, prime gaps, phi(n), phi(phi(n)), n-phi(n) for n < 100,400 (first
+  100,400 primes), strides 1-16, every residue, both directions; solved LP plaintext and ciphertext (all 9
+  solved pages concatenated in the outside order), as rune index and as gematria prime mod 29, strides 1-17
+  (outside used 1,2,3,5,7,11,13,17), every residue, both directions. (B) the full OEIS (stripped.gz fetched
+  2026-10-19, 400,455 sequences; 383,356 with >= 9 terms), every window starting in the first 100 terms
+  (median sequence has 39 terms), terms mod 29, forward and reversed. F-skip variants: for the three titles
+  containing a ciphertext F (p0-2 1 F, p15-22 1 F at rune 0, p33-39 1 F) every subset of their Fs passes
+  through as plaintext F without consuming key; chain forms with a skip in two modes (bridge = chain state
+  ignores the F; through = the F becomes the previous rune). 69 (title, skip, form, mode) variants in all.
+  Dictionary: War and Peace corpus words seen 3+ times plus every solved-LP word, lengths 1-12
+  (8,962 words). NOT covered: words over 12 runes or rare words (e.g. EMERGENCE, CIRCUMFERENCE), key
+  windows that begin before the title (key carried from the previous section), non-additive or
+  multiplicative forms, OEIS terms beyond the stripped file, other strides on the OEIS.'
+detector: 'Exact word-level crib: a hit is a key window under which every title word (wildcard at unknown
+  chain runes) is in the dictionary. Statistic per title and source = number of distinct hit plaintexts.
+  Full-section recheck: every hit''s key read on into the section body (up to 200 runes, no body skips and
+  every body F skipped), unigram LLR z vs uniform plaintext.'
+control:
+  method: 'Named control from the outside run: A REMINDER planted with primes stride 3, offset 500, c-k
+    -> recovered. Port check: no-skip, outside strides, bounded families reproduce the outside counts exactly
+    (p15-22 89 rows, every other title 0). Tier-1 power: 100 plants, each in a real title''s word lengths and
+    F positions, plaintext words drawn from the dictionary (frequency-weighted), random form/mode, key window
+    from a random position of the bounded store (50) or the OEIS store (50), 22 of them with F-skips, scanned
+    by the identical full search.'
+  score: A REMINDER recovered; port check 89/89 and 0/0 x 6; power 100/100 recovered (bounded noskip 39/39,
+    skip 11/11; OEIS noskip 39/39, skip 11/11).
+  power: 100/100 at the exact-match criterion (all 7 title patterns)
+'null':
+  method: '50 random titles per real title (same word lengths and F positions, other runes uniform over the
+    28 non-F runes) through the identical 69-variant scan of both sources; p = (1 + #null >= real) / 51.
+    Analytic chance count for uniform keys also reported (windows x product of per-word dictionary rates).'
+  ceiling: 'distinct hits, null mean / max: p15-22 bounded 373.1 / 504, OEIS 393.4 / 628; p33-39 0.18 / 3
+    and 0.18 / 1; p54-55 0.12 / 2 and 0.30 / 2; p0-2, p3-7, p23-26, p27-32 0 / 0. Continuation z: Bonferroni
+    4.39 for p 0.01 over 882 hit rows x 2 body variants.'
+  surrogates: 50 per title (350 full scans)
+result:
+  best: 'p15-22 is the only title with hits, at chance: bounded 376 rows / 365 distinct (88 no-skip, 278
+    with the F skipped; p 0.57), OEIS 506 rows / 374 distinct (p 0.53); uniform-key expectation 390 / 586.
+    Every other title: 0 hits in both sources (chance 0.0-0.4). Best continuation z 3.29 (OEIS A331305
+    reversed, k-s, 58 runes) < 4.39; no hit reads on as English. Top word score FULL BORIS (primes s8,
+    skip, k-s).'
+  verdict: negative
+skips_handled: 'yes: every subset of the title''s ciphertext Fs, chain bridge and through modes (titles only;
+  the continuation recheck uses no skips or all body Fs skipped)'
+source: claude/clever-cori-kgjv4w
+date: '2026-10-19'
+artifacts: [experiments/E0036_title_cribs.py, scripts/fetch_keysources.sh, results/E0036/run_all.sh,
+  results/E0036/summary.txt, results/E0036/summary.json, results/E0036/hits.tsv, results/E0036/null.jsonl,
+  results/E0036/power.jsonl, results/E0036/real_p0-2.json, results/E0036/real_p3-7.json,
+  results/E0036/real_p15-22.json, results/E0036/real_p23-26.json, results/E0036/real_p27-32.json,
+  results/E0036/real_p33-39.json, results/E0036/real_p54-55.json]
+notes: 'Ports and supersedes the 2026-10-19 outside run (outside/CribTest.py, outside/ReverseCrib2.py,
+  gpt-6-astra candidate titles + reverse crib), which reproduces exactly inside the lab. New vs E0004 (relikd
+  OEIS, first 40 terms, IoC/English on windows): offsets over the first 100 terms, an exact word-level crib on
+  the titles only, chain forms, F-skip subsets, and a measured null and power. New vs E0010: systematic,
+  controlled. The CribTest.py forward search over 15 gpt-6-astra candidate titles per section is subsumed:
+  every dictionary title is checked at once. Short titles (p15-22, p54-55: 9 runes) cannot discriminate:
+  p15-22 has ~370 chance titles per source, so a true hit there would need the continuation recheck
+  (power of that recheck not measured). Rendering uses ToLatin, so NG shows as in FAILNG.'

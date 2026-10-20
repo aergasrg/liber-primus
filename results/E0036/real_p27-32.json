@@ -1,0 +1,1 @@
+{"title": "p27-32", "cipher": "MPYLSOAAEHLEEOIMLLSCP", "wordlens": [3, 12, 4], "fpos": [], "sources": {"bounded": {"expected_uniform": 6.2805366150677325e-12, "hits": []}, "oeis": {"expected_uniform": 6.9815231271297535e-12, "hits": []}}}

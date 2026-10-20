@@ -6,7 +6,6 @@ Open and claimed items first, by rank. Claim an item by editing its own file.
 | rank | id | title | status | claimed_by | ledger |
 | --- | --- | --- | --- | --- | --- |
 | 2 | [B02](backlog/B02-plaintext-reactive-key.md) | Plaintext-reactive key rules over long key sources | open |  | E0006, E0007, E0028 |
-| 4 | [B04](backlog/B04-titles-as-cribs.md) | Section titles as cribs | open |  | E0010 |
 | 4 | [B19](backlog/B19-prng-page-local-skip-aware.md) | Rerun E0019/E0020 page-locally, skip-aware, with reduction … | open |  | E0019, E0020 |
 | 5 | [B05](backlog/B05-grid-as-ciphertext.md) | The 256-byte grid as ciphertext | open |  | E0014, E0023 |
 | 5 | [B22](backlog/B22-running-key-short-pages-continuation.md) | Running-key engine - verify short pages (cross-page key con… | open |  | E0029 |
@@ -29,5 +28,6 @@ Open and claimed items first, by rank. Claim an item by editing its own file.
 | 3 | [B03](backlog/B03-cicada-public-domain-texts.md) | Public-domain Cicada texts as running keys | done | claude/charming-babbage-raidxt | E0008, E0035 |
 | 3 | [B18](backlog/B18-periodicity-in-steps-page-local.md) | Rerun E0002 in the step domain, page by page, with bounded … | done | claude/eager-brahmagupta-exiu52 | E0002, E0027 |
 | 3 | [B24](backlog/B24-engine-fixes-midpoint-bughunt.md) | Engine fixes from the midpoint bug hunt (F-runs in runningk… | done | claude/admiring-brown-6qihly | E0029, E0030, E0031 |
+| 4 | [B04](backlog/B04-titles-as-cribs.md) | Section titles as cribs | done | claude/clever-cori-kgjv4w | E0010, E0036 |
 | 4 | [B21](backlog/B21-column-shift-likelihood-detector.md) | Column-shift likelihood detector to extend E0027's power to… | done | claude/eloquent-hopper-k6fff6 | E0027, E0030 |
 | 12 | [B12](backlog/B12-doublet-event-process.md) | Structure of the doublet event process (spacing, clustering… | done | claude/serene-pasteur-5lrf49 | E0028 |

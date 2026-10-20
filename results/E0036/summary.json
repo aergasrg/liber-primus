@@ -1,0 +1,242 @@
+{
+ "titles": {
+  "p0-2": {
+   "cipher": "SHEOGMIOFSYENGC",
+   "wordlens": [
+    8,
+    5
+   ],
+   "fpos": [
+    7
+   ],
+   "bounded": {
+    "rows": 0,
+    "distinct": 0,
+    "distinct_noskip": 0,
+    "distinct_skip": 0,
+    "expected_uniform": 0.000337179601585301,
+    "null_reps": 50,
+    "null_mean": 0.0,
+    "null_max": 0,
+    "p": 1.0,
+    "max_cont_z": NaN
+   },
+   "oeis": {
+    "rows": 0,
+    "distinct": 0,
+    "distinct_noskip": 0,
+    "distinct_skip": 0,
+    "expected_uniform": 0.0004473433023795644,
+    "null_reps": 50,
+    "null_mean": 0.0,
+    "null_max": 0,
+    "p": 1.0,
+    "max_cont_z": NaN
+   }
+  },
+  "p3-7": {
+   "cipher": "LJEOHNGCTHTAEJTXHTUOE",
+   "wordlens": [
+    2,
+    11,
+    3
+   ],
+   "fpos": [],
+   "bounded": {
+    "rows": 0,
+    "distinct": 0,
+    "distinct_noskip": 0,
+    "distinct_skip": 0,
+    "expected_uniform": 1.6521239831076183e-08,
+    "null_reps": 50,
+    "null_mean": 0.0,
+    "null_max": 0,
+    "p": 1.0,
+    "max_cont_z": NaN
+   },
+   "oeis": {
+    "rows": 0,
+    "distinct": 0,
+    "distinct_noskip": 0,
+    "distinct_skip": 0,
+    "expected_uniform": 2.0050368648237298e-08,
+    "null_reps": 50,
+    "null_mean": 0.0,
+    "null_max": 0,
+    "p": 1.0,
+    "max_cont_z": NaN
+   }
+  },
+  "p15-22": {
+   "cipher": "FULMAEAYOEA",
+   "wordlens": [
+    4,
+    5
+   ],
+   "fpos": [
+    0
+   ],
+   "bounded": {
+    "rows": 376,
+    "distinct": 365,
+    "distinct_noskip": 88,
+    "distinct_skip": 278,
+    "expected_uniform": 390.085067677826,
+    "null_reps": 50,
+    "null_mean": 373.1,
+    "null_max": 504,
+    "p": 0.5686274509803921,
+    "max_cont_z": 2.72
+   },
+   "oeis": {
+    "rows": 506,
+    "distinct": 374,
+    "distinct_noskip": 96,
+    "distinct_skip": 281,
+    "expected_uniform": 586.3636103012309,
+    "null_reps": 50,
+    "null_mean": 393.36,
+    "null_max": 628,
+    "p": 0.5294117647058824,
+    "max_cont_z": 3.29
+   }
+  },
+  "p23-26": {
+   "cipher": "UAWNGGXDGIBIEOTBIY",
+   "wordlens": [
+    2,
+    6,
+    3,
+    5
+   ],
+   "fpos": [],
+   "bounded": {
+    "rows": 0,
+    "distinct": 0,
+    "distinct_noskip": 0,
+    "distinct_skip": 0,
+    "expected_uniform": 0.00012384782435230453,
+    "null_reps": 50,
+    "null_mean": 0.0,
+    "null_max": 0,
+    "p": 1.0,
+    "max_cont_z": NaN
+   },
+   "oeis": {
+    "rows": 0,
+    "distinct": 0,
+    "distinct_noskip": 0,
+    "distinct_skip": 0,
+    "expected_uniform": 0.00015030315883890255,
+    "null_reps": 50,
+    "null_mean": 0.0,
+    "null_max": 0,
+    "p": 1.0,
+    "max_cont_z": NaN
+   }
+  },
+  "p27-32": {
+   "cipher": "MPYLSOAAEHLEEOIMLLSCP",
+   "wordlens": [
+    3,
+    12,
+    4
+   ],
+   "fpos": [],
+   "bounded": {
+    "rows": 0,
+    "distinct": 0,
+    "distinct_noskip": 0,
+    "distinct_skip": 0,
+    "expected_uniform": 6.2805366150677325e-12,
+    "null_reps": 50,
+    "null_mean": 0.0,
+    "null_max": 0,
+    "p": 1.0,
+    "max_cont_z": NaN
+   },
+   "oeis": {
+    "rows": 0,
+    "distinct": 0,
+    "distinct_noskip": 0,
+    "distinct_skip": 0,
+    "expected_uniform": 6.9815231271297535e-12,
+    "null_reps": 50,
+    "null_mean": 0.0,
+    "null_max": 0,
+    "p": 1.0,
+    "max_cont_z": NaN
+   }
+  },
+  "p33-39": {
+   "cipher": "DEOXCFIAWHG",
+   "wordlens": [
+    2,
+    8
+   ],
+   "fpos": [
+    4
+   ],
+   "bounded": {
+    "rows": 0,
+    "distinct": 0,
+    "distinct_noskip": 0,
+    "distinct_skip": 0,
+    "expected_uniform": 0.2741345899582205,
+    "null_reps": 50,
+    "null_mean": 0.18,
+    "null_max": 3,
+    "p": 1.0,
+    "max_cont_z": NaN
+   },
+   "oeis": {
+    "rows": 0,
+    "distinct": 0,
+    "distinct_noskip": 0,
+    "distinct_skip": 0,
+    "expected_uniform": 0.39947832664053157,
+    "null_reps": 50,
+    "null_mean": 0.18,
+    "null_max": 1,
+    "p": 1.0,
+    "max_cont_z": NaN
+   }
+  },
+  "p54-55": {
+   "cipher": "AMNGDIOTHXIM",
+   "wordlens": [
+    1,
+    8
+   ],
+   "fpos": [],
+   "bounded": {
+    "rows": 0,
+    "distinct": 0,
+    "distinct_noskip": 0,
+    "distinct_skip": 0,
+    "expected_uniform": 0.2543998488691658,
+    "null_reps": 50,
+    "null_mean": 0.12,
+    "null_max": 2,
+    "p": 1.0,
+    "max_cont_z": NaN
+   },
+   "oeis": {
+    "rows": 0,
+    "distinct": 0,
+    "distinct_noskip": 0,
+    "distinct_skip": 0,
+    "expected_uniform": 0.37504169032434986,
+    "null_reps": 50,
+    "null_mean": 0.3,
+    "null_max": 2,
+    "p": 1.0,
+    "max_cont_z": NaN
+   }
+  }
+ },
+ "power": {
+  "recovered": 100,
+  "plants": 100
+ }
+}

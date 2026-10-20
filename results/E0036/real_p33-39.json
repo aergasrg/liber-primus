@@ -1,0 +1,1 @@
+{"title": "p33-39", "cipher": "DEOXCFIAWHG", "wordlens": [2, 8], "fpos": [4], "sources": {"bounded": {"expected_uniform": 0.2741345899582205, "hits": []}, "oeis": {"expected_uniform": 0.39947832664053157, "hits": []}}}

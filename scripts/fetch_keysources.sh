@@ -27,6 +27,9 @@ for F in AUDIO/761.MP3 DATA/_560.00 DATA/560.17 DATA/560.13 tmp/wisdom; do
   Fetch "$Scream/assets/2013/cicados/$F" "data/keyfiles/cicados/$(basename "$F")"
 done
 Fetch "$Scream/2014.md" "data/keyfiles/scream314_2014.md"
+# B04: the full OEIS, first terms of every sequence (stripped.gz, ~30 MB)
+mkdir -p data/keyfiles/oeis
+Fetch "https://oeis.org/stripped.gz" "data/keyfiles/oeis/stripped.gz"
 if [ "${1:-}" = "--images" ]; then
   for N in $(seq -w 0 74); do
     Fetch "$Scream/assets/2014/liber-primus-complete/$N.jpg" "data/keyfiles/lp-images/$N.jpg"

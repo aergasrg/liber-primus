@@ -1,0 +1,61 @@
+E0036 title cribs: distinct all-common-word plaintexts per title (null = random titles with the same word lengths and F positions, identical scan)
+title   source    rows  dist noskip  skip  unif.exp null mean null max      p maxcontz
+p0-2    bounded      0     0      0     0      0.00      0.00        0  1.000      nan
+p0-2    oeis         0     0      0     0      0.00      0.00        0  1.000      nan
+p3-7    bounded      0     0      0     0      0.00      0.00        0  1.000      nan
+p3-7    oeis         0     0      0     0      0.00      0.00        0  1.000      nan
+p15-22  bounded    376   365     88   278    390.09    373.10      504  0.569     2.72
+p15-22  oeis       506   374     96   281    586.36    393.36      628  0.529     3.29
+p23-26  bounded      0     0      0     0      0.00      0.00        0  1.000      nan
+p23-26  oeis         0     0      0     0      0.00      0.00        0  1.000      nan
+p27-32  bounded      0     0      0     0      0.00      0.00        0  1.000      nan
+p27-32  oeis         0     0      0     0      0.00      0.00        0  1.000      nan
+p33-39  bounded      0     0      0     0      0.27      0.18        3  1.000      nan
+p33-39  oeis         0     0      0     0      0.40      0.18        1  1.000      nan
+p54-55  bounded      0     0      0     0      0.25      0.12        2  1.000      nan
+p54-55  oeis         0     0      0     0      0.38      0.30        2  1.000      nan
+
+named control 'A REMINDER' (primes s3 r0 d1 offset 500, c-k): recovered=True, 1 hits in total for that ciphertext (all variants, bounded families)
+port check p0-2: 0 rows (outside run: 0)
+port check p3-7: 0 rows (outside run: 0)
+port check p15-22: 89 rows (outside run: 89)
+port check p23-26: 0 rows (outside run: 0)
+port check p27-32: 0 rows (outside run: 0)
+port check p33-39: 0 rows (outside run: 0)
+port check p54-55: 0 rows (outside run: 0)
+power: 100/100 planted keys recovered (0 plants had no fitting word); by (source, skip, recovered): {('bounded', 'noskip', True): 39, ('bounded', 'skip', True): 11, ('oeis', 'noskip', True): 39, ('oeis', 'skip', True): 11}
+
+top distinct hits by word score (title, source, segment, offset, skip, form, mode, plain, score, continuation z / runes):
+  p15-22 bounded primes|s8|r3|d-1 @9065 skip[1] k-s through | FULL BORIS | 10.74 | z 0.64/200
+  p15-22 bounded prime gaps|s11|r7|d-1 @6167 skip[] c-k - | CAMP LATER | 9.75 | z 0.51/200
+  p15-22 oeis A211501|d-1 @16 skip[1] c-k - | FELT SHOPS | 9.34 | z -99.0/0
+  p15-22 oeis A369883|d1 @42 skip[1] c-k - | FATE MAMMA | 8.87 | z 1.37/50
+  p15-22 bounded primes|s1|r0|d1 @38995 skip[1] s-k through | FLYNG SINCE | 8.64 | z 1.12/200
+  p15-22 oeis A177498|d1 @8 skip[1] c+k - | FIRM RUNNNG | 8.51 | z 0.95/33
+  p15-22 oeis A010590|d1 @89 skip[] k-c - | THREE XUIII | 8.34 | z -99.0/0
+  p15-22 oeis A010590|d1 @90 skip[1] k-c - | FREE XUIII | 7.73 | z -99.0/0
+  p15-22 oeis A050102|d1 @6 skip[] k-c - | BLOW WRITE | 7.68 | z 1.29/40
+  p15-22 bounded phi(n)|s12|r0|d-1 @4040 skip[1] s-k bridge | F?CE WHICH | 7.63 | z 1.17/200
+  p15-22 bounded prime gaps|s6|r3|d-1 @15763 skip[1] s+k bridge | F?EW WHICH | 7.63 | z 1.85/200
+  p15-22 bounded primes|s15|r13|d-1 @490 skip[1] k-c - | FULL FAILNG | 7.62 | z 0.12/200
+  p15-22 oeis A205848|d-1 @44 skip[1] c-k - | FATE MNGLED | 7.45 | z -99.0/0
+  p15-22 oeis A216266|d1 @54 skip[1] c-k - | FAST BLAME | 7.35 | z -1.12/32
+  p15-22 oeis A129467|d-1 @44 skip[1] s+k through | FULL BREADTH | 7.14 | z -99.0/0
+  p15-22 bounded n-phi(n)|s2|r1|d1 @5511 skip[1] c-k - | FINE COPSE | 7.11 | z 0.63/200
+  p15-22 bounded primes|s10|r0|d-1 @9855 skip[1] k-s through | FIRE LIMPNG | 7.09 | z 0.41/177
+  p15-22 oeis A097966|d-1 @26 skip[1] k-s through | FIRE CEEPS | 7.09 | z 2.08/38
+  p15-22 oeis A299789|d1 @31 skip[1] s-k bridge | F?IR COULD | 7.02 | z 0.38/11
+  p15-22 bounded n-phi(n)|s9|r8|d-1 @2208 skip[1] s+k through | FULL RHINE | 7.0 | z -1.23/200
+  p15-22 bounded phi(phi(n))|s4|r0|d-1 @3394 skip[1] s-k bridge | F?NE ABOUT | 6.92 | z -0.02/200
+  p15-22 oeis A102366|d1 @4 skip[1] c-k - | FAIR OFFER | 6.91 | z -0.92/32
+  p15-22 oeis A050102|d1 @7 skip[1] k-c - | FLOW WRITE | 6.77 | z 1.29/40
+  p15-22 oeis A383808|d-1 @7 skip[1] k-c - | FAME CWIET | 6.7 | z 0.53/11
+  p15-22 oeis A314893|d1 @2 skip[1] s+k through | FIRE FOURS | 6.68 | z 0.36/40
+
+highest continuation z (key read on into the section body):
+  p15-22 oeis A331305|d-1 @27 k-s | F?CA BADGE | z 3.29 over 58 runes
+  p15-22 oeis A082571|d-1 @29 s-k | F?ET ROYAL | z 3.27 over 65 runes
+  p15-22 oeis A258105|d-1 @19 s-k | F?OW MISSNG | z 2.81 over 59 runes
+  p15-22 oeis A260534|d-1 @31 s-k | F?EL ROYAL | z 2.75 over 44 runes
+  p15-22 bounded prime-1|s5|r0|d1 @15679 s-k | F?EL FIERY | z 2.72 over 200 runes
+continuation trials: 882 hit rows x 2 body variants; Bonferroni z for p 0.01: 4.39
